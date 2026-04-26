@@ -1,0 +1,30 @@
+[Unit]
+Description=Wyoming openWakeWord (HomeClaw)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/wyoming-openwakeword
+ExecStart=/home/pi/wyoming-openwakeword/script/run \
+    --uri tcp://0.0.0.0:10400 \
+    --custom-model-dir /home/pi/openwakeword-models \
+    --preload-model ehi_claw \
+    --threshold 0.5 \
+    --trigger-level 1
+Restart=on-failure
+RestartSec=2
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/pi/wyoming-openwakeword /home/pi/openwakeword-models
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

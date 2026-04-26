@@ -1,0 +1,36 @@
+[Unit]
+Description=HomeClaw Bridge (Wyoming <-> OpenClaw)
+After=network-online.target wyoming-satellite.service
+Wants=network-online.target
+Requires=wyoming-satellite.service
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/homeclaw-repo/skill
+# Environment variables. You can override any of them in an override.conf
+# via `sudo systemctl edit homeclaw-bridge` without touching this file.
+Environment=HOMECLAW_SATELLITE_URI=tcp://127.0.0.1:10700
+Environment=HOMECLAW_AGENT=HomeClaw
+Environment=HOMECLAW_TTS_VOICE=it_IT-paola-medium
+Environment=HOMECLAW_RESPONSE_TIMEOUT=8.0
+Environment=HOMECLAW_OPENCLAW_WS=ws://127.0.0.1:18789
+Environment=HOMECLAW_LOG_LEVEL=INFO
+Environment=HOMECLAW_SILENT_OK=[SILENT_OK]
+ExecStart=/home/pi/homeclaw-repo/skill/venv/bin/python \
+    /home/pi/homeclaw-repo/skill/bridge.py
+Restart=on-failure
+RestartSec=5
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/pi/homeclaw-repo
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

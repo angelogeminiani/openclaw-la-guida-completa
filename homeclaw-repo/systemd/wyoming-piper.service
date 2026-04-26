@@ -1,0 +1,33 @@
+[Unit]
+Description=Wyoming Piper TTS (HomeClaw)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/wyoming-piper
+# Voice choice:
+#   - it_IT-riccardo-x_low  (~1.8x realtime on Pi5 CPU, robotic)
+#   - it_IT-paola-medium    (~1.1x realtime on Pi5 CPU, natural) -- DEFAULT
+ExecStart=/home/pi/wyoming-piper/script/run \
+    --piper /home/pi/wyoming-piper/bin/piper \
+    --uri tcp://0.0.0.0:10200 \
+    --voice it_IT-paola-medium \
+    --length-scale 1.0 \
+    --noise-scale 0.667 \
+    --noise-w 0.8 \
+    --data-dir /home/pi/piper-voices \
+    --download-dir /home/pi/piper-voices
+Restart=on-failure
+RestartSec=2
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/pi/wyoming-piper /home/pi/piper-voices
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

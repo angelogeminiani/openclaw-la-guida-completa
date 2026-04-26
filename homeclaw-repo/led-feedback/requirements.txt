@@ -1,0 +1,4 @@
+# LED feedback script runtime dependencies.
+# The ReSpeaker USB 4-Mic Array exposes an APA102 chain on SPI.
+
+apa102-pi>=3.2,<4.0

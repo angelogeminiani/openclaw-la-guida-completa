@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+venv/
+env/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Editor
+.vscode/
+.idea/
+*.sublime-*
+
+# Secrets — never commit
+.env
+.env.*
+esphome/secrets.yaml
+**/secrets.yaml
+
+# Runtime artifacts
+*.log
+homeclaw-debug/
+homeclaw-sounds/*.wav
+openwakeword-models/*.tflite
+openwakeword-models/*.onnx
+piper-voices/
+speakers/
+*.npy
+
+# Backups
+backups/
+*.tar.gz
+*.tgz
+
+# Build output
+dist/
+build/
+*.whl

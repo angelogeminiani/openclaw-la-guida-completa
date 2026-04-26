@@ -1,0 +1,9 @@
+# HomeClaw bridge runtime dependencies.
+# Tested on Python 3.11 / Raspberry Pi OS Bookworm 64-bit.
+
+wyoming>=1.5.4,<2.0          # Wyoming Protocol client/server primitives
+websockets>=12.0,<14.0       # OpenClaw gateway WebSocket client
+
+# Note: we intentionally do NOT depend on the full openclaw-sdk.
+# The bridge uses only a small slice of the gateway protocol (see
+# openclaw_client.py) so we keep the dependency surface tiny and auditable.

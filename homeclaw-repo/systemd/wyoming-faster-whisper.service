@@ -1,0 +1,31 @@
+[Unit]
+Description=Wyoming Faster-Whisper (HomeClaw)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/wyoming-faster-whisper
+# Model selection:
+#   - Tier A (no NPU):  use 'base-int8'   (~1.1s per phrase on CPU)
+#   - Tier B (Hailo):   use 'small-int8'  (~0.7s per phrase on NPU, 89% IT accuracy)
+#   - Max accuracy:     use 'medium-int8' (~1.4s per phrase on NPU, 94% IT accuracy, 2.4GB RAM)
+ExecStart=/home/pi/wyoming-faster-whisper/script/run \
+    --uri tcp://0.0.0.0:10300 \
+    --model small-int8 \
+    --language it \
+    --beam-size 5 \
+    --initial-prompt "Conversazione in italiano con un assistente vocale chiamato HomeClaw."
+Restart=on-failure
+RestartSec=2
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/pi/wyoming-faster-whisper
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

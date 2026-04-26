@@ -1,0 +1,41 @@
+[Unit]
+Description=Wyoming Satellite (HomeClaw)
+After=network-online.target wyoming-openwakeword.service wyoming-faster-whisper.service wyoming-piper.service
+Wants=network-online.target
+Requires=wyoming-openwakeword.service wyoming-faster-whisper.service wyoming-piper.service
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/wyoming-satellite
+# Audio capture: ReSpeaker USB 4-Mic Array (shows up as 'ArrayUAC10').
+# Audio playback: change to your actual output device (run `aplay -L` to list).
+# The JBL placeholder below works if the speaker is Bluetooth-paired as default sink.
+ExecStart=/home/pi/wyoming-satellite/script/run \
+    --name homeclaw-studio \
+    --uri tcp://0.0.0.0:10700 \
+    --mic-command "arecord -D plughw:CARD=ArrayUAC10,DEV=0 -r 16000 -c 1 -f S16_LE -t raw" \
+    --snd-command "aplay -D default -r 22050 -c 1 -f S16_LE -t raw" \
+    --wake-uri tcp://127.0.0.1:10400 \
+    --wake-word-name ehi_claw \
+    --stt-uri tcp://127.0.0.1:10300 \
+    --tts-uri tcp://127.0.0.1:10200 \
+    --event-uri tcp://127.0.0.1:10700 \
+    --mic-auto-gain 5 \
+    --mic-noise-suppression 2 \
+    --awake-wav /home/pi/homeclaw-sounds/beep-start.wav \
+    --done-wav /home/pi/homeclaw-sounds/beep-stop.wav \
+    --vad-threshold 0.3 \
+    --debug-recording-dir /home/pi/homeclaw-debug
+Restart=on-failure
+RestartSec=2
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+# Note: we intentionally DO NOT use ProtectSystem=strict here because the
+# satellite needs broad access to /dev/snd (ALSA devices).
+SupplementaryGroups=audio
+
+[Install]
+WantedBy=multi-user.target

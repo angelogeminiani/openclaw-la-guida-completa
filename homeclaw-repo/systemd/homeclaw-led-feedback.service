@@ -1,0 +1,24 @@
+[Unit]
+Description=HomeClaw LED Feedback (ReSpeaker USB APA102)
+After=wyoming-satellite.service
+Requires=wyoming-satellite.service
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/homeclaw-repo/led-feedback
+Environment=HOMECLAW_SATELLITE_URI=tcp://127.0.0.1:10700
+Environment=HOMECLAW_LED_COUNT=12
+Environment=HOMECLAW_LED_BRIGHTNESS=0.6
+Environment=HOMECLAW_LED_QUIET_HOURS=22:00-07:00
+Environment=HOMECLAW_LED_QUIET_BRIGHTNESS=0.1
+ExecStart=/home/pi/homeclaw-repo/led-feedback/venv/bin/python \
+    /home/pi/homeclaw-repo/led-feedback/homeclaw_led_feedback.py
+Restart=on-failure
+RestartSec=5
+# Needs SPI access for APA102 on ReSpeaker USB 4-Mic Array.
+SupplementaryGroups=gpio spi
+
+[Install]
+WantedBy=multi-user.target
