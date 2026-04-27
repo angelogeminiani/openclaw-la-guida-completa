@@ -201,7 +201,9 @@ OpenClaw evolve rapidamente. Verifica i comandi e i prezzi prima di seguirli all
 
 ## Licenza
 
-Vedi [`LICENSE`](./LICENSE) nel repository. I contenuti sono distribuiti sotto Creative Commons BY-SA 4.0.
+Vedi [`LICENSE`](./LICENSE-BOOK) nel repository. I contenuti sono distribuiti sotto Creative Commons BY-SA 4.0.
+
+Il codice è distribuito sotto licenza [`MIT`](./LICENSE).
 
 ---
 
