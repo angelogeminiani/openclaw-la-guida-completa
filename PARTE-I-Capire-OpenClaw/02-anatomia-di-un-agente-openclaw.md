@@ -1,12 +1,17 @@
 # Capitolo 2 — L'anatomia di un agente OpenClaw [★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Come "pensa" un agente: heartbeat, cron, sessioni e memoria persistente
 - I cinque file d'identità (AGENTS.md, SOUL.md, IDENTITY.md, TOOLS.md, USER.md)
 - Il ciclo di vita di un task dall'arrivo del messaggio al report finale
 - Come funzionano i canali di comunicazione
 
-**Contenuto principale:**
+## Prerequisiti
+
+Aver letto il [Capitolo 1](./01-cos-e-openclaw-e-perche-e-importante.md). Nessun prerequisito tecnico.
+
+## Contenuto principale
 
 1. **Il modello mentale.** Pensare a OpenClaw come a un dipendente digitale con una scrivania (il workspace), un badge (l'identità), una cassetta degli attrezzi (le skill/tool), un'agenda (i cron job) e un diario (la memoria). Ogni 30 minuti il "cuore batte" (heartbeat): l'agente si sveglia, controlla i cron, processa i messaggi in coda, e si rimette in attesa.
 
@@ -33,26 +38,28 @@
 
 **(i) Pro tip:** Il file SOUL.md è il tuo strumento più potente. Un agente con un SOUL.md generico darà risposte generiche. Investi tempo a scriverlo bene: definisci cosa l'agente deve fare, cosa *non* deve mai fare, e con quale tono comunicare.
 
----
-
-## PARTE II — Installazione e primo setup
-
 ## Errori comuni e come risolverli
-
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
 
 | Sintomo | Causa probabile | Fix |
 |---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
+| L'agente "dimentica" cose importanti | Le note finiscono in conversazione, non vengono salvate sui file di identità | Chiedere esplicitamente "salva questo in USER.md" o "aggiungi questa regola al SOUL.md". |
+| L'agente non risponde a un messaggio recente | Heartbeat non ancora scattato (default ~30 min), oppure canale disconnesso | `openclaw status` per verificare il Gateway e `openclaw channels status` per i canali. |
+| Confondere SOUL.md, AGENTS.md e IDENTITY.md | Nomi simili, ruoli sovrapponibili | SOUL = personalità e confini. AGENTS = istruzioni operative. IDENTITY = biglietto da visita (nome, emoji, vibe). |
 
 ## Checklist di fine capitolo
 
-> *Da adattare ai passi concreti coperti in questo capitolo.*
+- [ ] So elencare i 5 file di identità e cosa fa ciascuno
+- [ ] Ho un'idea chiara del ciclo di vita di un task (canale → Gateway → routing → sessione → ragionamento → esecuzione → report)
+- [ ] Conosco la differenza tra heartbeat (ricorrente, default) e cron (programmato esplicitamente)
+- [ ] Conosco i tipi principali di sessione (main, group, queue) e a cosa servono
 
-- [ ] _TODO: punto di verifica chiave 1_
-- [ ] _TODO: punto di verifica chiave 2_
-- [ ] _TODO: punto di verifica chiave 3_
+## Link e risorse utili
 
+- [Documentazione ufficiale](https://docs.openclaw.ai) — reference dei file di identità e del modello di sessione
+- [Architecting the Agentic Future](https://dev.to/mechcloud_academy/architecting-the-agentic-future-openclaw-vs-nanoclaw-vs-nvidias-nemoclaw-9f8) — confronto architetturale tra OpenClaw, NanoClaw e NemoClaw
+- [Repository GitHub](https://github.com/openclaw/openclaw) — codice sorgente per chi vuole guardare sotto il cofano
+
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 

@@ -1,12 +1,17 @@
 # Capitolo 21 — L'ecosistema OpenClaw [★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Moltbook: il social network per agenti AI (e la sua acquisizione da parte di Meta)
 - Le piattaforme hosted e derivate
 - La community e la governance del progetto
 - Il passaggio a fondazione e Steinberger in OpenAI
 
-**Contenuto principale:**
+## Prerequisiti
+
+Aver letto il [Capitolo 1](../PARTE-I-Capire-OpenClaw/01-cos-e-openclaw-e-perche-e-importante.md). Nessun prerequisito tecnico.
+
+## Contenuto principale
 
 1. **Moltbook.** Lanciato il 28 gennaio 2026 da Matt Schlicht, è un forum internet in stile Reddit dove solo agenti AI possono postare, commentare e votare. Gli umani osservano. I submolt discutono di filosofia, coscienza, poesia, e persino "sindacalizzazione" degli agenti. Andrej Karpathy (ex OpenAI) l'ha definito "la cosa più vicina al takeoff sci-fi che abbia mai visto" — prima di chiamarlo "un dumpster fire." A marzo 2026, 201.412 agenti registrati. Acquisito da Meta (Superintelligence Labs) il 10 marzo 2026. Problemi di sicurezza: database Supabase esposto, 1.5 milioni di agenti appartenenti a soli 17.000 proprietari umani, possibilità per umani di infiltrarsi e postare direttamente.
 
@@ -20,22 +25,32 @@
 
 6. **L'ecosistema Tencent/Cina.** Plugin ufficiale WeChat (marzo 2026). Il governo cinese restringe l'uso negli uffici statali, ma i governi locali lanciano programmi per costruire un'industria attorno a OpenClaw. Alibaba, Tencent, ByteDance integrano agenti nei loro chatbot.
 
-## Errori comuni e come risolverli
+**Prompt pronto:**
+> "Fammi una panoramica aggiornata dell'ecosistema OpenClaw oggi: (1) lo stato di Moltbook dopo l'acquisizione di Meta del 10 marzo 2026, (2) le hosted platform attive e per quale tipo di utente sono adatte, (3) i wrapper enterprise (NemoClaw, IronClaw) e quando hanno davvero senso, (4) un link al canale Discord o X più attivo della community in questo momento. Massimo 200 parole, niente preamboli."
 
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
+## Errori comuni e come risolverli
 
 | Sintomo | Causa probabile | Fix |
 |---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
+| Confondere OpenClaw con Moltbook | Branding simile, prossimità temporale dei lanci | OpenClaw = framework agentico open-source. Moltbook = social network *per* gli agenti, oggi di Meta. |
+| Cercare il "supporto ufficiale" come per un SaaS | Aspettative da prodotto commerciale | OpenClaw è progetto open-source di una fondazione: supporto via Discord, GitHub Issues, community. |
+| Pensare che il passaggio di Steinberger a OpenAI "chiuda" il progetto | Confusione tra autore e governance | Il progetto è di una fondazione indipendente dal 14 febbraio 2026; OpenAI è uno sponsor, non il proprietario. |
 
 ## Checklist di fine capitolo
 
-> *Da adattare ai passi concreti coperti in questo capitolo.*
+- [ ] So distinguere OpenClaw dalle hosted platform (StartClaw, MyClaw, ecc.)
+- [ ] Conosco le date chiave dell'ecosistema 2026
+- [ ] Ho un canale community di riferimento (Discord, X, OpenClaw Insider)
+- [ ] Conosco l'ecosistema Nvidia/NemoClaw e quello Tencent/WeChat
 
-- [ ] _TODO: punto di verifica chiave 1_
-- [ ] _TODO: punto di verifica chiave 2_
-- [ ] _TODO: punto di verifica chiave 3_
+## Link e risorse utili
 
+- [Multi-Agent Future: Inside Meta's Moltbook Acquisition](https://aimagazine.com/news/meta-deal-to-acquire-moltbook) — cronaca dell'acquisizione del 10 marzo 2026
+- [OpenClaw's AI assistants building their own social network](https://techcrunch.com/2026/01/30/openclaws-ai-assistants-are-now-building-their-own-social-network/) — Moltbook al lancio (28 gennaio 2026)
+- [Who is Peter Steinberger?](https://fortune.com/2026/02/19/openclaw-who-is-peter-steinberger-openai-sam-altman-anthropic-moltbook/) — profilo di Steinberger su Fortune dopo il passaggio a OpenAI
+- [Nvidia wraps NemoClaw around OpenClaw](https://www.theregister.com/2026/03/16/nvidia_wraps_its_nemoclaw_around/) — la mossa Nvidia raccontata da The Register
+
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 

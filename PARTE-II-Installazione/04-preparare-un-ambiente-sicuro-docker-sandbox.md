@@ -1,14 +1,17 @@
 # Capitolo 4 — Preparare un ambiente sicuro: Docker, sandbox e wrapper [★★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Perché l'isolamento dell'ambiente è il primo passo, non un optional
 - Le tre strategie di sandboxing: Docker nativo, NanoClaw, NemoClaw/OpenShell
 - Come scegliere il livello di isolamento giusto per il tuo caso d'uso
 - Setup pratico di Docker sandbox per OpenClaw
 
-**Prerequisiti:** Aver scelto dove installare (Capitolo 3). Conoscenza base del terminale.
+## Prerequisiti
 
-**Contenuto principale:**
+Aver scelto dove installare (Capitolo 3). Conoscenza base del terminale.
+
+## Contenuto principale
 
 1. **Perché il sandboxing viene prima di tutto.** OpenClaw ha accesso completo al sistema operativo: filesystem, rete, comandi shell, browser. Come ha scritto Simon Willison: "Non sono abbastanza coraggioso per farlo girare direttamente sul mio Mac." La containerizzazione non è un extra per paranoici — è il modo responsabile di usare un agente autonomo. CVE-2026-25253 ha dimostrato che un'istanza non patchata poteva essere compromessa in meno di 90 secondi via WebSocket.
 
@@ -73,13 +76,26 @@
    - Profilo seccomp personalizzato per limitare le syscall
    - `read_only: true` sul filesystem del container dove possibile
 
+**Prompt pronto:**
+> "Voglio configurare un Docker sandbox per OpenClaw a livello 1 (Docker per-session). Spiegami passo per passo: (1) come costruire l'immagine `openclaw-sandbox:bookworm-slim`, (2) come abilitarla in `agents.defaults.sandbox.mode`, (3) come testarla con un comando innocuo, (4) come verificare che il container giri come non-root con `--cap-drop=ALL`. Dammi i comandi esatti per il mio sistema operativo."
+
 **(!) Attenzione:** "Un container non è automaticamente un sandbox." La configurazione di default di Docker non protegge da tutto. Senza egress filtering, un agente compromesso può esfiltare dati verso qualsiasi host esterno. Senza `--cap-drop=ALL`, il container ha più permessi del necessario.
 
 **(i) Pro tip:** Per chi inizia, il percorso più pratico è: installazione su Mac Mini/VPS dedicato → Docker sandbox per-session (Livello 1) → quando ci si sente pronti, passare al Gateway containerizzato (Livello 2). Aggiungere NemoClaw solo quando si hanno dati business reali da proteggere.
 
 **(#) Debug:** Se il sandbox Docker non parte, verificare: Docker Desktop/Engine è in esecuzione? L'immagine `openclaw-sandbox:bookworm-slim` è stata costruita? Il socket Docker è montato correttamente? Su Linux, i permessi del volume sono di uid 1000? Lanciare `openclaw doctor` per diagnostica automatica.
 
-**Checklist di fine capitolo:**
+## Errori comuni e come risolverli
+
+| Sintomo | Causa probabile | Fix |
+|---------|-----------------|-----|
+| Sandbox non parte, container exit code 1 | Immagine `openclaw-sandbox:bookworm-slim` non costruita o non aggiornata | Costruire l'immagine con `docker build`, poi verificarne la presenza con `docker images` filtrando per `openclaw`. |
+| L'agente non riesce a scrivere file nel workspace | `workspaceAccess: "none"` o `"ro"` configurato di default | Cambiare in `"rw"` solo dopo aver capito le implicazioni; meglio iniziare con `"ro"` se possibile. |
+| Errori di rete dentro il container, l'agente non raggiunge un'API | Egress filtering troppo restrittivo (allowlist incompleta) | Aggiungere il dominio alla allowlist. Se il dominio è dinamico, considerare un proxy intermedio. |
+| Il container gira come root | Dockerfile senza direttiva `USER` o override sbagliato | Aggiungere `USER 1000` nel Dockerfile e verificare i permessi del volume montato (`chown -R 1000:1000`). |
+
+## Checklist di fine capitolo
+
 - [ ] Ho scelto il livello di isolamento adatto al mio caso d'uso
 - [ ] Docker Desktop/Engine è installato e funzionante
 - [ ] Ho costruito l'immagine sandbox (se uso Docker sandbox)
@@ -87,14 +103,15 @@
 - [ ] Ho verificato che il container gira come non-root
 - [ ] Ho configurato egress filtering se espongo il sistema a internet
 
-## Errori comuni e come risolverli
+## Link e risorse utili
 
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
+- [Run OpenClaw Securely in Docker Sandboxes](https://www.docker.com/blog/run-openclaw-securely-in-docker-sandboxes/) — post ufficiale di Docker sull'integrazione
+- [Sandboxing — documentazione ufficiale](https://docs.openclaw.ai/gateway/sandboxing) — reference completo sulle modalità di sandbox
+- [Running OpenClaw in Docker](https://til.simonwillison.net/llms/openclaw-docker) — TIL di Simon Willison con setup pratico
+- [OpenClaw Docker: Hardening for Production 2026](https://advenboost.com/openclaw-docker-hardening-your-ai-sandbox-for-production-2026/) — guida all'hardening per ambienti reali
+- [NemoClaw Explained: Enterprise Security](https://particula.tech/blog/nvidia-nemoclaw-openclaw-enterprise-security) — approfondimento sull'OpenShell di Nvidia
 
-| Sintomo | Causa probabile | Fix |
-|---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
-
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 

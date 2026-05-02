@@ -1,12 +1,17 @@
 # Capitolo 5 — Installazione step-by-step [★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Come preparare il computer per l'installazione
 - Come completare l'onboarding senza errori
 - Come scegliere modello LLM, autenticazione e canale
 - Come effettuare il primo "hatch"
 
-**Contenuto principale:**
+## Prerequisiti
+
+Aver letto il [Capitolo 3](./03-scegliere-dove-installare-openclaw.md) e scelto dove installare OpenClaw. Per un setup sicuro è caldamente consigliato il [Capitolo 4](./04-preparare-un-ambiente-sicuro-docker-sandbox.md). Ti serve: account utente dedicato, terminale, Chrome installato, una Gmail dedicata.
+
+## Contenuto principale
 
 1. **Pre-work (10 minuti).** 
    - Creare un account admin dedicato sul computer
@@ -41,20 +46,29 @@
 
 ## Errori comuni e come risolverli
 
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
-
 | Sintomo | Causa probabile | Fix |
 |---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
+| Lo script `curl … install.sh` fallisce | Rete dietro proxy aziendale o certificate pinning | Scaricare lo script (`curl -O`), ispezionarlo, lanciarlo manualmente con `bash install.sh`. |
+| Errore "Anthropic API key invalid" | Tentativo di usare la sottoscrizione Claude Pro/Max (bloccata dal 4 aprile 2026) invece di una API key | Generare una API key dal pannello Anthropic e usarla. Vedi Cap. 14 per le alternative al ban. |
+| La TUI non parte dopo l'installazione | Terminale non TTY (es. SSH senza `-t`) | Lanciare in un vero terminale o aggiungere `-t` allo `ssh`. |
+| Onboarding completo ma `openclaw status` dice "stopped" | Il Gateway non è stato avviato dopo l'installazione | `openclaw start` o riavviare il servizio se installato come daemon. |
 
 ## Checklist di fine capitolo
 
-> *Da adattare ai passi concreti coperti in questo capitolo.*
+- [ ] Account utente dedicato e Gmail dedicata creati
+- [ ] OpenClaw installato senza errori (`openclaw --version` risponde)
+- [ ] Modello LLM configurato con API key valida (NON sottoscrizione)
+- [ ] Almeno un canale collegato (`openclaw channels status` lo conferma)
+- [ ] Primo "hatch" completato e l'agente risponde
+- [ ] `openclaw status` mostra "running"
 
-- [ ] _TODO: punto di verifica chiave 1_
-- [ ] _TODO: punto di verifica chiave 2_
-- [ ] _TODO: punto di verifica chiave 3_
+## Link e risorse utili
 
+- [Documentazione ufficiale di installazione](https://docs.openclaw.ai) — guide step-by-step e troubleshooting
+- [How to install OpenClaw without getting banned](https://www.shareuhack.com/en/posts/openclaw-setup-tutorial-2026) — tutorial aggiornato post-ban Anthropic
+- [Anthropic provider docs (OpenClaw)](https://docs.openclaw.ai/providers/anthropic) — come configurare la chiave API Anthropic dopo il 4 aprile 2026
+
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 

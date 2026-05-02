@@ -1,12 +1,17 @@
 # Capitolo 6 — Configurare Telegram (e altri canali) [★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Come creare un bot Telegram con @BotFather (step-by-step)
 - Come configurare WhatsApp via Baileys
 - Come collegare Slack e Discord per uso lavorativo
 - Come scegliere il canale giusto per ogni caso d'uso
 
-**Contenuto principale:**
+## Prerequisiti
+
+Aver completato l'installazione del [Capitolo 5](./05-installazione-step-by-step.md). Smartphone con Telegram (per il setup iniziale del bot via @BotFather).
+
+## Contenuto principale
 
 1. **Telegram (consigliato per iniziare).** Guida passo-passo completa:
    - Scaricare Telegram sul telefono
@@ -42,26 +47,31 @@
    - Ecosistema Apple → iMessage via BlueBubbles
    - Mercato cinese → WeChat
 
----
-
-## PARTE III — Il primo mese con OpenClaw
+**Prompt pronto:**
+> "Guidami nella creazione di un bot Telegram da collegare a te. Spiegami in ordine: (1) cosa fare in @BotFather per ottenere il token, (2) come passarlo a `openclaw channels login --channel telegram`, (3) come testare che ci siamo davvero parlando, (4) come abilitare il mention gating se ti aggiungerò a un gruppo. Vai diretto, niente preamboli."
 
 ## Errori comuni e come risolverli
 
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
-
 | Sintomo | Causa probabile | Fix |
 |---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
+| Bot Telegram non risponde | Token incollato in modo incompleto o bot non attivato in @BotFather | Rigenerare il token in @BotFather e rifare `openclaw channels login --channel telegram`. |
+| WhatsApp QR scade prima della scansione | Tempo limite stretto, smartphone lontano dalla scrivania | Avere lo smartphone in mano prima di lanciare il comando, ripetere se serve. |
+| Account WhatsApp bannato | Troppo traffico automatizzato su numero personale | Usare un numero secondario dedicato all'agente; limitare il volume di messaggi automatici. |
+| Nei gruppi l'agente risponde a ogni messaggio | Mention gating non attivo | Configurare il bot per rispondere solo se menzionato (`@nomebot`) o solo a comandi (`/`). |
 
 ## Checklist di fine capitolo
 
-> *Da adattare ai passi concreti coperti in questo capitolo.*
+- [ ] Almeno un canale collegato (`openclaw channels status` lo conferma)
+- [ ] Test di andata e ritorno: ho mandato un messaggio e ho ricevuto risposta
+- [ ] Mention gating configurato per i gruppi (l'agente non risponde a tutto)
+- [ ] Token e secrets salvati nel password manager, mai in chiaro
 
-- [ ] _TODO: punto di verifica chiave 1_
-- [ ] _TODO: punto di verifica chiave 2_
-- [ ] _TODO: punto di verifica chiave 3_
+## Link e risorse utili
 
+- [Documentazione ufficiale](https://docs.openclaw.ai) — reference dei canali supportati e dei comandi `openclaw channels`
+- [OpenClaw Setup Guide 2026](https://popularaitools.ai/blog/openclaw-setup-guide-2026) — walkthrough con screenshot per Telegram e WhatsApp
+
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 

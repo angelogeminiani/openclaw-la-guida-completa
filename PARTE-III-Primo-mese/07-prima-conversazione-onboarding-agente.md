@@ -1,12 +1,17 @@
 # Capitolo 7 — La prima conversazione: fare l'onboarding del tuo agente [★★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Cosa dire al tuo agente nei primi 10 minuti
 - Come si auto-configura scrivendo i file .md
 - Come dargli un nome, una personalità e un primo task
 - Il mindset del "manager di agenti"
 
-**Contenuto principale:**
+## Prerequisiti
+
+Aver completato l'installazione ([Capitolo 5](../PARTE-II-Installazione/05-installazione-step-by-step.md)) e collegato almeno un canale ([Capitolo 6](../PARTE-II-Installazione/06-configurare-telegram-e-altri-canali.md)).
+
+## Contenuto principale
 
 1. **Mettersi il cappello da manager.** Come dice Claire Vo: "Come un dipendente, il tuo agente non può essere bravo in tutto. Pensa a un ruolo specifico." Assistente personale? Social media manager? Sviluppatore? Iniziare con un ruolo e aggiungerne altri dopo.
 
@@ -38,20 +43,26 @@
 
 ## Errori comuni e come risolverli
 
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
-
 | Sintomo | Causa probabile | Fix |
 |---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
+| L'agente sembra "vuoto", senza personalità | USER.md/SOUL.md non sono stati popolati durante l'onboarding | Dedicare 30 minuti reali, condividere ruolo, sfide, preferenze, cosa NON deve mai fare. |
+| Risposte generiche e prolisse | SOUL.md ancora di default | Rivedere SOUL.md: aggiungere sezione "Boundaries" con almeno 3 "non fare" e "Vibe" con tono richiesto. |
+| L'agente non chiama l'utente per nome | Nome non scritto in USER.md | Dirglielo esplicitamente ("mi chiamo X, salvalo nel mio profilo") e verificare con `cat .openclaw/<nome>-workspace/USER.md`. |
 
 ## Checklist di fine capitolo
 
-> *Da adattare ai passi concreti coperti in questo capitolo.*
+- [ ] Nome, ruolo, fuso orario e preferenze condivise con l'agente
+- [ ] USER.md popolato (verificato con `cat`)
+- [ ] SOUL.md ha almeno 3 regole di "non fare"
+- [ ] Primo task piccolo completato dall'agente
+- [ ] L'agente sa cosa NON deve mai fare in autonomia
 
-- [ ] _TODO: punto di verifica chiave 1_
-- [ ] _TODO: punto di verifica chiave 2_
-- [ ] _TODO: punto di verifica chiave 3_
+## Link e risorse utili
 
+- [The Complete Guide to Building Your Personal AI Agent](https://www.lennysnewsletter.com/p/openclaw-the-complete-guide-to-building) — i consigli di Claire Vo sull'onboarding
+- [Use OpenClaw to Build a Business That Runs Itself](https://creatoreconomy.so/p/use-openclaw-to-build-a-business-that-runs-itself-nat-eliason) — l'approccio di Nat Eliason all'onboarding
+
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 

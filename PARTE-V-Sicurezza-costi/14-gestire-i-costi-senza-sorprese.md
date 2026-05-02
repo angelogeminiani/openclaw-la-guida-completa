@@ -1,13 +1,18 @@
 # Capitolo 14 — Gestire i costi senza sorprese [★]
 
-**Cosa imparerai:**
+## Cosa imparerai
+
 - Come funziona il pricing di OpenClaw (gratis + costi LLM)
 - Il ban Anthropic del 4 aprile 2026: cosa è successo e cosa fare
 - Stima costi per profilo d'uso
 - Strategie di ottimizzazione
 - Come monitorare la spesa
 
-**Contenuto principale:**
+## Prerequisiti
+
+Aver completato l'installazione ([Capitolo 5](../PARTE-II-Installazione/05-installazione-step-by-step.md)). Idealmente, una settimana di uso reale per avere un punto di partenza sui costi.
+
+## Contenuto principale
 
 1. **Come funziona.** OpenClaw è gratuito (MIT). Il costo è interamente nel modello LLM:
    - **API key** (consigliato, più affidabile): si paga per token consumati
@@ -31,7 +36,10 @@
    - **Reazioni della community:** Steinberger ha definito la decisione "triste per l'ecosistema" e ha rivelato che lui e Dave Morin hanno cercato di convincere Anthropic, ottenendo solo un ritardo di una settimana. Garry Tan (Y Combinator): "Potrebbe rivelarsi un errore strategico o un colpo di genio." Molti utenti stanno migrando verso modelli OpenAI (Codex 5.4), modelli locali (Nemotron) o ChatGPT come provider principale.
    - **Lezione per il lettore:** Non costruire mai un workflow critico su un singolo provider. La scelta model-agnostic di OpenClaw è un punto di forza — usarla.
 
-   **(!) Attenzione:** Se il tuo agente smette improvvisamente di funzionare e usavi una sottoscrizione Claude, il motivo è questo ban. Passa a una API key o cambia modello.
+   **Prompt pronto:**
+> "Mostrami l'analisi della tua spesa LLM dell'ultima settimana. Per ogni giorno riporta: numero di chiamate, token in ingresso/uscita, modello usato, costo stimato. Identifica: (1) il singolo task più costoso, (2) le opportunità di routing su modelli più economici (es. Haiku per heartbeat, Opus solo per ragionamento), (3) eventuali cron in loop o conversazioni stantie. Proponi un piano per ridurre la spesa del 30% senza perdere qualità."
+
+**(!) Attenzione:** Se il tuo agente smette improvvisamente di funzionare e usavi una sottoscrizione Claude, il motivo è questo ban. Passa a una API key o cambia modello.
 
 3. **Stima costi per profilo d'uso (post-ban, aprile 2026):**
    - **Leggero** (1 agente, task semplici, pochi cron): $6–30/mese con API key
@@ -52,26 +60,31 @@
 
 5. **Monitorare la spesa.** Comando `/status`, dashboard del provider API (Anthropic Console, OpenAI Dashboard), log dei costi per agente. Impostare alert sul provider per evitare sorprese.
 
----
-
-## PARTE VI — Manutenzione e ottimizzazione
-
 ## Errori comuni e come risolverli
-
-> *Sezione da rifinire in fase di stesura. Annota qui i sintomi reali che incontri seguendo il capitolo, le cause probabili e i fix verificati.*
 
 | Sintomo | Causa probabile | Fix |
 |---------|-----------------|-----|
-| _TODO_ | _TODO_ | _TODO_ |
+| Bolletta API raddoppiata in un giorno | Cron in loop o conversazione che cresce a dismisura | `openclaw status` per identificare l'ultimo cron attivo, fermarlo, configurare budget di iterazioni. |
+| ChatGPT Plus blocca dopo poche ore | Rate limit della sottoscrizione raggiunto | Per workload pesanti passare a API a consumo o ai modelli locali (Nemotron, Kimi K2.5). |
+| Opus usato per task semplici → costo elevato | Routing modello non configurato | Configurare model routing: Opus per ragionamento complesso, Haiku/Flash per heartbeat e cron. |
+| Errore "insufficient quota" mid-conversazione | Hard cap del provider raggiunto | Aumentare il limite o passare a un secondo provider come fallback. |
 
 ## Checklist di fine capitolo
 
-> *Da adattare ai passi concreti coperti in questo capitolo.*
+- [ ] Conosco il pricing del mio provider LLM (input/output, per modello)
+- [ ] Ho impostato un budget mensile e un alert nel pannello del provider
+- [ ] Routing modello configurato (Opus solo dove serve, Haiku/Flash per heartbeat)
+- [ ] Verifico la spesa almeno una volta a settimana con `/status` o dashboard
+- [ ] Ho un piano B se il provider blocca o aumenta i prezzi
 
-- [ ] _TODO: punto di verifica chiave 1_
-- [ ] _TODO: punto di verifica chiave 2_
-- [ ] _TODO: punto di verifica chiave 3_
+## Link e risorse utili
 
+- [Anthropic blocks OpenClaw from Claude subscriptions](https://thenextweb.com/news/anthropic-openclaw-claude-subscription-ban-cost) — cronaca del ban del 4 aprile 2026 e impatto sui costi
+- [Rebuilt my OpenClaw setup for $15/month](https://medium.com/@rentierdigital/anthropic-just-killed-my-200-month-openclaw-setup-so-i-rebuilt-it-for-15-9cab6814c556) — caso studio "$200 → $15/mese" con dettagli pratici
+- [Anthropic provider docs (OpenClaw)](https://docs.openclaw.ai/providers/anthropic) — configurazione di chiavi API Anthropic post-ban
+- [Tell HN: Anthropic no longer allowing Claude for OpenClaw](https://news.ycombinator.com/item?id=47633396) — discussione community con alternative concrete
+
+Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 
 ---
 
