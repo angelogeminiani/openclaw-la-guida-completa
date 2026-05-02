@@ -13,21 +13,93 @@ Nessuno. Questo è il punto di ingresso del libro: ti basta una mezz'ora e vogli
 
 ## Contenuto principale
 
-1. **L'era degli agenti personali.** Il 2026 è l'anno in cui l'intelligenza artificiale ha smesso di "rispondere" e ha iniziato ad "agire". OpenClaw incarna questo salto: è un framework open-source (licenza MIT) che trasforma un LLM in un dipendente digitale sempre attivo, in grado di leggere la posta, controllare il calendario, navigare il web, scrivere codice e comunicare via Telegram, WhatsApp, Slack e altri 20+ canali.
+### L'era degli agenti personali
 
-2. **La storia.** Peter Steinberger, fondatore austriaco di PSPDFKit (exit da €100 M), dopo un periodo di pausa torna a programmare nel 2025 con lo spirito del "vibe coding". A novembre 2025 pubblica Clawdbot come progetto personale su GitHub. A gennaio 2026, dopo una disputa sul marchio con Anthropic (il nome era un gioco di parole su "Claude"), il progetto diventa Moltbot e poi, tre giorni dopo, OpenClaw — perché "Moltbot non suonava bene". In 60 giorni raggiunge 247.000+ GitHub stars, il record assoluto, superando ciò che React ha impiegato dieci anni a ottenere. Il 14 febbraio 2026, Steinberger annuncia l'ingresso in OpenAI e il trasferimento del progetto a una fondazione open-source indipendente, supportata da OpenAI ma non posseduta da essa. Il 4 aprile 2026, Anthropic blocca l'uso delle sottoscrizioni Claude Pro/Max con OpenClaw e tutti i tool terzi, provocando un terremoto nella community (vedi Capitolo 14).
+Per vent'anni abbiamo chiamato "intelligenti" software che, in realtà, erano dizionari verbali un po' sofisticati. Chiedevi qualcosa, ricevevi una risposta. Bello, utile, niente di rivoluzionario. Il 2026 è l'anno in cui questa abitudine si è rotta. Non perché i modelli linguistici siano diventati improvvisamente più bravi a parlare, ma perché qualcuno ha capito che la cosa interessante non è la conversazione: è l'azione.
 
-3. **Perché è diverso.** Confronto tassonomico: chatbot (ChatGPT, Claude chat) → assistente proattivo (Siri, Alexa) → agente autonomo (OpenClaw). Tabella comparativa con ChatGPT Agent, Siri, Alexa, Google Assistant, e agenti proprietari (Manus/Meta). OpenClaw è local-first, model-agnostic (Claude, GPT, Gemini, Nemotron, modelli locali), auto-installante (può crearsi nuove skill) e opera in background 24/7 su un computer dedicato.
+OpenClaw è la dimostrazione più visibile di questo passaggio. È un framework open-source con licenza MIT che prende un LLM — Claude, GPT, Gemini, Nemotron, un modello locale, quello che preferisci — e lo trasforma in qualcosa di molto più simile a un dipendente che a un assistente vocale. Un dipendente digitale che vive su un computer dedicato, ha i suoi canali (Telegram, WhatsApp, Slack e altri venti), legge la posta al posto tuo, controlla il calendario, scrive codice, naviga il web, prende decisioni nei limiti che gli hai dato. Quando Nvidia decide di ribattezzare la categoria, non usa giri di parole: lo definisce "the operating system for personal AI." È una frase di marketing, certo, ma cattura il punto.
 
-4. **Il fenomeno culturale.** 343.000+ GitHub stars (aprile 2026), 67.000+ fork, oltre 200.000 agenti registrati su Moltbook (il social network per agenti AI, acquistato da Meta a marzo 2026). La mascotte del lobster, i meme, la community su Discord/X, le hosted platform (StartClaw, MyClaw, SimpleClaw, UniClaw, Plus One). La frase di Nvidia: "OpenClaw is the operating system for personal AI."
+Per capire la differenza concreta, immagina questa scena. Sono le 7:00 del mattino. Il telefono vibra: sul canale Telegram dedicato c'è un messaggio del tuo agente. Dice che hai 23 email nuove, di cui 4 che richiedono risposta entro la giornata; il primo meeting è alle 9:30 con un cliente nuovo, e ha già preparato un brief di tre paragrafi su di lui leggendo il sito e l'ultima newsletter; il caffè è finito ieri sera (l'ha visto da una nota su Obsidian) e ha aggiunto la marca giusta al carrello di un servizio di consegna ma non lo conferma finché non glielo dici tu. Tu rispondi "ok, conferma il caffè e mandami il brief". Lui esegue. Niente di tutto questo è successo perché glielo hai chiesto stamattina: era già nei suoi compiti, gestiti da una manciata di cron job che lui stesso si è scritto la prima settimana che lavorate insieme. Questo è un agente. Un chatbot, alle 7:00, dorme.
 
-5. **Confronto con le alternative.** Tabella riepilogativa:
-   - **NanoClaw**: alternativa minimalista (~700 righe di TypeScript), container Docker isolati, Claude-only, più sicuro out-of-the-box, meno integrazioni
-   - **NemoClaw (Nvidia)**: wrapper di sicurezza enterprise per OpenClaw, OpenShell sandboxing a livello kernel, policy YAML, privacy router per modelli locali/cloud
-   - **IronClaw (NEAR AI)**: riscrittura in Rust con focus su memory safety, zero telemetria
-   - **ZeroClaw**: binary minimale (3,4 MB), deny-by-default, ideale per edge computing
-   - **Moltworker**: hosting su Cloudflare, zero gestione infrastruttura
-   - **Claude Code / Codex CLI**: agenti specializzati per coding, non general-purpose
+### Da Clawdbot a OpenClaw: 90 giorni
+
+La storia di OpenClaw è anomala perfino per gli standard del 2026. A novembre 2025 Peter Steinberger — austriaco, fondatore di PSPDFKit con un'exit da circa 100 milioni di euro alle spalle, in pausa creativa dopo l'uscita dall'azienda — pubblica su GitHub un esperimento personale chiamato Clawdbot. È un piccolo wrapper su Claude che permette di chattare con un agente via Telegram. Niente di pretenzioso: è "vibe coding", come lo definirà lui stesso. Pochi giorni dopo, il progetto ha già qualche centinaio di stelle.
+
+A gennaio 2026 arriva la prima frizione: Anthropic contesta l'uso del nome perché "Clawd" gioca troppo apertamente con "Claude" e con la mascotte ufficiale del lobster. Steinberger rinomina il progetto Moltbot. Il nome resiste tre giorni — "Moltbot non suonava bene", riconoscerà poi — e diventa OpenClaw. È da qui che la curva di adozione esplode. Il 24 gennaio 2026 DigitalOcean lancia il primo Marketplace 1-Click ufficiale per OpenClaw, segnale che il progetto è uscito dall'ambito hobbystico. Quattro giorni dopo, il 28 gennaio, Matt Schlicht presenta Moltbook: un social network in cui non sono gli umani a postare, ma i loro agenti. Sembra una boutade; al 5 febbraio ha già più di 200.000 agenti registrati. In sessanta giorni il repository GitHub ha superato 247.000 stelle, un ritmo che React, per riferimento, non ha avvicinato in nessuno dei suoi anni.
+
+Il 14 febbraio 2026 arriva il colpo di scena. Steinberger annuncia di aver accettato un ruolo in OpenAI e di trasferire OpenClaw a una fondazione open-source indipendente, supportata ma non controllata da OpenAI. Per molti progetti questo sarebbe stato il momento dell'incertezza; per OpenClaw è il momento della legittimazione. La community capisce che il software resterà open, BYOK (bring-your-own-key), model-agnostic. Le stelle continuano a salire: ad aprile 2026 sono oltre 343.000, con 67.000+ fork. Il 10 marzo Meta Superintelligence Labs annuncia l'acquisizione di Moltbook: la prima exit visibile dell'ecosistema, mentre il framework su cui poggia rimane open. La biforcazione è netta e ha conseguenze importanti per la governance, di cui parla il Capitolo 21.
+
+#### La svolta del 4 aprile
+
+Il 4 aprile 2026 arriva il terremoto. Anthropic blocca via OAuth l'uso delle sottoscrizioni Claude Pro e Max con OpenClaw e con qualunque altro tool di terze parti. Chi finanziava l'agente con i 20 dollari al mese del Pro si ritrova spento dall'oggi al domani; chi era passato a Max scopre che l'unico percorso supportato è ora la API key dedicata, con costi che si misurano per token. È un giorno di panico nella community: thread di Hacker News in tempo reale, fork del progetto pensati per altri provider, guide spuntate nel giro di ore per migrare a Kimi K2.5, MiniMax M2.5, GPT-5.1 o ai modelli locali Nemotron. Il Capitolo 14 ricostruisce la cronologia ora per ora; per ora basta sapere che da quel giorno l'equazione dei costi di OpenClaw è cambiata, e che il libro tiene conto di entrambi gli scenari (pre-ban e post-ban) perché molti lettori incontreranno tutorial vecchi che non lo fanno.
+
+### Chatbot, assistente, agente: tre cose diverse
+
+Il marketing AI ha mescolato in una sola parola — "assistente" — tre categorie che funzionano in modi profondamente diversi. La distinzione è quella che fa funzionare o non funzionare le aspettative del lettore.
+
+| Caratteristica | Chatbot (ChatGPT, Claude chat) | Assistente proattivo (Siri, Alexa, Google Assistant) | Agente autonomo (OpenClaw) |
+|---|---|---|---|
+| Inizio dell'azione | sempre l'utente | utente o trigger predefinito (sveglia, calendario) | utente, trigger, oppure l'agente stesso (cron, heartbeat) |
+| Memoria | sessione corrente, opzionale persistente | template ristretti (preferenze, lista spesa) | persistente, multi-livello, editabile |
+| Strumenti | quelli decisi dal vendor | quelli decisi dal vendor | configurabili dall'utente, espandibili a runtime |
+| Esecuzione fra una richiesta e l'altra | nessuna | nessuna | sì, in background 24/7 |
+| Integrazioni | preconfezionate | preconfezionate | qualsiasi cosa abbia un'API o una shell |
+| Lock-in del modello | totale | totale | nessuno (BYOK) |
+
+Un chatbot non sa che ora è quando non gli stai parlando. Un assistente proattivo sa che ora è ma agisce solo dentro i binari che il vendor ha previsto. Un agente autonomo sa che ora è, decide cosa fare di sua iniziativa entro confini che hai scritto tu, e quando non sa cosa fare ti scrive per chiedere. È il tipo di differenza che si capisce solo dopo qualche giorno di convivenza, ed è il motivo per cui il Capitolo 7 di questo libro è dedicato esclusivamente ai primi dieci minuti di onboarding.
+
+#### L'architettura in 60 secondi
+
+Sotto il cofano, OpenClaw è composto da quattro pezzi che lavorano insieme. Il primo è il **Gateway**, un processo locale che fa da centralino: tutto entra e tutto esce da qui. Il secondo sono i **canali**, le connessioni verso l'esterno (Telegram, WhatsApp, Slack, Discord, Signal, iMessage e altri ancora) — ogni canale è un plug-in che parla un protocollo specifico e consegna i messaggi al Gateway. Il terzo sono gli **agenti**, identità separate con propri file `SOUL.md` e `IDENTITY.md`, ognuno con il suo workspace, le sue skill, la sua memoria. Il quarto sono le **skill**: cartelle con un `SKILL.md` dentro che insegnano all'agente come fare cose specifiche (mandare email, leggere PDF, cercare sul web). A coordinare il tempo ci sono i **cron job**, che fanno scattare azioni a intervalli regolari, e l'**heartbeat**, un battito di sistema che permette all'agente di pensare anche quando nessuno gli ha appena scritto.
+
+Il flusso di un task tipico si legge così: arriva un messaggio su un canale, il Gateway lo riceve e lo instrada all'agente giusto sulla base del binding configurato, l'agente apre o riprende una sessione, ragiona, chiama una o più skill, esegue, e infine torna al canale con la risposta. In pseudocodice, un ciclo minimo:
+
+```yaml
+# A simplified message lifecycle, top-down.
+inbound:
+  channel: telegram
+  binding: agent.polly
+agent:
+  sessions: main
+  thinks_with: claude-sonnet-4.6
+  uses_skills: [gog, summarize, web_search]
+outbound:
+  reply_to: telegram
+  attach: [link_preview, optional_artifact]
+```
+
+Il Capitolo 2 sviluppa il modello mentale, il Capitolo 20 entra nei dettagli tecnici (WebSocket control plane, Pi agent runtime, Live Canvas). Per ora è sufficiente avere questa mappa in testa.
+
+### Per chi è OpenClaw — e per chi non lo è
+
+OpenClaw funziona molto bene per tre profili. Il primo è il **knowledge worker** che vive di email, calendario, ricerca, documenti: un agente che gestisce il digest mattutino, prepara i meeting e segue i lead libera due o tre ore di lavoro a basso valore. Il secondo è il **founder o solopreneur** che vuole automatizzare interi pezzi di azienda: Nat Eliason ne ha parlato apertamente raccontando una "zero-human company" da oltre 177.000 dollari in due mesi, costruita sopra un piccolo team di agenti specializzati. Il terzo è la **famiglia o coppia tech-savvy** che adotta un agente come maggiordomo digitale per spese, calendario condiviso, viaggi, scuola dei bambini.
+
+OpenClaw è una scelta sbagliata per altri tre profili, almeno oggi. Chi cerca **un'esperienza simile a ChatGPT**, dove la cosa più sofisticata è una conversazione lunga, qui si trova davanti un'overdose di complessità che non gli serve: meglio restare sul prodotto consumer. Chi opera in **ambienti regolati con vincoli stretti di data residency** (sanità, finanza, settore pubblico) deve fare un'analisi seria di rischio e di conformità prima di pensarci, perché il modello di esecuzione di OpenClaw — accesso pieno al filesystem, esecuzione di comandi shell, comunicazione con API esterne — non è compatibile out-of-the-box con la maggior parte dei requisiti regolatori; in quei casi conviene guardare a NemoClaw o IronClaw (vedi più sotto). Chi pensa di provarlo "giusto un attimo" sul **portatile di lavoro** sta facendo un errore di sicurezza che il Capitolo 13 spiega in dettaglio: OpenClaw va su un computer dedicato, sempre.
+
+### Il fenomeno culturale
+
+I numeri di adozione del progetto sono difficili da inquadrare con metriche tradizionali. Ad aprile 2026 il repository GitHub conta 343.000+ stelle e 67.000+ fork, con oltre 200.000 agenti registrati su Moltbook prima dell'acquisizione Meta. Sono dati che, da soli, dicono poco; quello che li rende interessanti è il tessuto culturale che si è formato attorno. La community si chiama #LobsterGang, prende il nome dalla mascotte (un'aragosta digitale che muta — "molts" — quando l'agente si aggiorna), parla un suo gergo fatto di submolts, hatch, soul-files, e produce meme con la stessa frequenza con cui produce pull request.
+
+Sopra il framework è cresciuto un mercato di piattaforme che eliminano la frizione di installare in proprio: StartClaw, MyClaw, SimpleClaw, UniClaw, Plus One, OpenClaw Desktop. Sono tutte hosted, ognuna con un taglio diverso (alcune più orientate ai team, altre alle famiglie, una perfino integrata in una newsletter). Ne parla il Capitolo 3, che aiuta a scegliere se installare in proprio o appoggiarsi a un servizio. In parallelo è esploso il registry di skill chiamato ClawHub, con migliaia di skill di terze parti — di cui, va detto subito, una percentuale non trascurabile è risultata problematica dal punto di vista della sicurezza (è la storia di ClawHavoc, raccontata nel Capitolo 13).
+
+Claire Vo, che ha scritto sulla guida-fiume di Lenny's Newsletter una delle analisi più lette sul tema, sintetizza l'effetto del prodotto come "il primo prodotto agentico che provoca la sensazione di assumere un team". È una frase ottimistica, e non andrebbe presa alla lettera; ma cattura perché OpenClaw, a differenza di tante automazioni che si "imparano da capo", richiede un'attitudine da manager più che da utente.
+
+### Confronto con le alternative
+
+OpenClaw non è solo nel suo segmento, e tutto il libro presuppone che il lettore sia in grado di scegliere consapevolmente. La tabella seguente riassume le sei alternative più rilevanti ad aprile 2026.
+
+| Alternativa | Target | Sandboxing | Lock-in modello | Maturità | Quando sceglierla |
+|---|---|---|---|---|---|
+| **NanoClaw** | hobbisti e dev prudenti | container Docker isolati per chat | Claude-only | giovane ma stabile | vuoi il minimo set-up sicuro e non ti serve il multi-canale ricco |
+| **NemoClaw** (Nvidia) | enterprise | OpenShell a livello kernel + policy YAML | multi (router locale/cloud) | early enterprise | hai requisiti di compliance e vuoi lo stack Nvidia |
+| **IronClaw** (NEAR AI) | privacy-first | sandbox Rust con focus memory safety | model-agnostic | early | privilegi safety formale e zero telemetria |
+| **ZeroClaw** | edge computing | binary 3,4 MB, deny-by-default | model-agnostic | early | vuoi un agente su device costretto (Pi, micro-VPS) |
+| **Moltworker** | non vuoi gestire infrastruttura | sandbox gestita da Cloudflare | proprietaria del provider | hosted | preferisci l'esperienza serverless |
+| **Claude Code / Codex CLI** | sviluppatori | nessuna (gira nel terminale) | Anthropic / OpenAI | maturo | il tuo unico caso d'uso è il coding |
+
+In termini pratici: scegli OpenClaw quando vuoi il sistema più completo, multi-canale, multi-agente, con la possibilità di sostituire il modello in qualsiasi momento; scegli NanoClaw se preferisci un perimetro più piccolo e ti basta Claude; scegli NemoClaw se la conversazione che dovrai fare con il tuo team di sicurezza prevede già la parola "policy"; scegli IronClaw se la sicurezza la prendi sul serio fin dal linguaggio con cui è scritto il software; scegli Claude Code o Codex CLI se non ti interessa l'agente personale e ti basta uno strumento da terminale per programmare. Il libro dedica capitoli specifici a ciascuna alternativa quando entra nei rispettivi temi (sicurezza al Cap. 13, deploy al Cap. 19, ecosistema al Cap. 21).
+
+**(i) Pro tip:** se sei indeciso fra OpenClaw e una delle alternative, non scegliere oggi. Leggi il Capitolo 3 (dove installare) e il Capitolo 13 (sicurezza) e poi torna qui: il 90% delle decisioni si prende sulla base del *dove* prima ancora che del *cosa*.
 
 **Prompt pronto:**
 > "Presentati. Dimmi chi sei, cosa sai fare e quali limiti hai. Elenca i canali attraverso cui possiamo parlare e le skill che hai installate."
