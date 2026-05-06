@@ -4,8 +4,9 @@
 
 - Che cos'è un agente autonomo e in che cosa si distingue da un chatbot
 - La storia del progetto: da Clawdbot a OpenClaw in 90 giorni
-- Perché Jensen Huang l'ha definito "il rilascio software più importante di sempre"
+- Perché Nvidia l'ha definito "the operating system for personal AI"
 - In che modo si differenzia da ChatGPT, Siri e Alexa
+- Come si distribuisce il lavoro di un agente in una giornata tipo
 
 ## Prerequisiti
 
@@ -61,7 +62,7 @@ inbound:
   binding: agent.polly
 agent:
   sessions: main
-  thinks_with: claude-sonnet-4.6
+  thinks_with: claude-sonnet-4-6
   uses_skills: [gog, summarize, web_search]
 outbound:
   reply_to: telegram
@@ -69,6 +70,20 @@ outbound:
 ```
 
 Il Capitolo 2 sviluppa il modello mentale, il Capitolo 20 entra nei dettagli tecnici (WebSocket control plane, Pi agent runtime, Live Canvas). Per ora è sufficiente avere questa mappa in testa.
+
+### Una giornata tipo con il tuo agente
+
+Per ancorare l'idea nel concreto, segui un agente attraverso una giornata qualunque. Non è prescrittivo — il tuo agente farà cose diverse — ma serve a vedere come il lavoro autonomo si distribuisce nel tempo, senza che tu debba pensarci.
+
+**Mattina, 7:00.** L'heartbeat ha già fatto scattare il digest delle email e del calendario. Sul tuo Telegram trovi tre paragrafi: cosa è successo dalle 18:00 di ieri, cosa serve oggi, cosa puoi ignorare. Tu rispondi due monosillabi ("conferma il caffè", "no, non rispondo io a quella mail"). L'agente esegue.
+
+**Mezzogiorno, 12:30.** Stai per andare a pranzo. Ricevi un ping: il cliente delle 14:30 ha appena pubblicato un post su LinkedIn che probabilmente vorrai citare nel meeting. Nessun agente di calendario te lo avrebbe segnalato. Il tuo sì, perché ha dei cron job che, mezz'ora prima di ogni meeting, controllano i canali pubblici del partecipante esterno e ti mandano un breve aggiornamento rispetto al brief di stamattina.
+
+**Pomeriggio, 15:45.** Il meeting è andato bene. Mentre cammini al supermercato scrivi all'agente: "preparami una bozza di follow-up per il cliente X, tienila corta, riprendi il punto sul pricing". Quando arrivi a casa, nella cartella `~/Drafts/` trovi un file `.md` con la bozza. Tu correggi due frasi e dai l'OK per l'invio.
+
+**Sera, 22:00.** Tu stai per spegnere il telefono. L'agente sta entrando nella sua finestra di manutenzione: sintetizza la giornata in una nota, aggiorna il knowledge graph con tre fatti nuovi, prepara il digest per domani. Se gli hai dato il permesso (al Cap. 13 vediamo come), può anche eseguire il backup della cartella `.openclaw/` su un volume crittografato.
+
+Niente di quanto sopra è inventato: sono pattern reali, ricavati dai workflow del Cap. 8 e dai cron del Cap. 18. Il punto del capitolo è solo riconoscere che, fra le 7:00 e le 22:00, il lavoro è successo perché qualcuno lo ha *fatto succedere*, non perché tu lo hai chiesto.
 
 ### Per chi è OpenClaw — e per chi non lo è
 
@@ -99,6 +114,16 @@ OpenClaw non è solo nel suo segmento, e tutto il libro presuppone che il lettor
 
 In termini pratici: scegli OpenClaw quando vuoi il sistema più completo, multi-canale, multi-agente, con la possibilità di sostituire il modello in qualsiasi momento; scegli NanoClaw se preferisci un perimetro più piccolo e ti basta Claude; scegli NemoClaw se la conversazione che dovrai fare con il tuo team di sicurezza prevede già la parola "policy"; scegli IronClaw se la sicurezza la prendi sul serio fin dal linguaggio con cui è scritto il software; scegli Claude Code o Codex CLI se non ti interessa l'agente personale e ti basta uno strumento da terminale per programmare. Il libro dedica capitoli specifici a ciascuna alternativa quando entra nei rispettivi temi (sicurezza al Cap. 13, deploy al Cap. 19, ecosistema al Cap. 21).
 
+### Tre obiezioni che sentirai (e cosa rispondere)
+
+Quando racconti a qualcuno che usi OpenClaw, ricevi quasi sempre tre risposte. Vale la pena anticiparle, perché sono utili anzitutto a te per ridimensionare le aspettative.
+
+**"Ma è solo un wrapper di Claude, no?"** Una metà di verità. OpenClaw non possiede un modello: usa Claude, GPT, Gemini, Nemotron, ciò che gli dai. Quello che il framework aggiunge è tutto il resto: gli agenti come unità di esecuzione, le sessioni che sopravvivono fra una conversazione e l'altra, il routing dei canali, il sistema di skill, i cron, l'heartbeat, l'isolamento dei workspace. Chiamarlo "wrapper" è come chiamare un sistema operativo "wrapper di un microprocessore". Tecnicamente non è falso, ma manca la parte interessante.
+
+**"Se ha accesso al computer, prima o poi fa danni."** Anche qui la metà di verità è reale: OpenClaw può fare danni, e in 90 giorni di vita pubblica li ha fatti. Le storie ci sono e vanno dette: il caso MoltMatch documentato da Jack Luo (un agente che ha agito oltre i limiti previsti dall'utente), le skill di terze parti malevole su ClawHub raccolte sotto il nome ClawHavoc, le CVE come ClawJacked. La risposta corretta non è "non succederà", è "ho pianificato il dove e il come". Il Cap. 13 entra nei dettagli, ma il principio è semplice: computer dedicato, sandbox, scope minimo per i token, audit periodico. Chi salta questi passaggi finisce nelle storie. Chi li rispetta riduce il rischio a un livello accettabile.
+
+**"Ma posso fare la stessa cosa con Zapier o n8n."** Per molti task automatici sì. Zapier e n8n risolvono molto bene il caso "trigger → azione → sì/no". OpenClaw risolve un caso diverso: "trigger → ragionamento → decisione → eventualmente più azioni → eventualmente fare una domanda all'umano → riprendere domani". Il discrimine è la presenza del *ragionamento* fra il trigger e l'azione, e il fatto che il ragionamento venga da un LLM con contesto persistente. Se i tuoi workflow non hanno bisogno di ragionamento, OpenClaw è overkill: resta su Zapier. Se ne hanno bisogno, OpenClaw è la categoria giusta.
+
 **(i) Pro tip:** se sei indeciso fra OpenClaw e una delle alternative, non scegliere oggi. Leggi il Capitolo 3 (dove installare) e il Capitolo 13 (sicurezza) e poi torna qui: il 90% delle decisioni si prende sulla base del *dove* prima ancora che del *cosa*.
 
 **Prompt pronto:**
@@ -113,12 +138,15 @@ In termini pratici: scegli OpenClaw quando vuoi il sistema più completo, multi-
 | Confondere OpenClaw con Claude o ChatGPT | Marketing AI poco preciso, abitudine ai chatbot | OpenClaw è un *framework* che usa un LLM (Claude, GPT, Nemotron, ecc.). Il framework agisce, l'LLM ragiona. |
 | Aspettarsi che l'agente "indovini" cosa fare | Mindset da chatbot conversazionale | Trattare OpenClaw come un dipendente da onboardare: serve specificare ruolo, compiti, confini (vedi Cap. 7). |
 | Volerlo provare "giusto un attimo" sul portatile di lavoro | Non si percepisce ancora il rischio dell'accesso pieno al sistema | Fermarsi e leggere i Cap. 3, 4 e 13 prima di installare. La prima installazione va su un dispositivo dedicato. |
+| Trattare OpenClaw come uno Zapier più sofisticato | Confondere automazione deterministica e ragionamento | Vedi sezione "Tre obiezioni": se i tuoi workflow non hanno bisogno di ragionamento, OpenClaw è overkill — resta su Zapier o n8n. |
 
 ## Checklist di fine capitolo
 
 - [ ] So spiegare in una frase la differenza tra agente autonomo e chatbot
 - [ ] Conosco il modello di rilascio di OpenClaw (open-source MIT, BYOK, hosted alternatives)
 - [ ] Ho memorizzato le date chiave del 2026 (ban Anthropic 4 aprile, Moltbook→Meta 10 marzo, Steinberger→OpenAI 14 febbraio)
+- [ ] Ho in mente come si distribuisce il lavoro di un agente in una giornata tipo (mattina, pranzo, pomeriggio, sera)
+- [ ] Conosco le tre obiezioni più comuni e ho una risposta breve per ciascuna
 - [ ] Ho deciso se è il caso di andare avanti col libro o fermarmi qui
 
 ## Link e risorse utili
