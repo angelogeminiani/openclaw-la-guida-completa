@@ -78,6 +78,7 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | Fix OpenClaw missing auth after Anthropic changes | Medium (@ulmeanuadrian) | https://medium.com/@ulmeanuadrian/anthropic-just-cut-off-my-ai-agents-heres-how-i-fixed-it-in-20-minutes-741384d27080 |
 | How to install OpenClaw without getting banned | ShareUHack | https://www.shareuhack.com/en/posts/openclaw-setup-tutorial-2026 |
 | Anthropic provider docs (OpenClaw) | OpenClaw Docs | https://docs.openclaw.ai/providers/anthropic |
+| Apple Mac Mini price hike to $799 (AI memory shortage, mag 2026) | Fortune | https://fortune.com/2026/05/02/apple-mac-minis-starting-price-hike-799-ai-demand-supply-shortage/ |
 
 ### Podcast e video
 
@@ -100,8 +101,14 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | ClawHub (skill registry) | https://clawhub.com |
 | OpenClaw Desktop | https://openclawdesktop.com |
 | Railway (1-Click Deploy) | https://railway.com/deploy/openclaw |
-| DigitalOcean (1-Click Deploy) | https://www.digitalocean.com/community/tutorials/how-to-run-openclaw |
+| DigitalOcean (1-Click Deploy tutorial) | https://www.digitalocean.com/community/tutorials/how-to-run-openclaw |
+| DigitalOcean Marketplace 1-Click | https://marketplace.digitalocean.com/apps/openclaw |
+| DigitalOcean Technical Deep Dive (1-Click hardened) | https://www.digitalocean.com/blog/technical-dive-openclaw-hardened-1-click-app |
+| Hetzner — guida community OpenClaw | https://docs.openclaw.ai/install/hetzner |
+| openclaw-hetzner (Pulumi IaC) | https://github.com/miguelff/openclaw-hetzner |
 | Hostinger VPS | https://www.hostinger.com/vps/docker/openclaw |
+| Raspberry Pi Foundation — OpenClaw on Pi | https://www.raspberrypi.com/news/turn-your-raspberry-pi-into-an-ai-agent-with-openclaw/ |
+| Tailscale — Self-host a local AI stack | https://tailscale.com/blog/self-host-a-local-ai-stack |
 
 ### Analisi tecniche approfondite
 
