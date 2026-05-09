@@ -116,6 +116,10 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | UptimeRobot — uptime monitoring | https://uptimerobot.com/ |
 | Better Stack — uptime + logs | https://betterstack.com/ |
 | Jeff Geerling — M4 Mac mini efficiency | https://www.jeffgeerling.com/blog/2024/m4-mac-minis-efficiency-incredible/ |
+| Oracle Cloud Free Tier — FAQ | https://www.oracle.com/cloud/free/faq/ |
+| Oracle Always Free Resources (limits) | https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm |
+| Hetzner — Sustainability / Umweltschutz | https://www.hetzner.com/unternehmen/umweltschutz/ |
+| Apple — Environmental Reports | https://www.apple.com/environment/ |
 
 ### Analisi tecniche approfondite
 
