@@ -4,9 +4,10 @@
 
 - Le **tre vie** di installazione e quando ognuna ha senso davvero
 - I requisiti minimi (Node, RAM, disco, rete) aggiornati a maggio 2026
-- Pro, contro e **costi reali** di hosted, VPS cloud e hardware fisico
+- Pro, contro e **costi reali** di hosted, VPS cloud e hardware fisico, anche con provider italiani ed europei
 - La regola d'oro che evita il 90% dei disastri raccontati nei forum
-- Come arrivare al Cap. 4 con una scelta di campo già fatta
+- Tre storie vere e un albero decisionale per scegliere senza più dubbi
+- I casi in cui la scelta più razionale è **non** installare OpenClaw, almeno per ora
 
 ## Prerequisiti
 
@@ -115,6 +116,17 @@ Il panorama 2026 è dominato da due nomi e da una mezza dozzina di alternative.
 
 A questi importi vanno **sommati i token LLM**: per un agente personale "normale" si stima €15–80/mese di API (vedi Cap. [14](../PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md)).
 
+**Italia ed Europa: provider locali e dato in casa.** Per chi legge in italiano, vale la pena conoscere anche le opzioni "vicine":
+
+- **Aruba Cloud** (Italia, datacenter Arezzo, Bergamo, Milano, Roma) — VPS Smart Cloud da €4,20/mese (1 vCPU, 1 GB) fino a €30/mese per i tagli che reggono OpenClaw bene (4 vCPU, 8 GB). Pro: dato in territorio italiano, fatturazione in IVA italiana, supporto in italiano. Contro: networking meno performante di Hetzner, console web più datata.
+- **Seeweb** (Italia, datacenter Milano, Lugano, Frosinone, Sesto San Giovanni) — Cloud Server da circa €10/mese per 2 vCPU/4 GB. Sotto il 100% rinnovabile, una delle poche realtà cloud italiane con questa promessa.
+- **OVHcloud** (Francia, datacenter Strasburgo, Gravelines, Roubaix) — VPS Value da €3,50/mese, ottimo rapporto prezzo/specs, latenza ~25 ms da Milano.
+- **Scaleway** (Francia, datacenter Parigi, Amsterdam, Varsavia) — STARDUST da €0,01/ora (~€7,30/mese always-on per Stardust 2 vCPU/2 GB), interfaccia molto curata, comunità developer attiva.
+
+Quando sceglierli rispetto a Hetzner: se hai vincoli di **GDPR / data residency** stretti (clienti pubblici, sanità, settore legale), tenere il VPS in Italia o quanto meno in UE è una semplificazione enorme della documentazione di trattamento dati. Se invece sei un privato che vuole solo il prezzo migliore e bassa latenza dall'Italia, **Hetzner Falkenstein o Helsinki** restano imbattibili — i datacenter Hetzner sono in UE e quindi il GDPR è comunque rispettato dalle clausole standard.
+
+**(#) Debug:** se ti accorgi che un agente "ragiona" lentamente ma `htop` sul VPS mostra CPU al 5% e rete tranquilla, la causa è quasi sempre **latenza verso il provider LLM**, non il VPS. Fai una verifica rapida: `curl -w "%{time_total}\n" -o /dev/null -s https://api.anthropic.com/v1/messages -X POST -H 'x-api-key: …' …`. Se ottieni più di 400 ms di tempo totale, hai sbagliato regione del VPS o stai colpendo un endpoint geograficamente sbagliato.
+
 **Latenza e regione.** Un VPS di Singapore con il modello LLM in Virginia ti regala 350 ms di andata e ritorno per ogni token. Per un agente conversazionale, è terribile. Regola pratica: **stesso continente del tuo provider LLM**. Per Anthropic e OpenAI è di solito `us-east-1`; per Mistral e Cohere c'è scelta in Europa; per Qwen e Moonshot meglio Singapore o Tokyo.
 
 **Accesso sicuro: niente porte aperte.** Il Gateway di OpenClaw apre il control plane WebSocket su `127.0.0.1:18789`. Quella porta **non va mai esposta su internet**, nemmeno per pochi minuti. Per accedere alla TUI o al dashboard del tuo VPS dal laptop, la community usa **Tailscale**: rete WireGuard mesh, NAT traversal automatico, MagicDNS, gratuito fino a 100 dispositivi. Lo configuri in tre comandi sul VPS, lo aggiungi al tuo telefono e al laptop, e l'agente è raggiungibile come fosse in LAN — senza che il resto del mondo veda nulla. Il setup completo è nel Cap. [19](../PARTE-VII-Uso-avanzato/19-deploy-su-vps-e-infrastruttura-cloud.md); per ora basta sapere che esiste e che è la risposta giusta a "come ci accedo da fuori?".
@@ -125,13 +137,15 @@ curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up --ssh --hostname openclaw-vps
 ```
 
+**(i) Pro tip — Tailscale Serve vs Funnel.** Tailscale ha due modi diversi di esporre un servizio. *Serve* lo rende raggiungibile **solo dalla tua tailnet** (i tuoi device): è l'opzione di default ed è quella giusta nel 99% dei casi. *Funnel* lo apre invece a internet pubblico via i relay Tailscale (con HTTPS gestito). Per OpenClaw **non usare mai Funnel** sul control plane (`:18789`): ti basta Serve. Funnel può avere senso solo per webhook in ingresso ben specifici, e va sempre accoppiato a un token segreto.
+
 **(i) Pro tip:** se è la prima volta che metti mano a un VPS, parti dal 1-Click DigitalOcean a $12. Costa il 60% più di Hetzner ma evita di passare il primo giorno a configurare `ufw`, `fail2ban`, `sshd_config` e utenti non-root. Una volta che capisci come si muove un agente in cloud, migrare a Hetzner è un'ora di lavoro.
 
 ### Opzione 3 — Hardware fisico: il piacere del ferro
 
 L'hardware fisico è l'opzione più "meme-worthy" della cultura OpenClaw — dal post di Steinberger che chiama il suo Mac mini "il mio dipendente più affidabile" alle foto di Raspberry Pi nascosti nelle dispense. Ma è anche l'opzione che dà più controllo, più privacy e, nel lungo periodo, più soddisfazione.
 
-**Mac mini M4 (consigliato).** È diventato lo standard di fatto. Modello base in vendita ad aprile 2026: M4 a 10 core, 16 GB di memoria unificata, 512 GB SSD, **$799** (Apple ha alzato il prezzo da $599 il 1° maggio 2026 dopo il ritiro della versione 256 GB e una carenza globale di chip di memoria dovuta alla domanda AI). Consumo idle 6–7 W, dimensioni 13×13 cm, rumorosità impercettibile, performance largamente eccessive per un agente personale. Ottimo per chi vuole **privacy assoluta**: niente cloud, niente provider, tutto in casa.
+**Mac mini M4 (consigliato).** È diventato lo standard di fatto. Modello base in vendita ad aprile 2026: M4 a 10 core, 16 GB di memoria unificata, 512 GB SSD, **$799** (Apple ha alzato il prezzo da $599 il 1° maggio 2026 dopo il ritiro della versione 256 GB e una carenza globale di chip di memoria dovuta alla domanda AI). Consumo a riposo 2,6–4 W misurati da utenti indipendenti, picco multi-core ~21 W, dimensioni 13×13 cm, rumorosità impercettibile, performance largamente eccessive per un agente personale. Ottimo per chi vuole **privacy assoluta**: niente cloud, niente provider, tutto in casa.
 
 **Vecchio laptop o mini-PC.** Qualsiasi macchina con Node 22+, 8 GB di RAM e SSD funziona benissimo. Un MacBook Air 2018, un mini-PC Intel N100 nuovo a €170, un ThinkPad ricondizionato sotto i €250 — sono tutti candidati validi. Vantaggio: zero costo per chi ha già il pezzo nel cassetto. Svantaggio: spesso senza autospegnimento dopo un blackout (vedi sotto).
 
@@ -150,7 +164,73 @@ rsync -av --delete \
   /Volumes/backup/openclaw-$(date +%F)/
 ```
 
+**Bolletta elettrica: quanto costa davvero tenere acceso il Mac mini.** Con un consumo medio realistico di ~10 W (mix idle + brevi picchi quando l'agente lavora) e 8.760 ore in un anno, sono **~88 kWh/anno**. Al prezzo medio italiano residenziale di 0,30 €/kWh siamo a **~€26 all'anno**, cioè poco più di **€2 al mese** in bolletta. Il Raspberry Pi 5 sta ancora più in basso (3–7 W, ~€10–18/anno). Se sommi questo all'ammortamento dell'hardware su 3 anni, vedi nella sezione costi più avanti che il Mac mini in casa resta competitivo con un VPS Hetzner.
+
+**Avvio automatico: l'agente parte con il computer.** Su macOS conviene un `LaunchAgent` plist (questo, non `cron`, è il modo "giusto" di tenere un demone su Mac). Su Linux si usa `systemd --user`. Esempio macOS:
+
+```xml
+<!-- ~/Library/LaunchAgents/ai.openclaw.gateway.plist -->
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+  <dict>
+    <key>Label</key><string>ai.openclaw.gateway</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/usr/local/bin/openclaw</string>
+      <string>gateway</string>
+    </array>
+    <key>RunAtLoad</key><true/>
+    <key>KeepAlive</key><true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/openclaw.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/openclaw.err.log</string>
+  </dict>
+</plist>
+```
+
+Carichi il plist con `launchctl load ~/Library/LaunchAgents/ai.openclaw.gateway.plist` e dopo ogni reboot il Gateway riparte da solo. La stessa idea su Linux è una unit `systemd --user` con `Restart=on-failure` (il Cap. [19](../PARTE-VII-Uso-avanzato/19-deploy-su-vps-e-infrastruttura-cloud.md) la mostra in dettaglio).
+
+**Monitoraggio: sapere che è giù prima di te.** Anche un agente in casa può cadere mentre sei al lavoro o in ferie. Due servizi gratuiti coprono il 90% dei casi: **UptimeRobot** (50 monitor gratis, controllo ogni 5 minuti, alert via email/Telegram) e **Better Stack** (10 monitor gratis, alert più ricchi). Punti il monitor su un endpoint di health interno (esposto solo via Tailscale, non su internet) e ricevi un push se l'agente è muto da più di 10 minuti. Vedi anche il Cap. [15](../PARTE-VI-Manutenzione/15-care-and-feeding-tenere-l-agente-in-salute.md) sulla diagnostica e la salute dell'agente.
+
 **(!) Attenzione:** chiunque ti convincerà a mettere OpenClaw "tanto per provare" sul tuo MacBook quotidiano avrà torto. Se vuoi davvero provarlo subito senza nuovo hardware, usa un'utenza macOS dedicata (`System Settings → Users & Groups → Add User`) con i permessi di amministrazione disabilitati, in modo che almeno l'agente non possa modificare i file della tua utenza principale. Ma è un palliativo: un Mac mini di seconda mano costa €300 ed è una scelta migliore.
+
+### Tre storie vere (in versione anonima)
+
+Le tabelle aiutano, ma a fissare la scelta servono persone. Tre profili reali raccolti dai forum e dai meet-up del primo trimestre 2026, ridotti all'essenziale.
+
+**Anna, copywriter freelance, Milano.** Ha sentito parlare di OpenClaw da una collega e vuole un agente che le legga le email del mattino, le metta in coda i task della giornata, le scriva la prima bozza di newsletter ogni martedì. Zero terminale, zero voglia di imparare. Ha cominciato con *MaxClaw* a €19/mese a inizio marzo, ha capito il flusso in due settimane, e a fine aprile ha pagato un consulente €150 una tantum per migrarla su Mac mini ricondizionato (€420). Costo totale del primo mese: €19. Costo medio dei mesi successivi: €25 (LLM + API ricerca + ammortamento Mac). Tempo dedicato: due ore/settimana per i primi 30 giorni, mezz'ora/settimana dopo.
+
+**Marco, ingegnere meccanico, Bologna.** Sa usare Linux, vuole privacy, non gli interessa risparmiare 7 €/mese sul cloud. Ha comprato un Mac mini M4 16/512 a €949 con il 5% di sconto Apple Education, lo ha messo in studio dietro la libreria, attaccato a un APC Back-UPS, con Tailscale e backup notturno su un NAS Synology che già aveva. Tre mesi dopo ha quattro agenti attivi (uno per la casa, uno per la moglie, uno per il lavoro, uno sperimentale per l'asilo della figlia). Costo medio: €40/mese di LLM + €2 di bolletta. Soddisfazione: alta. Frustrazione: il primo blackout senza UPS, prima dell'acquisto, gli era costato due ore per ricostruire una memoria persistente.
+
+**Luca, sviluppatore SaaS, Torino.** Vuole un agente "serio", lo userà anche per i clienti, deve essere always-on, vuole poter scriverlo nei termini di servizio del suo prodotto. Ha messo OpenClaw su un *Hetzner CX42* (€14,90/mese) a Falkenstein, hardenizzato a mano (UFW, fail2ban, utenti non-root, certificati Let's Encrypt per le webhook), accesso SSH solo via Tailscale. NemoClaw sopra (Cap. 4) per le query con dati clienti, privacy router locale per il resto. Costo: €15 infra + €60 LLM + €10 monitoring (Better Stack a pagamento). Per Luca, l'hosted era fuori discussione: avrebbe dovuto firmare DPA con il provider e infilarli nel suo contratto. Il VPS gli risolve il problema in tre clausole.
+
+Le tre storie raccontano la stessa morale: **la via giusta è quella che minimizza l'attrito tra te e l'agente**. Anna non avrebbe mai resistito a un Hetzner. Marco si sarebbe annoiato in tre giorni con MaxClaw. Luca su Mac mini in casa sarebbe esploso al primo problema di reperibilità.
+
+### L'albero delle decisioni: tre domande in ordine
+
+Se le storie e le tabelle ti hanno lasciato indeciso, prova a rispondere a tre domande in ordine. Ognuna esclude tutta una famiglia di opzioni.
+
+```text
+1) Hai paura del terminale o non hai 2 ore/settimana
+   da dedicarci nei primi due mesi?
+        SÌ ─► HOSTED (Launch / MaxClaw / SimpleClaw)
+                                    fine
+        NO ─► passa a 2)
+
+2) Tratti dati sensibili (clienti, medici, legali)
+   o vuoi privacy assoluta?
+        SÌ, e ho budget ─► HARDWARE in casa (Mac mini)
+        SÌ, ma niente budget ─► VPS UE + NemoClaw (Cap. 4)
+        NO ─► passa a 3)
+
+3) Stai a casa la maggior parte del tempo,
+   con buona connessione e un angolo asciutto?
+        SÌ ─► HARDWARE (Mac mini o vecchio laptop)
+        NO ─► VPS (Hetzner CX32 o DO 1-Click)
+```
+
+Tre domande, una scelta. Se la prima risposta fosse "SÌ, no, no", saresti nei panni di Anna; se fosse "NO, sì-budget, sì", saresti Marco; "NO, no, no" è il profilo di Luca.
 
 ### Tabella decisionale: quale via fa per te
 
@@ -192,6 +272,20 @@ Esempio realistico per un singolo agente personale, livello intermedio:
 
 Sembra che hosted vinca sempre. Sui costi puri, spesso sì. Ma controllo, personalizzazione, privacy e capacità di crescere con multi-agente fanno pendere la bilancia in direzione VPS o hardware per chi pensa di restare con OpenClaw oltre i primi 60 giorni.
 
+**Setup di prova vs setup serio: il pattern "due agenti".** Una pratica diffusa nella community è tenere **due ambienti separati** dopo il primo mese: un "agente di prova" (su hosted o su un VPS Hostinger da €5) dove provi skill nuove, prompt aggressivi e modelli sconosciuti, e un "agente serio" (Mac mini, Hetzner CX32+, NemoClaw) che gestisce le cose che contano davvero — calendario, email, automazioni vincolate. Costa €5–10 in più al mese ma ti evita di romperti l'agente principale durante un esperimento delle 23. Ne riparliamo nei capitoli sui workflow (Cap. [8](../PARTE-III-Primo-mese/08-dieci-workflow-pronti-all-uso.md)) e sulla manutenzione (Cap. [15](../PARTE-VI-Manutenzione/15-care-and-feeding-tenere-l-agente-in-salute.md)).
+
+### Quando NON installare OpenClaw (sii adulto con te stesso)
+
+Un libro onesto non finge che OpenClaw sia per chiunque. Ci sono almeno tre situazioni in cui la scelta più razionale è non installarlo affatto, almeno non oggi.
+
+**Non hai due ore alla settimana per i primi due mesi.** OpenClaw non è "imposta una volta e dimentica". Per le prime sei-otto settimane vorrai modificare `IDENTITY.md`, leggere log, riavviare il Gateway, regolare cron. Se hai un periodo di lavoro o vita che non te le concede, aspetta: l'agente che non riesci a curare diventa un agente che ti propone idiozie convinto di servirti.
+
+**Tratti dati altamente regolamentati senza budget per fare le cose bene.** Avvocati, medici, commercialisti che maneggiano dati di clienti devono accettare un costo minimo di €40/mese per VPS hardenizzato + NemoClaw + monitoring + DPA con il provider LLM, e qualche ora con un consulente. Provare a risparmiare facendo girare un agente "sul portatile, total privacy" è il modo più rapido per ritrovarsi in un guaio serio dopo la prima query mal scritta.
+
+**Sei totalmente alle prime armi col terminale e non hai un amico smanettone a portata di mano.** Per quanto MaxClaw e Launch abbiano abbassato l'asticella, prima o poi servirà cambiare un file `.md` in cartella `~/.openclaw/`, configurare un canale Telegram, leggere un log. Senza un riferimento — un familiare, un collega, un canale Discord di lingua italiana — la frustrazione arriva alla seconda settimana. In questi casi il consiglio è: cominciare da Claude o ChatGPT come **assistente** (Cap. 1) e tornare a OpenClaw quando hai più dimestichezza.
+
+In tutti gli altri casi, prosegui senza esitazioni. Le prossime pagine dànno per scontato che tu abbia fatto la tua scelta.
+
 ### Anteprima Cap. 4: la sicurezza non è un optional
 
 Qualunque via tu scelga, il prossimo capitolo affronta una domanda che non puoi rimandare: **come isolare l'agente dal resto del sistema operativo**? Docker per-session, container Gateway, NanoClaw, NemoClaw, gVisor — sono i livelli di sandboxing tra cui scegliere prima di lanciare il primo `openclaw gateway`. Se sei sull'hosted, te ne occupa il provider; se sei su VPS o hardware, è una decisione tua.
@@ -224,8 +318,11 @@ Qualunque via tu scelga, il prossimo capitolo affronta una domanda che non puoi 
 - [ ] Il dispositivo o il VPS NON contiene dati personali o di lavoro sensibili
 - [ ] Il provider LLM ha API key pay-as-you-go disponibili (non solo subscription)
 - [ ] Se VPS: regione coerente con il provider LLM, accesso solo via Tailscale
-- [ ] Se hardware: UPS pianificato, backup notturno del workspace, rete stabile
+- [ ] Se hardware: UPS pianificato, backup notturno del workspace, rete stabile, autostart configurato (launchd / systemd)
 - [ ] Ho letto il TOS del provider per verificare che gli agenti AI siano consentiti
+- [ ] Se tratto dati personali: il provider è UE / Italia, ho valutato un DPA
+- [ ] Ho previsto un monitor di uptime (UptimeRobot, Better Stack) sul Gateway
+- [ ] Ho onestamente verificato di **avere il tempo** per i primi due mesi di curva di apprendimento
 - [ ] Ho dato un'occhiata al [Cap. 4](./04-preparare-un-ambiente-sicuro-docker-sandbox.md) sul sandboxing prima di passare all'installazione
 
 ## Link e risorse utili
@@ -239,6 +336,11 @@ Qualunque via tu scelga, il prossimo capitolo affronta una domanda che non puoi 
 - [Apple raises Mac Mini's starting price to $799](https://fortune.com/2026/05/02/apple-mac-minis-starting-price-hike-799-ai-demand-supply-shortage/) — cronaca dell'aumento di maggio 2026
 - [Anthropic ban — terzi e subscription Claude](https://thenextweb.com/news/anthropic-openclaw-claude-subscription-ban-cost) — il punto sul ban del 4 aprile 2026
 - [Tailscale — Self-host a local AI stack](https://tailscale.com/blog/self-host-a-local-ai-stack) — pattern di accesso remoto consigliato
+- [Aruba Cloud — VPS Italia](https://www.cloud.it/vps/) — alternativa con dato in territorio italiano
+- [Seeweb — Cloud Server](https://www.seeweb.it/prodotti/cloud-server) — provider italiano sostenibile (energia rinnovabile)
+- [OVHcloud — VPS Value](https://www.ovhcloud.com/it/vps/) — alternativa francese a basso costo
+- [UptimeRobot](https://uptimerobot.com/) e [Better Stack](https://betterstack.com/) — monitoraggio gratuito del Gateway
+- [Jeff Geerling — M4 Mac mini's efficiency is incredible](https://www.jeffgeerling.com/blog/2024/m4-mac-minis-efficiency-incredible/) — misure reali del consumo energetico
 
 Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-risorse-e-link-utili.md).
 

@@ -109,6 +109,13 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | Hostinger VPS | https://www.hostinger.com/vps/docker/openclaw |
 | Raspberry Pi Foundation — OpenClaw on Pi | https://www.raspberrypi.com/news/turn-your-raspberry-pi-into-an-ai-agent-with-openclaw/ |
 | Tailscale — Self-host a local AI stack | https://tailscale.com/blog/self-host-a-local-ai-stack |
+| Aruba Cloud — VPS Italia | https://www.cloud.it/vps/ |
+| Seeweb — Cloud Server (Italia) | https://www.seeweb.it/prodotti/cloud-server |
+| OVHcloud — VPS Value (Francia) | https://www.ovhcloud.com/it/vps/ |
+| Scaleway — Stardust Instance | https://www.scaleway.com/en/stardust-instances/ |
+| UptimeRobot — uptime monitoring | https://uptimerobot.com/ |
+| Better Stack — uptime + logs | https://betterstack.com/ |
+| Jeff Geerling — M4 Mac mini efficiency | https://www.jeffgeerling.com/blog/2024/m4-mac-minis-efficiency-incredible/ |
 
 ### Analisi tecniche approfondite
 
