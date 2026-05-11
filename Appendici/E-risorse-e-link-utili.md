@@ -52,6 +52,15 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | Run OpenClaw Safely with Docker (beginner guide) | Bill Wang (Towards Dev / Medium) | https://medium.com/towardsdev/run-openclaw-moltbot-clawdbot-safely-with-docker-a-practical-guide-for-beginners-94112a9b57be |
 | OpenClaw Docker: Hardening for Production 2026 | Adven Boost | https://advenboost.com/openclaw-docker-hardening-your-ai-sandbox-for-production-2026/ |
 | OpenClaw Docker Gateway, Sandbox and Config | OpenClaw community docs | https://open-claw.bot/docs/install/docker/ |
+| Docker Sandboxes documentation | Docker Docs | https://docs.docker.com/ai/sandboxes/ |
+| How to sandbox AI agents in 2026: MicroVMs, gVisor & isolation | Northflank | https://northflank.com/blog/how-to-sandbox-ai-agents |
+| Multi-Agent gVisor Isolation (MAGI) | gVisor team (Google) | https://gvisor.dev/blog/2026/04/15/magi-multi-agent-gvisor-isolation/ |
+| Your Container Is Not a Sandbox: MicroVM Isolation in 2026 | Emir B. | https://emirb.github.io/blog/microvm-2026/ |
+| Sandboxing Claude Code in Docker: From Naive to Hardened | Rasha Hantash | https://www.rasha.me/blog/sandboxing-claude-code-in-docker |
+| claude-code-devcontainer (devcontainer hardenato di riferimento) | Trail of Bits | https://github.com/trailofbits/claude-code-devcontainer |
+| NemoClaw Explained: Enterprise Security | Particula | https://particula.tech/blog/nvidia-nemoclaw-openclaw-enterprise-security |
+| Sigstore / cosign — Verifying Container Images | Sigstore Docs | https://docs.sigstore.dev/cosign/verifying/verify/ |
+| Rootless mode (Docker docs) | Docker Docs | https://docs.docker.com/engine/security/rootless/ |
 
 ### Notizie e approfondimenti
 
