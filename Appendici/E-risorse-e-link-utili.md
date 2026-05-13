@@ -27,6 +27,38 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | OpenClaw Setup Guide 2026 | Popular AI Tools | https://popularaitools.ai/blog/openclaw-setup-guide-2026 |
 | OpenClaw Income Generation Stories | OpenClaw Desktop Blog | https://openclawdesktop.com/blog/openclaw-income-generation-community-stories.html |
 
+### Installazione, onboarding e troubleshooting
+
+| Risorsa | Autore | URL |
+|---------|--------|-----|
+| Onboarding overview — documentazione ufficiale | OpenClaw Docs | https://docs.openclaw.ai/start/onboarding-overview |
+| Onboarding wizard (CLI) — reference | OpenClaw Docs | https://docs.openclaw.ai/start/wizard |
+| Getting started — quickstart ufficiale | OpenClaw Docs | https://docs.openclaw.ai/start/getting-started |
+| Node.js requirements e supported versions | OpenClaw Docs | https://docs.openclaw.ai/install/node |
+| Hooks reference (session-memory, cost-tracker, ecc.) | OpenClaw Docs | https://docs.openclaw.ai/cli/hooks |
+| General troubleshooting | OpenClaw Docs | https://docs.openclaw.ai/help/troubleshooting |
+| OpenClaw Setup Guide 2026: Install, Configure & Connect in 15 Min | Verdent Guides | https://www.verdent.ai/guides/openclaw-setup-guide-from-zero-to-ai-assistant |
+| How to Run OpenClaw: Terminal, Daemon, TUI & Cloud | Dextra Labs | https://dextralabs.com/blog/how-to-run-openclaw/ |
+| OpenClaw Memory Files: AGENTS.md, IDENTITY.md, SOUL.md & More | OpenClaw Setup | https://openclaw-setup.me/blog/openclaw-internals/openclaw-memory-files/ |
+| OpenClaw Memory Masterclass — guida completa alla memoria persistente | VelvetShark | https://velvetshark.com/openclaw-memory-masterclass |
+| What Does `openclaw doctor --fix` Do? — ogni warning spiegato | Stack Junkie | https://www.stack-junkie.com/blog/openclaw-doctor-command |
+| openclaw — pacchetto npm ufficiale | npm | https://www.npmjs.com/package/openclaw |
+| Uninstall — procedura ufficiale | OpenClaw Docs | https://docs.openclaw.ai/install/uninstall |
+| OpenClaw Backup Guide (state, settings, memory) | LumaDock | https://lumadock.com/tutorials/openclaw-backup-export-settings-memory |
+| OpenClaw Complete Uninstall Guide (All Platforms) | Gist (bewithdhanu) | https://gist.github.com/bewithdhanu/a5b960ef4a9550afa4a27020eeea1b85 |
+
+### Provider API key — pannelli e guide
+
+| Risorsa | Provider | URL |
+|---------|----------|-----|
+| Anthropic API keys (pannello) | Anthropic | https://console.anthropic.com/settings/keys |
+| Get Your Claude (Anthropic) API Key — guida | Apideck | https://www.apideck.com/blog/how-to-get-your-claude-anthropic-api-key |
+| OpenAI API keys (pannello) | OpenAI | https://platform.openai.com/api-keys |
+| OpenAI API Quick Start 2026 — account, key, billing | DEV Community | https://dev.to/abdul_qadir/openai-api-quick-start-2026-account-api-key-and-billing-setup-9b8 |
+| OpenAI Billing Overview (pannello) | OpenAI | https://platform.openai.com/settings/organization/billing/overview |
+| Google AI Studio API key (pannello) | Google | https://aistudio.google.com/app/apikey |
+| Using Gemini API keys (restrizioni 2026) | Google AI for Developers | https://ai.google.dev/gemini-api/docs/api-key |
+
 ### Sicurezza e confronti
 
 | Risorsa | Autore | URL |
