@@ -24,6 +24,45 @@ Il primo comando mostra l'elenco dei canali supportati dalla tua versione (cambi
 
 ## Contenuto principale
 
+Sono le 19:00 di un mercoledì. Hai pianificato il digest serale, l'agente è acceso, il modello risponde. Manca una sola decisione: su quale chat ti scrive? Telegram impiega cinque minuti a configurarsi, WhatsApp Business tre giorni di verifica Meta, WhatsApp con Baileys due settimane prima del primo ban. Questo capitolo ti porta dalla scelta del canale al primo "ciao, ti sento" — senza fare il giro lungo.
+
+**(i) Pro tip:** i comandi e i nomi di canale di questo capitolo si riferiscono a OpenClaw `0.18+` (la serie attiva nella primavera 2026). Prima di copia-incollare verifica con `openclaw --version` e, in caso di differenze, consulta `docs.openclaw.ai/channels` per la sintassi della tua versione. Le piattaforme esterne (Telegram Bot API, Meta, Slack, Discord) cambiano in modo indipendente e ancora più rapido.
+
+### TL;DR — Telegram in cinque minuti
+
+Se hai fretta e vuoi solo arrivare a "il bot risponde", questi sono i tre comandi essenziali. Tutto il resto del capitolo spiega *perché* esistono, e cosa fare quando uno di loro non si comporta come dovrebbe.
+
+```bash
+# 1. crea il bot in @BotFather sul telefono
+#    /newbot -> nome -> username_bot -> copia il token
+
+# 2. collega il token al Gateway
+openclaw channels login --channel telegram
+
+# 3. verifica che parli
+openclaw channels status --channel telegram
+```
+
+Apri Telegram, cerca il tuo bot, premi `/start`. Se ricevi una risposta entro pochi secondi sei a posto: salta direttamente alla sezione *Gruppi e mention gating*. Altrimenti, prosegui con il capitolo: ogni nodo è coperto sotto.
+
+### Costi, tempi e rischio a colpo d'occhio
+
+Prima di entrare nel dettaglio, una mappa decisionale in quattro colonne. I costi mensili presumono uso personale o di piccolo team (~500-2000 messaggi/mese); per volumi più alti, vedi le tabelle dettagliate nelle sezioni dedicate.
+
+| Canale | Tempo setup | Costo/mese | Rischio |
+|---|---|---|---|
+| Telegram | 5 min | 0 € | Basso |
+| WhatsApp Baileys | 15 min | 0 € | Alto (ban 2-8 sett.) |
+| WhatsApp Cloud | 1-3 giorni | 5-30 € | Basso (ufficiale) |
+| Slack | 10 min | 0 € (workspace) | Basso |
+| Discord | 10 min | 0 € | Basso |
+| iMessage nativo | 20 min | 0 € | Medio (Mac sempre acceso) |
+| Signal (signal-cli) | 30 min | 0 € | Medio (canale non ufficiale) |
+| Matrix (client) | 20 min | 0 € | Basso |
+| WeChat (plugin) | 1-2 giorni | 0 € | Basso (geo: Cina) |
+
+Lettura rapida: parti da **Telegram** (costo zero, rischio zero, cinque minuti). Aggiungi **Slack o Discord** se ti serve un canale di team. Considera **WhatsApp Cloud API** solo se hai un caso d'uso *business* riconducibile a operazioni concrete (supporto, ordini, FAQ). Tutto il resto è ottimizzazione.
+
 ### Perché il canale conta più di quanto sembri
 
 Quando si sceglie il canale di un agente personale la tentazione è di guardare solo a "quale chat uso più spesso io". È un buon punto di partenza, ma manca tre dimensioni che diventano evidenti solo dopo qualche settimana di uso reale.
@@ -301,7 +340,7 @@ openclaw channels login --channel discord
 
 Token + application ID, conferma, fatto. Verifica nello stesso modo di Slack: scrivi nel server, l'agente risponde.
 
-### iMessage — l'ecosistema Apple
+### iMessage — l'ecosistema Apple [★★]
 
 iMessage è ostico perché è chiuso. Non esiste una Bot API ufficiale Apple, non c'è un endpoint cloud. L'unico modo per pilotarlo è avere un **Mac fisico** dove iMessage è loggato, e un layer software che intercetti i messaggi.
 
@@ -321,7 +360,7 @@ openclaw channels login --channel imessage-bluebubbles
 
 **(!) Attenzione:** Apple non garantisce stabilità sui database di Messages.app. Aggiornamenti minori di macOS (15.4.1 → 15.4.2) hanno rotto il plugin nativo in passato. Tieni `openclaw update` aggiornato e monitora il changelog dopo ogni aggiornamento di macOS.
 
-### Signal — privacy massima, setup tecnico
+### Signal — privacy massima, setup tecnico [★★]
 
 Signal non ha bot API. Esiste però `signal-cli`, una CLI non ufficiale ma stabile (manutentore: AsamK, attiva dal 2017) che parla il protocollo Signal e si integra via JSON-RPC o D-Bus. OpenClaw la usa come backend del canale `signal`.
 
@@ -343,7 +382,7 @@ openclaw channels login --channel signal
 
 Signal è ottimo per chi tiene molto alla privacy o ha interlocutori che usano solo Signal. È meno adatto come canale primario per un agente personale: non supporta gruppi business, non ha l'ecosistema bot di Telegram, e il setup è molto più tecnico. Tipicamente diventa un canale secondario, attivato per pubblici specifici.
 
-### Matrix — open-source e self-hosted
+### Matrix — open-source e self-hosted [★★]
 
 Matrix è il protocollo aperto di messaggistica federata (Element è il client più diffuso). Per OpenClaw c'è un canale `matrix` che si collega a un homeserver via API client-server, oppure si registra come *appservice* (più potente, ma richiede modifiche alla config dell'homeserver).
 
@@ -364,7 +403,7 @@ WeChat è il canale necessario se hai utenti, clienti o team in Cina. Da **marzo
 
 Limitazioni: il plugin funziona solo per account WeChat *Personal* registrati in Cina o per account *Business* con licenza. Restrizioni governative (vedi [Capitolo 21](../PARTE-VIII-Visione-futuro/21-ecosistema-openclaw.md)) impongono che l'inferenza dell'agente avvenga su modelli LLM autorizzati dalla CAC; questo esclude OpenAI e Anthropic, e tipicamente significa appoggiarsi a Kimi K2.5, MiniMax M2.5 o DeepSeek-V3.
 
-### Microsoft Teams, Google Chat, Feishu, LINE, IRC
+### Microsoft Teams, Google Chat, Feishu, LINE, IRC [★★]
 
 OpenClaw supporta nativamente anche **Microsoft Teams** (via Bot Framework, scope Graph API), **Google Chat** (per Workspace), **Feishu** (l'edizione internazionale di Lark, molto usato in APAC), **LINE** (Giappone, Taiwan, Thailandia), **IRC** (storico, ma ancora vivissimo nelle community open-source). Il pattern è uguale per tutti: `openclaw channels login --channel <nome>`, il wizard chiede i token/credenziali specifiche della piattaforma, OpenClaw li registra. La differenza è solo nel processo lato piattaforma: Teams richiede approvazione di tenant, Google Chat passa per Workspace Marketplace, LINE ha la console *LINE Developers*.
 
@@ -373,6 +412,17 @@ Se ti serve uno di questi canali in modo serio, la documentazione ufficiale (`do
 ### Multi-canale: stesso agente, contesto condiviso
 
 Una delle caratteristiche distintive di OpenClaw è che lo stesso Gateway gestisce contemporaneamente più canali, mantenendo un *session store* condiviso. Configuri Telegram, WhatsApp e Slack: lo stesso agente risponde su tutti e tre, e la memoria dell'interazione è la stessa.
+
+Visivamente, il flusso ha questa forma:
+
+```
+   Telegram ─┐
+   WhatsApp ─┼──► Gateway ──► Session Store
+   Slack    ─┘    (router)    (memoria
+                              condivisa)
+```
+
+I tre canali entrano nel Gateway con identità distinte (UID Telegram, numero WhatsApp, user ID Slack); il *router* le riconduce alla stessa sessione utente se la *unification* è attiva, altrimenti le tiene separate. La risposta dell'agente esce dal canale da cui è arrivata la richiesta — non c'è cross-posting automatico: se chiedi qualcosa su Telegram, l'agente risponde su Telegram.
 
 In pratica:
 
@@ -426,6 +476,37 @@ Tabella 3 — **casi specifici**:
 | Ecosistema Apple | iMessage nativo | Mac sempre acceso |
 | Mercato cinese | WeChat (plugin Tencent) | Modello LLM CAC-approved |
 | Federazione open | Matrix | Homeserver tuo |
+
+### Migrare da un canale all'altro
+
+Capita più spesso di quanto pensi. Si parte con Telegram da soli, poi si entra in un team che vive su Slack e bisogna replicarci l'agente. Oppure si lavora con Baileys da mesi finché un ban annuncia che è il momento di passare a WhatsApp Cloud. La migrazione è raramente un *cutover* netto: di solito i due canali convivono per qualche settimana, poi quello vecchio viene spento. Tre punti da non perdere di vista.
+
+**Storico delle conversazioni.** OpenClaw archivia i messaggi *per sessione*, non per canale. Quando aggiungi un nuovo canale lo storico esistente *non* si trasferisce automaticamente: l'agente sa cosa avete detto su Telegram, ma su Slack parte da zero. Per spianare la transizione, prima di chiudere il vecchio canale chiedi all'agente di scrivere un *briefing di passaggio* nel file `MEMORY.md` o nelle note giornaliere — un riepilogo di chi sei, su cosa state lavorando, le decisioni recenti. Quello viaggia con la memoria persistente e l'agente lo ritroverà sul nuovo canale.
+
+**Mappare le identità.** Se uso Telegram come UID `123456` e Slack come `U0ABCDEF`, l'agente vede *due persone diverse* — a meno che tu non glielo dica. Nel `USER.md` (o nella sezione *identities* del config) puoi mappare esplicitamente l'identità unica:
+
+```yaml
+users:
+  - id: gian-angelo
+    identities:
+      telegram: "123456"
+      slack: "U0ABCDEF"
+      whatsapp: "+39 333 1234567"
+```
+
+Da quel momento le tre identità collassano sull'utente `gian-angelo` e la *session unification* (vista nella sezione precedente) funziona davvero.
+
+**Cutover graduale.** Tieni il vecchio canale attivo per due-quattro settimane in parallelo al nuovo. Sposta un cron alla volta (es. prima il digest mattutino, poi le notifiche, poi i task interattivi), e monitora che tutto funzioni sul nuovo prima di disattivare il vecchio. Quando sei sicuro:
+
+```bash
+openclaw channels disable --channel whatsapp-baileys
+# disconnects but keeps config
+
+openclaw channels remove --channel whatsapp-baileys
+# permanently removes config
+```
+
+`disable` è reversibile in qualunque momento (`channels enable`); `remove` cancella la configurazione e richiede di rifare il login per riabilitare il canale.
 
 ### Sicurezza dei canali: cose da non dimenticare
 
