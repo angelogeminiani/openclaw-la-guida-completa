@@ -94,6 +94,56 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | Sigstore / cosign — Verifying Container Images | Sigstore Docs | https://docs.sigstore.dev/cosign/verifying/verify/ |
 | Rootless mode (Docker docs) | Docker Docs | https://docs.docker.com/engine/security/rootless/ |
 
+### Canali di comunicazione (Telegram, WhatsApp, Slack, Discord, iMessage, Signal, Matrix)
+
+| Risorsa | Autore / Editore | URL |
+|---------|------------------|-----|
+| Telegram Bot API — changelog ufficiale | Telegram | https://core.telegram.org/bots/api-changelog |
+| Telegram Bot API — reference completa | Telegram | https://core.telegram.org/bots/api |
+| Telegram Mini Apps — documentazione | Telegram | https://core.telegram.org/bots/webapps |
+| Bot API 9.5: streaming, member tags, can_manage_tags | GramIO Changelog | https://gramio.dev/changelogs/2026-03-02 |
+| Telegram Bot API 2026: cosa cambia per gli AI agent | ZeroClaw Blog | https://zeroclaws.io/blog/telegram-bot-api-2026-ai-agent-developers-guide |
+| Create a Telegram bot: step-by-step 2026 | Anthem Creation | https://anthemcreation.com/en/artificial-intelligence/create-bot-telegram-complete-guide/ |
+| WhatsApp Business API Pricing 2026 | EngageLab | https://www.engagelab.com/blog/whatsapp-business-api-pricing |
+| WhatsApp Chatbot Rules 2026: Meta AI Policy | Conferbot | https://www.conferbot.com/blog/whatsapp-chatbot-rules-2026 |
+| Not All Chatbots Are Banned: WhatsApp 2026 AI Policy | respond.io | https://respond.io/blog/whatsapp-general-purpose-chatbots-ban |
+| Meta Blocks Third-Party AI Chatbots on WhatsApp 2026 | Chatboq | https://chatboq.com/blogs/third-party-ai-chatbots-ban |
+| WhatsApp Automation Ban Risk: Safe vs Unsafe Tools | Kraya AI Blog | https://blog.kraya-ai.com/whatsapp-automation-ban-risk |
+| OpenClaw WhatsApp Risks: What Engineers Must Know | Zen van Riel | https://zenvanriel.com/ai-engineer-blog/openclaw-whatsapp-risks-engineers-guide/ |
+| Baileys — repository ufficiale (WhiskeySockets) | GitHub | https://github.com/WhiskeySockets/Baileys |
+| WhatsApp changes terms to bar general-purpose chatbots | TechCrunch | https://techcrunch.com/2025/10/18/whatssapp-changes-its-terms-to-bar-general-purpose-chatbots-from-its-platform/ |
+| WhatsApp Business API Pricing 2026 — pricing model | Twilio | https://www.twilio.com/en-us/whatsapp/pricing |
+| WhatsApp Business Platform Pricing | WhatsAppBusiness.com | https://whatsappbusiness.com/products/platform-pricing/ |
+| Slack Bolt for JavaScript — Socket Mode | Slack Developer Tools | https://tools.slack.dev/bolt-js/concepts/socket-mode/ |
+| Slack — Using Socket Mode | Slack Developer Docs | https://docs.slack.dev/apis/events-api/using-socket-mode/ |
+| Slack Socket Mode — reference | Slack API | https://api.slack.com/apis/socket-mode |
+| Slack — Creating an app with Bolt for JavaScript | Slack Developer Docs | https://docs.slack.dev/tools/bolt-js/creating-an-app/ |
+| Slack — Hello World Bolt tutorial | Slack API | https://api.slack.com/tutorials/tracks/hello-world-bolt |
+| Discord — Message Content Privileged Intent FAQ | Discord Developer Support | https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ |
+| Discord Privileged Gateway Intents 2026 — practical guide | Space-Node | https://space-node.net/blog/discord-gateway-intents-message-content-2026 |
+| Discord.js — Gateway Intents guide | discord.js | https://discordjs.guide/legacy/popular-topics/intents |
+| Discord.py — Intents reference | Read the Docs | https://discordpy.readthedocs.io/en/latest/intents.html |
+| BlueBubbles — channel docs ufficiale OpenClaw | OpenClaw Docs | https://docs.openclaw.ai/channels/bluebubbles |
+| BlueBubbles Server — Complete Setup & API Guide | hmseeb (gist) | https://gist.github.com/hmseeb/e313cd954ad893b75433f2f2db0fb704 |
+| BlueBubbles — repository server | GitHub (BlueBubblesApp) | https://github.com/BlueBubblesApp/bluebubbles-server |
+| Set Up OpenClaw With iMessage via BlueBubbles | Stack Junkie | https://www.stack-junkie.com/blog/openclaw-imessage-bluebubbles-setup-guide |
+| OpenClaw iMessage Setup (2026) — Claw Messenger | Claw Messenger | https://www.clawmessenger.com/blog/openclaw-imessage-setup-guide |
+| signal-cli — repository ufficiale | GitHub (AsamK) | https://github.com/AsamK/signal-cli |
+| signal-cli Quickstart Wiki | GitHub (AsamK) | https://github.com/AsamK/signal-cli/wiki/Quickstart |
+| signal-cli daemon + dbus setup (discussion) | GitHub (AsamK) | https://github.com/AsamK/signal-cli/discussions/1894 |
+| matrix-appservice-bridge — bridging infrastructure | GitHub (matrix-org) | https://github.com/matrix-org/matrix-appservice-bridge |
+| Matrix.org — Application Services | Matrix.org | https://matrix.org/docs/older/application-services/ |
+| Matrix.org — Bridging | Matrix.org | https://matrix.org/docs/communities/bridging/ |
+| mautrix-bridges — troubleshooting & FAQ | mau.fi | https://docs.mau.fi/bridges/general/troubleshooting.html |
+| OpenClaw — Configuration reference (channels) | OpenClaw Docs | https://docs.openclaw.ai/gateway/configuration |
+| Multi-channel setup (Telegram + WhatsApp + Discord + Slack) | LumaDock | https://lumadock.com/tutorials/openclaw-multi-channel-setup |
+| OpenClaw Messaging Channel Integration Guide 2026 | YingTu | https://yingtu.ai/en/blog/openclaw-messaging-channel-integration-guide |
+| OpenClaw Channel Setup — Telegram & altri | ManageMyClaw | https://managemyclaw.com/blog/openclaw-channel-setup-telegram-whatsapp-discord-slack/ |
+| Part 3: Messaging Channel Integrations | RamNode | https://ramnode.com/guides/series/openclaw/messaging-channels |
+| Multi-Channel Bots with OpenClaw — Learn OpenClaw | Learn OpenClaw | https://resources.learnopenclaw.ai/multi-channel-bots-with-openclaw-telegram-discord-slack/ |
+| Optimal Messaging Platforms for OpenClaw AI | EasyClawd | https://www.easyclawd.com/blog/choose-your-channel |
+| OpenClaw Configuration Guide 2026 — full reference | CrewClaw | https://www.crewclaw.com/blog/openclaw-configuration-guide |
+
 ### Notizie e approfondimenti
 
 | Risorsa | Testata | URL |
