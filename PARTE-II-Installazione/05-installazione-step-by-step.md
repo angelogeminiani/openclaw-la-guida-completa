@@ -7,7 +7,7 @@
 - I dettagli specifici per macOS (Apple Silicon vs Intel), Linux (Ubuntu/Fedora/Arch) e Windows/WSL2
 - Come generare passo per passo la API key su Anthropic, OpenAI e Google AI Studio (con i costi minimi di partenza)
 - Come navigare il wizard di onboarding schermata per schermata, con il significato reale di ogni opzione
-- Cosa succede dietro le quinte quando il wizard scrive `~/.openclaw/config.yaml` e `~/openclaw/workspace/`
+- Cosa succede dietro le quinte quando il wizard scrive `~/.openclaw/config.yaml` e `~/.openclaw/workspace/`
 - Cosa aspettarti di spendere nei primi sette giorni per profilo d'uso (leggero, moderato, intensivo)
 - Come installare il Gateway come **daemon** (`--install-daemon`) e capire la differenza con la modalità foreground
 - Come scegliere modello, autenticazione e canale **dopo il ban Anthropic del 4 aprile 2026**
@@ -95,7 +95,7 @@ npm install -g openclaw
 openclaw onboard --install-daemon
 ```
 
-Funziona identico, ma richiede che tu abbia già Node 22.16+ installato e che `npm`'s global bin sia nel `PATH` (vedi la sezione "Errori comuni" se l'eseguibile `openclaw` non viene trovato).
+Funziona identico, ma richiede che tu abbia già Node 22.16+ installato e che la cartella global bin di `npm` sia nel `PATH` (vedi la sezione "Errori comuni" se l'eseguibile `openclaw` non viene trovato).
 
 **Modo 3 — Sorgente (per chi contribuisce o vuole leggersi il codice).** Clona il repo, builda, linka il binario:
 
@@ -116,7 +116,7 @@ cd openclaw
 ./scripts/docker/setup.sh
 ```
 
-Il setup script monta `~/.openclaw` (config) e `~/openclaw/workspace` (file dell'agente) come volumi, espone la porta `18789`, e parte. L'onboarding viene mostrato la prima volta che ti colleghi alla dashboard.
+Il setup script monta come volume `~/.openclaw` — lo stato e, al suo interno, `workspace/` con i file dell'agente — espone la porta `18789`, e parte. L'onboarding viene mostrato la prima volta che ti colleghi alla dashboard.
 
 ### Dettagli per sistema operativo
 
@@ -128,7 +128,7 @@ L'installer si comporta in modo simile su tutte le piattaforme, ma ognuna ha tre
 - L'installer crea un'entry in `~/Library/LaunchAgents/ai.openclaw.gateway.plist`. La gestisci con `launchctl list | grep openclaw`.
 - Su M1/M2 di prima generazione (Ventura 13.4 e precedenti) può servire abilitare *Rosetta 2* per alcune skill che dipendono ancora da binari Intel: `softwareupdate --install-rosetta --agree-to-license`.
 
-**macOS — Intel (Mac Mini 2018, MacBook Pro 2019).** Funziona ma è in fase di "best effort": Apple ha deprecato il supporto a partire da macOS 16. Se sei ancora su un Intel, fissa Node a 22.16 (non 24): qualche package nativo non è ancora aggiornato per Node 24 su Intel-Mac.
+**macOS — Intel (Mac Mini 2018, MacBook Pro 2019).** Funziona ma è in fase di "best effort": il supporto Apple ai Mac Intel è in via di dismissione. Se sei ancora su un Intel, fissa Node a 22.16 (non 24): qualche package nativo non è ancora aggiornato per Node 24 su Intel-Mac.
 
 **Linux — Ubuntu/Debian.** L'installer cerca `apt`, installa `curl`, `git`, e Node via NodeSource se manca:
 
@@ -197,25 +197,25 @@ Il wizard mostra otto schermate. Le passiamo una a una.
 
 **Schermata 1 — Avviso di sicurezza.** Una pagina di testo con un riassunto onesto di cosa OpenClaw può fare al tuo computer: leggere file, eseguire comandi, navigare la rete, mandare messaggi. Non è teatro: leggila davvero. Il pulsante "accetto" abilita l'installazione del daemon.
 
-**Schermata 2 — Workspace.** Dove l'agente scriverà i suoi file. Il default `~/openclaw/workspace` va bene per il 95% dei casi. Se hai un disco esterno dedicato o un volume cifrato, puntalo lì. Quello che metterai in questa cartella sarà *direttamente accessibile* dall'agente: niente segreti, niente roba personale.
+**Schermata 2 — Workspace.** Dove l'agente scriverà i suoi file. Il default `~/.openclaw/workspace` va bene per il 95% dei casi. Se hai un disco esterno dedicato o un volume cifrato, puntalo lì. Quello che metterai in questa cartella sarà *direttamente accessibile* dall'agente: niente segreti, niente roba personale.
 
 **Schermata 3 — Modello LLM.** Il cuore della scelta. A maggio 2026 le opzioni mainstream sono tre.
 
 | Modello | Provider | Quando sceglierlo |
 |---|---|---|
-| Claude Opus 4.6 | Anthropic | Default per agente generale |
-| Codex 5.4 | OpenAI | Forte su codice e tool use |
+| Claude Sonnet 4.6 | Anthropic | Default per agente generale |
+| GPT-5.1 | OpenAI | Forte su codice e tool use |
 | Gemini 2.5 Ultra | Google | Multimodale, finestra molto lunga |
 
 La scelta non è irreversibile: puoi cambiarla con `openclaw config set model <slug>` in qualunque momento. Ma cambiarla *spesso* costa, perché ogni modello ha i suoi token quirks e l'agente impara a "parlare" col modello iniziale. Scegli quello con cui pensi di restare almeno tre mesi.
 
-**(i) Pro tip:** se vuoi giocare in modalità "modello leggero per task semplici, modello forte per quelli difficili", scegli ora Claude Opus 4.6 come default e configura un *router* in fase due (vedi Cap. 14, sezione "Strategie di ottimizzazione costi"). Cominciare con un solo modello tiene il setup pulito.
+**(i) Pro tip:** se vuoi giocare in modalità "modello leggero per task semplici, modello forte per quelli difficili", scegli ora Claude Sonnet 4.6 come default e configura un *router* in fase due (vedi Cap. 14, sezione "Strategie di ottimizzazione costi"): Haiku per i task leggeri, Opus 4.6 come opzione premium per quelli difficili. Cominciare con un solo modello tiene il setup pulito.
 
 **Schermata 4 — Autenticazione.** Qui c'è il bivio post-ban. Tre opzioni teoriche, una sola realmente sostenibile.
 
 - **API key (consigliata, unica opzione affidabile).** Vai su `console.anthropic.com`, `platform.openai.com` o `aistudio.google.com` e genera una chiave. Pay-as-you-go: paghi i token che consumi. Incolla la key quando il wizard te la chiede; viene salvata cifrata in `~/.openclaw/credentials/`. Nessun rischio di ToS violation.
-- **Sottoscrizione ChatGPT Plus / Pro.** OpenAI ha esplicitamente "benedetto" l'uso di Codex 5.4 via account ChatGPT Pro ($200/mese) per agenti come OpenClaw. Conviene se prevedi un volume di token equivalente a $200+ al mese: sotto, l'API key paga di meno.
-- **~~Sottoscrizione Claude Pro/Max~~ — bloccata.** Dal **4 aprile 2026** Anthropic ha sospeso l'uso di Claude Pro e Max con tool di terze parti, OpenClaw incluso. Chi tenta vedrà un errore `Anthropic API key invalid` o `Unauthorized: subscription not allowed for third-party agents`. Unica via legittima oggi: API key o, in alternativa, "extra usage" pay-as-you-go aggiunto sopra alla sottoscrizione (vedi Cap. 14 per i conti esatti).
+- **Sottoscrizione ChatGPT Plus / Pro.** OpenAI ha esplicitamente "benedetto" l'uso di GPT-5.1 via account ChatGPT Pro ($200/mese, ~€185) per agenti come OpenClaw. Conviene se prevedi un volume di token equivalente a $200+ al mese: sotto, l'API key paga di meno.
+- **~~Sottoscrizione Claude Pro/Max~~ — bloccata.** Dal **4 aprile 2026** Anthropic ha sospeso l'uso di Claude Pro e Max con tool di terze parti, OpenClaw incluso. Chi tenta vedrà un errore `Anthropic API key invalid` o `Unauthorized: subscription not allowed for third-party agents`. Per Claude l'unica via legittima oggi è la **API key pay-as-you-go** (vedi Cap. 14 per i conti esatti).
 
 **(!) Attenzione:** non lasciare la API key in chiaro in `~/.bashrc` o in un file `.env` versionato. Il wizard la cifra automaticamente sotto `~/.openclaw/credentials/`; non spostarla. Se devi condividere l'installazione fra più macchine, ruota le chiavi su ognuna e usa il *credential proxy* del Capitolo 4.
 
@@ -223,25 +223,25 @@ La scelta non è irreversibile: puoi cambiarla con `openclaw config set model <s
 
 Il wizard si aspetta che tu abbia già la chiave in tasca. I tre provider mainstream hanno flussi simili ma non identici. Conta cinque minuti per ognuno.
 
-**Anthropic (Claude Opus 4.6).** È il provider che il libro usa come default.
+**Anthropic (Claude Sonnet 4.6).** È il provider che il libro usa come default.
 
 1. Vai su `console.anthropic.com` e fai *Sign up* o *Continue with Google*. Verifica l'email.
-2. Apri *Settings → Billing* (sidebar sinistra) e aggiungi un metodo di pagamento. **Senza billing non puoi generare key.** Il minimo di ricarica è $5; per partire è sufficiente.
+2. Apri *Settings → Billing* (sidebar sinistra) e aggiungi un metodo di pagamento. **Senza billing non puoi generare key.** Il minimo di ricarica è $5 (~€4,60); per partire è sufficiente.
 3. Vai su *Settings → API keys* (oppure direttamente `console.anthropic.com/settings/keys`).
 4. Click *Create Key*, dai un nome riconoscibile (es. `openclaw-mac-mini`), conferma.
 5. **Copia la key adesso.** Anthropic la mostra una sola volta. Salvala nel password manager con tag `anthropic-api`.
-6. Imposta un *spend limit* mensile in *Settings → Limits*. Per partire, $20 al mese ti tengono al sicuro mentre prendi le misure.
+6. Imposta un *spend limit* mensile in *Settings → Limits*. Per partire, $20 (~€18) al mese ti tengono al sicuro mentre prendi le misure.
 
 **(!) Attenzione:** la sottoscrizione *Claude Pro/Max* (`claude.ai`) è una cosa diversa dall'API key (`console.anthropic.com`). La prima è bloccata da OpenClaw dal 4 aprile 2026, la seconda no. Se non vedi la voce *API keys* in sidebar, sei sul sito sbagliato: vai su `console.anthropic.com`, non su `claude.ai`.
 
-**OpenAI (Codex 5.4, GPT-5).** Il flusso è simile ma con due passaggi extra (verifica telefono, ricarica prepagata).
+**OpenAI (GPT-5.1).** Il flusso è simile ma con due passaggi extra (verifica telefono, ricarica prepagata).
 
 1. Vai su `platform.openai.com`, fai *Sign in with Google* o crea l'account. Verifica email **e numero di telefono** (OpenAI lo richiede).
-2. Apri *Settings → Organization → Billing* (`platform.openai.com/settings/organization/billing/overview`) e *Add credit*. Minimo $5. Suggerito: abilita *auto-recharge* a $25 quando il credito scende sotto $5, così non ti ferma a metà task.
+2. Apri *Settings → Organization → Billing* (`platform.openai.com/settings/organization/billing/overview`) e *Add credit*. Minimo $5 (~€4,60). Suggerito: abilita *auto-recharge* a $25 (~€23) quando il credito scende sotto $5, così non ti ferma a metà task.
 3. Apri *API keys* (`platform.openai.com/api-keys`).
 4. *Create new secret key*, nome descrittivo (`openclaw-prod`), permessi *All*, *Create*.
 5. **Copia la key subito.** Stesso vincolo di Anthropic: viene mostrata una volta sola.
-6. Vai su *Usage → Limits* e imposta un *Monthly budget*. $30/mese è un buon punto di partenza.
+6. Vai su *Usage → Limits* e imposta un *Monthly budget*. $30 (~€28) al mese è un buon punto di partenza.
 
 **Google (Gemini 2.5 Ultra).** Il più rapido dei tre, ma con un dettaglio di sicurezza da non saltare.
 
@@ -260,6 +260,8 @@ Il wizard si aspetta che tu abbia già la chiave in tasca. I tre provider mainst
 | OpenAI | $5 | ~7 min | Auto-recharge $25, limite $30 |
 | Google | gratis | ~3 min | Free tier ampio; restrict obbligatorio dal 19 giu 2026 |
 
+Cambio indicativo usato nel libro: $1 ≈ €0,92.
+
 **(i) Pro tip:** crea key *separate* per ogni installazione, non riusare la stessa fra Mac Mini, VPS e laptop. Quando una compromessa, ruoti solo quella.
 
 **Schermata 5 — Gateway.** Qui il wizard configura il **WebSocket control plane** — il cuore di OpenClaw. I default sono ragionevoli per uso locale e li lasci come sono nel 99% dei casi.
@@ -276,16 +278,16 @@ Cambia il bind address in `0.0.0.0` *solo* se stai installando su un VPS con un 
 
 **Schermata 6 — Canale.** Il wizard ti chiede di scegliere il primo canale di messaggistica. Telegram è il default e per ottime ragioni: setup di tre minuti, gruppi, mention gating nativo, app eccellente su tutte le piattaforme. Le altre opzioni (WhatsApp, Slack, Discord, Signal, iMessage) sono coperte in dettaglio nel [Capitolo 6](./06-configurare-telegram-e-altri-canali.md). Per ora: scegli Telegram, anche se hai un caso d'uso enterprise. Aggiungerai Slack o Teams dopo, in due minuti, quando saprai che il resto funziona.
 
-Se non vuoi configurare alcun canale ora, scegli "Skip" — potrai sempre lanciare `openclaw channels add` più tardi.
+Se non vuoi configurare alcun canale ora, scegli "Skip" — potrai sempre lanciare `openclaw channels login --channel telegram` più tardi.
 
 **Schermata 7 — Ricerca web.** Quattro opzioni, una precaricata.
 
-- **Brave Search API** (precaricata, gratis fino a 2.000 query/mese). Sceglila per partire. Nessuna chiave da inserire.
+- **Brave Search API** (precaricata). Da febbraio 2026 il vecchio free tier da 2.000 query/mese è stato sostituito da $5 (~€4,60) di crediti gratuiti mensili — circa 1.000 query — oltre i quali si paga a consumo. Per un agente personale bastano e avanzano: sceglila per partire. Nessuna chiave da inserire.
 - **Exa.** Ricerca semantica eccellente per task di "trova-mi-cose-tipo-questa". Generosa nel free tier.
 - **Perplexity API.** Risultati già "ragionati", più lenti, più costosi. Utile per ricerche di sintesi.
 - **Firecrawl.** Non è motore di ricerca: è scraper. Utile come complemento, non come sostituto.
 
-Puoi anche saltare e configurarle dopo con `openclaw skills add brave-search` (o equivalente). Lasciare Brave attiva di default è quasi sempre la mossa giusta.
+Puoi anche saltare e configurarle dopo con `openclaw skills install brave-search` (o equivalente). Lasciare Brave attiva di default è quasi sempre la mossa giusta.
 
 **Schermata 8 — Skill iniziali e hook.** Il wizard propone un set di skill consigliate: tienile *quasi tutte*. Le due indispensabili per partire bene:
 
@@ -301,50 +303,47 @@ Il wizard offre anche di abilitare quattro **hook** di sistema:
 | `cost-tracker` | Aggrega spesa per modello, sessione, agente | **Sempre on** |
 | `context-optimizer` | Compatta il contesto quando si avvicina al limite | On — risparmia token |
 
-`session-memory` è il singolo hook che fa la differenza fra "agente che dimentica tutto a ogni sessione" e "agente che si ricorda chi sei". Va sempre abilitato. Salva i ricordi in `~/.openclaw/workspace/memory/YYYY-MM-DD-HHMM.md`, leggibili a occhio nudo.
+`session-memory` è il singolo hook che fa la differenza fra "agente che dimentica tutto a ogni sessione" e "agente che si ricorda chi sei". Va sempre abilitato. Salva i ricordi in `~/.openclaw/workspace/memory/YYYY-MM-DD.md` — una nota per giorno, leggibile a occhio nudo.
 
 ### Cosa il wizard ha appena scritto sul tuo disco
 
-Quando il wizard si chiude, il filesystem ha guadagnato due alberi separati con responsabilità chiare. Visualizziamoli con una mappa, perché la confusione fra "stato" (`.openclaw`) e "workspace" (`openclaw`) è la singola fonte di errori più frequente nelle prime settimane.
+Quando il wizard si chiude, il filesystem ha guadagnato un solo albero — `~/.openclaw/` — con dentro due zone a responsabilità chiare. Visualizziamole con una mappa, perché la confusione fra "stato" (la radice) e "workspace" (la sottocartella) è la singola fonte di errori più frequente nelle prime settimane.
 
 ```text
-            ┌─────────────────────────────┐
-            │      Home directory         │
-            │      (~/, %USERPROFILE%)    │
-            └──────────────┬──────────────┘
-                           │
-            ┌──────────────┴──────────────┐
-            │                             │
-   ┌────────▼─────────┐         ┌─────────▼──────────┐
-   │   ~/.openclaw    │         │    ~/openclaw      │
-   │   "il motore"    │         │   "la scrivania"   │
-   │  (state dir)     │         │  (workspace dir)   │
-   └────────┬─────────┘         └─────────┬──────────┘
-            │                             │
-   ├─ config.yaml                ├─ workspace/
-   ├─ credentials/  (encrypted)  │   ├─ SOUL.md
-   ├─ auth.token                 │   ├─ IDENTITY.md
-   ├─ logs/                      │   ├─ AGENTS.md
-   ├─ sessions/                  │   ├─ TOOLS.md
-   ├─ channels/                  │   ├─ USER.md
-   └─ workspace/memory/          │   ├─ HEARTBEAT.md
-       (session snapshots)       │   ├─ BOOTSTRAP.md (opt)
-                                 │   └─ MEMORY.md (opt)
-                                 └─ projects/
-                                     └─ ... (your stuff)
+~/.openclaw/            ← "il motore" (stato)
+├─ config.yaml
+├─ credentials/   (encrypted)
+├─ auth.token
+├─ logs/
+├─ sessions/
+├─ channels/
+└─ workspace/           ← "la scrivania"
+   ├─ SOUL.md              (dell'agente)
+   ├─ AGENTS.md
+   ├─ IDENTITY.md
+   ├─ USER.md
+   ├─ TOOLS.md
+   ├─ HEARTBEAT.md
+   ├─ MEMORY.md
+   ├─ BOOTSTRAP.md   (solo al primo avvio)
+   ├─ memory/        (note giornaliere)
+   ├─ skills/
+   ├─ cron/
+   └─ projects/
+       └─ ... (your stuff)
 ```
 
-A sinistra, **lo stato** — il *motore*. Config, credenziali cifrate, token, log, sessioni, snapshot di memoria. È la parte "infrastrutturale" e contiene segreti: trattala come la cartella `.ssh`, mai in cloud non cifrato, mai versionata in repo pubblici.
+In alto, **lo stato** — il *motore*. Config, credenziali cifrate, token, log, sessioni. È la parte "infrastrutturale" e contiene segreti: trattala come la cartella `.ssh`, mai in cloud non cifrato, mai versionata in repo pubblici.
 
-A destra, **il workspace** — la *scrivania*. Sono i file `.md` che l'agente legge e scrive come se fossero documenti suoi. Qui puoi (anzi, *dovresti*) tenere un repo Git privato: ogni modifica all'identità o ai progetti diventa una commit, e in caso di guai torni indietro con un `git checkout`.
+Dentro, **il workspace** — la *scrivania*. Sono i file `.md` che l'agente legge e scrive come se fossero documenti suoi. Qui puoi (anzi, *dovresti*) tenere un repo Git privato: ogni modifica all'identità o ai progetti diventa una commit, e in caso di guai torni indietro con un `git checkout`. Il fatto che tutto viva sotto `~/.openclaw/` ha anche un vantaggio pratico: **il backup è una cartella sola**.
 
-I sette/otto file nella radice del workspace sono i **bootstrap files** — gli unici che OpenClaw carica automaticamente all'avvio di ogni sessione. `BOOTSTRAP.md` (override personalizzato) e `MEMORY.md` (sintesi long-term) sono opzionali ma utili. Tutti gli altri `.md` che metterai sotto `projects/` saranno disponibili all'agente *su richiesta*, non automaticamente: questo evita di saturare la finestra di contesto.
+Gli otto file nella radice del workspace sono i **bootstrap files** — gli unici che OpenClaw carica automaticamente all'avvio di ogni sessione. `BOOTSTRAP.md` è un caso a parte: è il **rito del primo avvio**. Lo crea OpenClaw stesso, guida la conversazione di onboarding, propaga le tue risposte in `IDENTITY.md`, `USER.md` e `SOUL.md`, poi si auto-cancella. Se settimane dopo lo trovi ancora lì, il bootstrap è fallito (ne riparliamo nel Cap. 7). `MEMORY.md` è la sintesi long-term della memoria. Tutti gli altri `.md` che metterai sotto `projects/` saranno disponibili all'agente *su richiesta*, non automaticamente: questo evita di saturare la finestra di contesto.
 
 Cap aggregato: 150.000 caratteri totali fra tutti i bootstrap, 20.000 per singolo file. Sopra quei limiti, OpenClaw tronca silenziosamente. Se vedi comportamenti strani settimane dopo, controlla `/context list` dentro la TUI: ti dice cosa è entrato e cosa è stato troncato.
 
 ### Cosa aspettarti di spendere nei primi 7 giorni
 
-Quasi tutti, la prima settimana, hanno paura di spendere troppo. La realtà è quasi sempre l'opposto: si spende poco perché si fa fatica a trovare cose utili da chiedere. Tre profili di riferimento, misurati su Claude Opus 4.6 con cache prompt attivo, basati su sessioni reali raccontate dalla community fra marzo e maggio 2026.
+Quasi tutti, la prima settimana, hanno paura di spendere troppo. La realtà è quasi sempre l'opposto: si spende poco perché si fa fatica a trovare cose utili da chiedere. Tre profili di riferimento, misurati su Claude Sonnet 4.6 con cache prompt attivo, basati su sessioni reali raccontate dalla community fra marzo e maggio 2026.
 
 | Profilo | Tipico utente | Sessioni/giorno | Token/sessione | Costo 7 giorni |
 |---|---|---|---|---|
@@ -352,7 +351,7 @@ Quasi tutti, la prima settimana, hanno paura di spendere troppo. La realtà è q
 | Quotidiano | digest, email, calendario | 15–30 | ~8k | $4–$10 |
 | Intensivo | coding + ricerca + cron | 50+ | ~20k | $20–$45 |
 
-I numeri assumono *cache prompt* abilitato (default in OpenClaw 2026.x) e modello Opus. Se usi Codex 5.4 i costi salgono di circa il 30% per task di ragionamento puro; se usi Gemini 2.5 Ultra scendono di circa il 20% sui task multimodali. Se invece sei sulla sottoscrizione ChatGPT Pro ($200/mese), il costo è fisso indipendentemente dal volume — conviene quando superi le ~250.000 token al giorno, che è già "intensivo serio".
+I numeri assumono *cache prompt* abilitato (default in OpenClaw 2026.x) e modello Sonnet 4.6 (cambio indicativo: $1 ≈ €0,92, quindi il profilo "Quotidiano" spende ~€3,70–9,20 a settimana). Se usi GPT-5.1 i costi salgono di circa il 30% per task di ragionamento puro; se usi Gemini 2.5 Ultra scendono di circa il 20% sui task multimodali. Se invece sei sulla sottoscrizione ChatGPT Pro ($200/mese, ~€185), il costo è fisso indipendentemente dal volume — conviene quando superi i ~250.000 token al giorno (per dare un'idea: una dozzina abbondante di sessioni lunghe da ~20k token), che è già "intensivo serio".
 
 **(i) Pro tip:** la prima settimana, abilita `cost-tracker` (lo hai fatto nel wizard) e a fine giornata lancia `openclaw cost report --since today`. Il numero ti rassicura — o ti avvisa, se hai un cron impazzito che brucia token nella notte.
 
@@ -454,10 +453,15 @@ VER=$(openclaw --version 2>/dev/null \
 ok "CLI installed: $VER"
 
 # 2. Node version >= 22.16
+MIN="22.16"
 NODE=$(node --version 2>/dev/null \
   | sed 's/v//')
 [ -n "$NODE" ] || bad "Node not found"
-ok "Node version: v$NODE"
+LOWEST=$(printf '%s\n%s\n' "$MIN" "$NODE" \
+  | sort -V | head -1)
+[ "$LOWEST" = "$MIN" ] \
+  || bad "Node v$NODE older than v$MIN"
+ok "Node version: v$NODE (>= v$MIN)"
 
 # 3. Gateway running
 openclaw gateway status \
@@ -490,7 +494,7 @@ CHN=$(openclaw channels status \
   ok "Channels: $CHN connected"
 
 # 7. Bootstrap files present
-WS="$HOME/openclaw/workspace"
+WS="$HOME/.openclaw/workspace"
 for f in IDENTITY.md SOUL.md; do
   [ -s "$WS/$f" ] \
     || warn "$f missing or empty"
@@ -514,7 +518,7 @@ Lanciato dopo l'installazione, il risultato atteso è una pila di `OK` verdi e l
 
 **Prompt pronto — fai generare lo script all'agente stesso:**
 
-> "Genera uno script bash chiamato `verify-install.sh` che esegua sette controlli sull'installazione OpenClaw: (1) `openclaw` nel PATH, (2) Node ≥ 22.16, (3) gateway running, (4) dashboard raggiungibile su `127.0.0.1:18789`, (5) `openclaw doctor` senza errori (warning ammessi), (6) almeno un canale collegato (warning se zero), (7) presenza non vuota di `IDENTITY.md` e `SOUL.md` in `~/openclaw/workspace/`. Output a colori, exit 0 se tutto verde, 1 al primo rosso."
+> "Genera uno script bash chiamato `verify-install.sh` che esegua sette controlli sull'installazione OpenClaw: (1) `openclaw` nel PATH, (2) versione Node confrontata con il minimo 22.16 (fallisci se inferiore), (3) gateway running, (4) dashboard raggiungibile su `127.0.0.1:18789`, (5) `openclaw doctor` senza errori (warning ammessi), (6) almeno un canale collegato (warning se zero), (7) presenza non vuota di `IDENTITY.md` e `SOUL.md` in `~/.openclaw/workspace/`. Output a colori, exit 0 se tutto verde, 1 al primo rosso."
 
 ### Update, backup e disinstallazione
 
@@ -536,7 +540,7 @@ openclaw doctor --fix
 bash ~/dotfiles/verify-install.sh
 ```
 
-Il flag `--include-workspace` aggiunge i file della "scrivania" all'archivio (di default il backup contiene solo lo stato). Il `doctor --fix` post-update cattura i `schema mismatch` automaticamente. Lo script verifica che dopo l'update non ti sia rotto qualcosa di non ovvio (canale disconnesso, hook spento).
+Il flag `--include-workspace` aggiunge all'archivio anche la sottocartella `workspace/` con i file della "scrivania" (di default il backup contiene solo lo stato del motore: config, credenziali, sessioni). Il `doctor --fix` post-update cattura i `schema mismatch` automaticamente. Lo script verifica che dopo l'update non ti sia rotto qualcosa di non ovvio (canale disconnesso, hook spento).
 
 Leggi *sempre* il changelog prima di un major. Cerca le righe con tag `[breaking]` e `[security]`: sono le sole che ti faranno cambiare config a mano.
 
@@ -550,7 +554,7 @@ openclaw backup create \
   --rotate 8
 ```
 
-Il file risultante è `openclaw-backup-YYYYMMDD-HHMM.tar.gz` e contiene: `config.yaml`, `credentials/` (cifrate, non in chiaro), `auth.token`, `sessions/`, `channels/`, e — se hai messo `--include-workspace` — anche `~/openclaw/workspace/`. Per restore in caso di disastro:
+Il file risultante è `openclaw-backup-YYYY-MM-DD-HHMM.tar.gz` e contiene: `config.yaml`, `credentials/` (cifrate, non in chiaro), `auth.token`, `sessions/`, `channels/`, e — se hai messo `--include-workspace` — anche `workspace/`. Per restore in caso di disastro:
 
 ```bash
 openclaw backup restore \
@@ -573,14 +577,16 @@ openclaw backup restore \
 # 1. stop the daemon and remove the service
 openclaw gateway uninstall
 
-# 2. remove state and config (DANGER: secrets)
-rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
+# 2. keep a copy of the workspace (optional)
+cp -r ~/.openclaw/workspace \
+  ~/openclaw-archive-$(date +%F)
 
-# 3. remove the workspace if you really want
-rm -rf ~/openclaw/workspace
+# 3. remove state, config AND workspace
+#    (DANGER: secrets + agent files)
+rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 ```
 
-**(!) Attenzione:** il passo 2 cancella le API key cifrate. Se le hai salvate solo lì, dopo non le recuperi più: usa l'occasione per *ruotarle* sui pannelli dei provider, in modo che eventuali copie sparse non valgano più. Il passo 3 distrugge `IDENTITY.md`, `SOUL.md`, memorie e progetti: prima di lanciarlo, valuta se vuoi tenerne almeno una copia (`cp -r ~/openclaw/workspace ~/openclaw-archive-$(date +%F)`).
+**(!) Attenzione:** il passo 3 cancella le API key cifrate. Se le hai salvate solo lì, dopo non le recuperi più: usa l'occasione per *ruotarle* sui pannelli dei provider, in modo che eventuali copie sparse non valgano più. E poiché il workspace vive *dentro* `~/.openclaw/`, lo stesso comando distrugge anche `IDENTITY.md`, `SOUL.md`, memorie e progetti: non saltare il passo 2 se vuoi tenerne una copia.
 
 Su macOS ricordati anche di rimuovere il LaunchAgent se non l'ha fatto `gateway uninstall`:
 
@@ -649,7 +655,7 @@ I tre prompt che usi nei primi cinque minuti di vita dell'agente. Copia, incolla
 | Sintomo | Causa probabile | Fix |
 |---|---|---|
 | Lo script `curl … install.sh` fallisce | Rete dietro proxy aziendale o certificate pinning | Scaricare lo script (`curl -O`), ispezionarlo, lanciarlo manualmente con `bash install.sh`. |
-| `openclaw: command not found` dopo `npm install -g` | `npm` global bin non in `PATH` | Aggiungi `export PATH="$(npm bin -g):$PATH"` a `~/.zshrc` o `~/.bashrc`, riapri il terminale. |
+| `openclaw: command not found` dopo `npm install -g` | `npm` global bin non in `PATH` | Aggiungi `export PATH="$(npm prefix -g)/bin:$PATH"` a `~/.zshrc` o `~/.bashrc`, riapri il terminale. |
 | `Node version too old` | Sistema con Node < 22.16 | Installa Node 24 (raccomandato) o 22 LTS via `nvm install 22 && nvm use 22`. |
 | Errore `Anthropic API key invalid` o `subscription not allowed` | Tentativo di usare Claude Pro/Max bloccata dal 4 aprile 2026 | Generare una API key da `console.anthropic.com` e usarla. Vedi Cap. 14 per le alternative al ban. |
 | La TUI non parte dopo l'installazione | Terminale non TTY (es. SSH senza `-t`) | Lanciare in un vero terminale o aggiungere `-t` allo `ssh`. |

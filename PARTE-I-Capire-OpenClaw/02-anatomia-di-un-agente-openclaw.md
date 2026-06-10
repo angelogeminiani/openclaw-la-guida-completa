@@ -20,7 +20,7 @@ Aver letto il [Capitolo 1](./01-cos-e-openclaw-e-perche-e-importante.md). Nessun
 
 Il primo errore quando si apre la documentazione di OpenClaw è leggerla come si legge un manuale di sistema: cercare il file di config, il binary, il demone, le opzioni della CLI. È un riflesso comprensibile ma porta fuori strada. OpenClaw è progettato per essere ragionato come **un dipendente digitale** che vive sul tuo computer (o sul tuo VPS, o sul tuo Raspberry Pi), e l'analogia non è soltanto retorica: ti aiuta a capire dove guardare quando qualcosa non va.
 
-Pensa così. Il tuo agente ha **una scrivania**: il workspace, una cartella sul disco — di norma `~/.openclaw/<nome-agente>-workspace/` — dove vivono tutti i suoi file. Ha un **badge**: un'identità con un nome, un'emoji, una descrizione, che lo rende riconoscibile su Telegram, Slack o WhatsApp. Ha una **cassetta degli attrezzi**: le skill installate, ognuna documentata da un `SKILL.md` che gli spiega come usarla. Ha un'**agenda**: i cron job, scadenze ricorrenti che lui stesso può scrivere. Ha un **diario**: la memoria persistente, divisa in fogli giornalieri e in note di lungo periodo. E ha un **cuore che batte**: l'heartbeat, un ping di sistema che lo sveglia anche quando nessuno gli ha scritto.
+Pensa così. Il tuo agente ha **una scrivania**: il workspace, una cartella sul disco — `~/.openclaw/workspace/` per l'agente principale, `~/.openclaw/workspace-<nome>/` per gli agenti aggiuntivi — dove vivono tutti i suoi file. Ha un **badge**: un'identità con un nome, un'emoji, una descrizione, che lo rende riconoscibile su Telegram, Slack o WhatsApp. Ha una **cassetta degli attrezzi**: le skill installate, ognuna documentata da un `SKILL.md` che gli spiega come usarla. Ha un'**agenda**: i cron job, scadenze ricorrenti che lui stesso può scrivere. Ha un **diario**: la memoria persistente, divisa in fogli giornalieri e in note di lungo periodo. E ha un **cuore che batte**: l'heartbeat, un ping di sistema che lo sveglia anche quando nessuno gli ha scritto.
 
 Quando l'agente "non risponde", il primo riflesso utile non è guardare i log di sistema; è chiedersi quale dei sei elementi sopra non sta funzionando. Manca la scrivania (workspace corrotto)? Il badge è confuso (`IDENTITY.md` ambiguo)? La cassetta è chiusa (skill non installate o senza permessi)? L'agenda è vuota (cron non scritti)? Il diario è bloccato (memoria piena, contesto compattato)? Il cuore non batte (Gateway giù)? La diagnostica del Capitolo 15 rifletterà questa stessa griglia, e la userai più di una volta.
 
@@ -28,9 +28,9 @@ Quando l'agente "non risponde", il primo riflesso utile non è guardare i log di
 
 Nel parlato della community questi tre termini si mescolano. Vale la pena tenerli separati fin da subito.
 
-Il **Gateway** è uno e uno solo per macchina: è il processo che gira in background (lo lanci con `openclaw gateway`), apre i canali (Telegram, WhatsApp, Slack…), riceve i messaggi e li instrada. Senza Gateway acceso non c'è OpenClaw, anche se il tuo workspace è perfetto. Esiste un control plane WebSocket interno (`ws://127.0.0.1:18789`) che il Cap. 20 scopre nel dettaglio; per ora basta sapere che è il "centralino".
+Il **Gateway** è uno e uno solo per macchina: è il processo che gira in background (lo lanci con `openclaw gateway start`), apre i canali (Telegram, WhatsApp, Slack…), riceve i messaggi e li instrada. Senza Gateway acceso non c'è OpenClaw, anche se il tuo workspace è perfetto. Esiste un control plane WebSocket interno (`ws://127.0.0.1:18789`) che il Cap. 20 scopre nel dettaglio; per ora basta sapere che è il "centralino".
 
-Gli **agenti** sono identità distinte, ognuna con il suo workspace. Un Gateway può servirne uno o dieci. Quando aggiungi un agente con `openclaw agents add <nome>`, viene creata una cartella `~/.openclaw/<nome>-workspace/`, vengono seminati alcuni file di partenza, e il Gateway impara a riconoscerlo nel routing dei canali.
+Gli **agenti** sono identità distinte, ognuna con il suo workspace. Un Gateway può servirne uno o dieci. Quando aggiungi un agente con `openclaw agents add <nome>`, viene creata una cartella `~/.openclaw/workspace-<nome>/`, vengono seminati alcuni file di partenza, e il Gateway impara a riconoscerlo nel routing dei canali.
 
 Il **workspace** è la cartella fisica: lì dentro vivono i file di identità, le skill, i cron, le note di memoria, eventuali allegati. È versionabile con Git, copiabile da una macchina all'altra, ispezionabile con un editor di testo. È il punto in cui finisce ogni cosa che l'agente "sa di sé". Chi vuole portare un agente da un Mac mini a un VPS Hetzner non fa altro che spostare la cartella (e ridare le credenziali ai canali). È la conseguenza più potente di una scelta architetturale che il Cap. 20 esplora a fondo: **niente database, solo file**.
 
@@ -70,7 +70,7 @@ Una panoramica visuale aiuta a fissare i rapporti fra i tre concetti, prima di e
 └─────────────────────────────────────────────────────────┘
 ```
 
-Tre cose vale la pena notare in questo schema. Primo, il Gateway è l'**unico punto di contatto con i canali**: nessun agente "parla" direttamente a Telegram. Secondo, ogni agente è un **silos**: il workspace di Polly e quello di Finn (e di tutti gli altri) non si vedono fra loro, ed è questa la garanzia di isolamento. Terzo, ogni agente sceglie il **suo modello**: Polly può ragionare con Claude, Finn con Nemotron locale, e il Gateway è indifferente.
+Tre cose vale la pena notare in questo schema. Primo, il Gateway è l'**unico punto di contatto con i canali**: nessun agente "parla" direttamente a Telegram. Secondo, ogni agente è un **silos**: il workspace di Polly e quello di Finn (e di tutti gli altri) non si vedono fra loro, ed è questa la garanzia di isolamento. Quando due agenti devono davvero scambiarsi qualcosa, lo fanno attraverso canali espliciti — `sessions_send` o una cartella condivisa configurata nel Gateway — mai leggendo direttamente il workspace altrui: il meccanismo è spiegato nel Cap. 12. Terzo, ogni agente sceglie il **suo modello**: Polly può ragionare con Claude, Finn con Nemotron locale, e il Gateway è indifferente.
 
 ### Gli otto file che OpenClaw legge all'avvio
 
@@ -78,10 +78,10 @@ OpenClaw, all'avvio di una sessione, **carica automaticamente otto file** se li 
 
 I file sono `SOUL.md`, `AGENTS.md`, `USER.md`, `TOOLS.md`, `IDENTITY.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`. Cinque di questi sono di **identità** (chi è, come si comporta, cosa sa di te); due sono di **ciclo di vita** (come fa il primo avvio e cosa fa quando si sveglia); uno è la **memoria di lungo periodo**.
 
-Sul disco, una settimana dopo il primo avvio, una workspace tipica ha questa forma:
+Sul disco, una settimana dopo il primo avvio, il workspace tipico ha questa forma:
 
 ```text
-~/.openclaw/polly-workspace/
+~/.openclaw/workspace-polly/
 ├── SOUL.md          # personalità, tono, confini
 ├── AGENTS.md        # istruzioni operative
 ├── IDENTITY.md      # nome, emoji, vibe
@@ -104,7 +104,7 @@ Sul disco, una settimana dopo il primo avvio, una workspace tipica ha questa for
 └── .openclaw/       # stato interno (cache, lock)
 ```
 
-Quello che vedi qui è *tutto* ciò che esiste di un agente. Non c'è un database nascosto, non c'è un servizio cloud che tiene altro stato, non ci sono file binari proprietari. Se cancelli la cartella, l'agente smette di esistere; se la copi su un altro computer, riprende da dove l'avevi lasciato. La conseguenza pratica è importante: **mettere il workspace sotto Git** è la cosa più utile che puoi fare nella prima settimana — vedi il Cap. 16 per il workflow completo, ma il punto di partenza è banale: `cd ~/.openclaw/polly-workspace && git init && git add -A && git commit -m "polly day 0"`. Da quel momento ogni `git diff` ti racconta come l'agente sta cambiando nel tempo, e ogni `git log` è il diario delle sue evoluzioni.
+Quello che vedi qui è *tutto* ciò che esiste di un agente. Non c'è un database nascosto, non c'è un servizio cloud che tiene altro stato, non ci sono file binari proprietari. Se cancelli la cartella, l'agente smette di esistere; se la copi su un altro computer, riprende da dove l'avevi lasciato. La conseguenza pratica è importante: **mettere il workspace sotto Git** è la cosa più utile che puoi fare nella prima settimana — vedi il Cap. 15 per il workflow completo, ma il punto di partenza è banale: `cd ~/.openclaw/workspace-polly && git init && git add -A && git commit -m "polly day 0"`. Da quel momento ogni `git diff` ti racconta come l'agente sta cambiando nel tempo, e ogni `git log` è il diario delle sue evoluzioni.
 
 **SOUL.md — la personalità.** È il file più impattante che esista. Ogni risposta dell'agente passa attraverso il suo SOUL. Qui scrivi *come* parla (formale o sciolto, breve o esteso, ironico o asciutto), *cosa* fa volentieri, *cosa non deve mai fare*, e con quale gerarchia di valori si muove. Un SOUL.md generico produce un agente generico; un SOUL.md scritto bene è la differenza fra un assistente anonimo e un collega con una voce. Un esempio: scrivere `"Be witty and use understatement"` qui dentro è una scelta di personalità; scrivere `"Always answer in under 200 words"` è invece una regola operativa, e va in `AGENTS.md`. La distinzione fra i due file è esattamente questa: SOUL parla del *chi*, AGENTS del *come si lavora*.
 
@@ -112,7 +112,7 @@ Quello che vedi qui è *tutto* ciò che esiste di un agente. Non c'è un databas
 
 **IDENTITY.md — il biglietto da visita.** Nome, emoji, vibe, descrizione breve. È la parte che vede chi entra in contatto con l'agente: chi sei, in che lingua di default rispondi, qual è il ruolo che ricopri. È più leggero di SOUL.md perché parla di *come l'agente appare* anziché di *come pensa*. Il framework risolve i campi con una catena di fallback (config globale → config per-agente → file di workspace), e quello che leggi sul canale è il risultato di quella risoluzione.
 
-**USER.md — il dossier su di te.** Tutto ciò che l'agente deve ricordare di te in maniera *stabile*: nome, ruolo, città, fusi orari, preferenze ricorrenti, vincoli noti, persone che fanno parte della tua cerchia, conti che lavora, brand che usi. È la parte che mantieni *intenzionalmente* tu — e che resta ferma finché non la cambi. Una buona pratica del Cap. 6 è dedicarvi mezz'ora di onboarding e poi tornarci due o tre volte al mese.
+**USER.md — il dossier su di te.** Tutto ciò che l'agente deve ricordare di te in maniera *stabile*: nome, ruolo, città, fusi orari, preferenze ricorrenti, vincoli noti, persone che fanno parte della tua cerchia, gli account con cui lavori, i brand che usi. È la parte che mantieni *intenzionalmente* tu — e che resta ferma finché non la cambi. Una buona pratica del Cap. 7 è dedicarvi mezz'ora di onboarding e poi tornarci due o tre volte al mese.
 
 **TOOLS.md — il manuale d'uso degli strumenti.** Note operative sull'ambiente: convenzioni di path sul tuo computer, alias del tuo shell, peculiarità del tuo sistema, comandi che vanno usati con cautela, adattatori configurati. Se installi una skill nuova e l'agente la usa male, è qui che vai a scrivere "quando usi `gog`, l'account di default è X, l'account di lavoro è Y, non confonderli mai".
 
@@ -137,7 +137,7 @@ Reply "HEARTBEAT_OK" if nothing actionable.
 
 Quando il battito scatta, l'agente legge questa checklist e — se nessuno dei criteri è scattato — risponde `HEARTBEAT_OK`, che il Gateway scarta in silenzio. Se invece c'è materia, agisce e ti scrive sul canale configurato. È la macchina che produce la sensazione, descritta nel Cap. 1, di "essere svegliato dall'agente al momento giusto".
 
-**BOOTSTRAP.md — il rito del primo avvio.** Vive solo per pochi minuti. Al primo avvio dell'agente, OpenClaw scrive un BOOTSTRAP.md che guida una conversazione di onboarding (chi sei, come ti chiami, in che fuso orario sei, che canale preferisci…); le risposte vengono propagate in `IDENTITY.md`, `USER.md`, `SOUL.md`. Quando il rito è finito, OpenClaw cancella `BOOTSTRAP.md`. Se lo trovi ancora lì dopo settimane, vuol dire che il bootstrap non è andato a buon fine — vai al Cap. 6 a riavviarlo.
+**BOOTSTRAP.md — il rito del primo avvio.** Vive solo per pochi minuti. Al primo avvio dell'agente, OpenClaw scrive un BOOTSTRAP.md che guida una conversazione di onboarding (chi sei, come ti chiami, in che fuso orario sei, che canale preferisci…); le risposte vengono propagate in `IDENTITY.md`, `USER.md`, `SOUL.md`. Quando il rito è finito, OpenClaw cancella `BOOTSTRAP.md`. Se lo trovi ancora lì dopo settimane, vuol dire che il bootstrap non è andato a buon fine — vai al Cap. 7 a riavviarlo. Il rito ha anche due tetti da conoscere: i file di bootstrap vengono caricati fino a 150.000 caratteri complessivi, e nessun singolo file dovrebbe superare i 20.000.
 
 **MEMORY.md — la memoria di lungo periodo.** Fatti durevoli, decisioni prese, preferenze emerse, vincoli che hai dichiarato in conversazione. È qui che l'agente accumula nel tempo ciò che USER.md non aveva previsto. La regola d'oro è semplice: **USER.md è ciò che tu metti deliberatamente; MEMORY.md è ciò che l'agente impara da solo**. Tenerli separati ti fa risparmiare ore di debug.
 
@@ -149,7 +149,7 @@ OpenClaw non ha "una" memoria. Ne ha quattro, e capirne la geografia è ciò che
 
 Il **primo strato** sono i **bootstrap files** appena descritti: caricati ad ogni inizio di sessione, danno all'agente la sua identità di base. Pesano in token, ma sono la spina dorsale: l'agente *deve* leggerli per essere sé stesso.
 
-Il **secondo strato** è la **MEMORY.md**, che è l'archivio durevole dei fatti che vuoi sopravvivano alla singola conversazione. Caricata anche lei ad ogni inizio sessione DM, è il posto giusto dove mettere "il mio chirurgo si chiama Y", "il prossimo viaggio è a Tokyo a luglio", "non chiamare mai mia madre prima delle 10".
+Il **secondo strato** è la **MEMORY.md**, che è l'archivio durevole dei fatti che vuoi sopravvivano alla singola conversazione. Caricata anche lei ad ogni inizio sessione DM (direct message: la chat 1:1 con te), è il posto giusto dove mettere "il mio chirurgo si chiama Y", "il prossimo viaggio è a Tokyo a luglio", "non chiamare mai mia madre prima delle 10".
 
 Il **terzo strato** sono le **note giornaliere**, file in `memory/YYYY-MM-DD.md` con il contesto vivo della giornata: cosa è successo, cosa è in corso, cosa è da rifare. OpenClaw carica automaticamente la nota di oggi e quella di ieri, così l'agente ha una "finestra di lavoro" che copre il presente senza pesare sul contesto con un mese di storia. Questi file sono il tuo punto di osservazione preferito quando vuoi capire perché l'agente si è comportato in un certo modo: spesso la risposta è scritta lì.
 
@@ -165,7 +165,7 @@ Sono i due meccanismi temporali di OpenClaw, e si scambiano spesso a parole. Dis
 
 L'**heartbeat** è un battito *ricorrente di sistema*: di default ogni 30 minuti, l'agente si sveglia, legge il suo `HEARTBEAT.md`, decide se c'è qualcosa di cui occuparsi e — se non c'è nulla — risponde un laconico `HEARTBEAT_OK` che il Gateway scarta in silenzio. È il meccanismo che permette all'agente di "esistere" anche quando nessuno gli ha scritto: la differenza essenziale rispetto a un chatbot. L'heartbeat gira nella sessione `main` dell'agente per default, ma può essere configurato in modo *isolato* (`sessionTarget: "isolated"`), così ogni battito parte da zero senza la storia conversazionale precedente. Nei setup maturi questa è una scelta di costo importante: un battito isolato vale una frazione di un battito ricco di contesto.
 
-Il **cron** è invece un *appuntamento programmato esplicitamente*: "ogni mattina alle 7:00 mandami il digest", "ogni venerdì alle 17:00 prepara il report", "fra venti minuti ricordami la chiamata". È il Gateway a tenere traccia dei cron, a far svegliare l'agente all'orario giusto, e — se serve — a consegnare l'output su un canale specifico. Una particolarità potente: i cron possono creare altri cron. È il modo con cui un agente "impara la tua agenda", come vedremo nel Cap. 17.
+Il **cron** è invece un *appuntamento programmato esplicitamente*: "ogni mattina alle 7:00 mandami il digest", "ogni venerdì alle 17:00 prepara il report", "fra venti minuti ricordami la chiamata". È il Gateway a tenere traccia dei cron, a far svegliare l'agente all'orario giusto, e — se serve — a consegnare l'output su un canale specifico. Una particolarità potente: i cron possono creare altri cron. È il modo con cui un agente "impara la tua agenda", come vedremo nel Cap. 18.
 
 La regola pratica per non confondersi: l'heartbeat è il *cuore*, il cron è l'*agenda*. Se vuoi qualcosa "ogni tanto, in modo opportunistico", sta nell'heartbeat; se vuoi qualcosa "a un orario preciso", sta nel cron. Si possono pestare i piedi a vicenda — se la coda principale, la lane di sessione, la lane cron o un cron attivo sono occupati, l'heartbeat viene saltato e ritentato dopo: è un'eccezione gestita, non un errore — ma è raro che vada storto.
 
@@ -200,6 +200,17 @@ Quando stai parlando con il tuo agente e gli arrivano messaggi mentre lui sta an
 - **`collect`** — i nuovi messaggi si accumulano in un buffer e vengono trattati insieme appena il run corrente termina.
 
 Per la maggior parte dei lettori del libro, il default `followup` o `collect` è quello giusto: evita di tagliare a metà ragionamenti complessi e mantiene un'esperienza prevedibile. Il Cap. 15 entra nei dettagli di come scegliere il modo per i casi limite (per esempio, gli agenti che gestiscono allarmi in tempo reale preferiscono `interrupt`).
+
+Per fissare i termini inglesi di queste due sezioni:
+
+| Termine | In parole semplici |
+|---|---|
+| session scope | quante sessioni, e come separate |
+| peer | il singolo interlocutore |
+| mention gating | parte solo se menzionato |
+| reply tag | etichetta che lega i thread |
+| chunking | risposta spezzata per il canale |
+| queue mode | gestione dei messaggi in arrivo |
 
 ### Il ciclo di vita di un task
 
@@ -242,13 +253,13 @@ Tempo totale dall'invio alla risposta: ~6 secondi. Token spesi: ~3.500 in input 
 
 I **canali** sono i mezzi attraverso cui parli all'agente. Ne esistono ad oggi più di venti, ognuno con un plug-in dedicato e un protocollo proprio. Senza pretendere di essere esaustivi, vale la pena vederne i sette principali con un consiglio d'uso.
 
-**Telegram (grammY).** Il canale consigliato per iniziare. Setup veloce con `@BotFather`, supporto a immagini, file, voce, gruppi, messaggi formattati. È quello che il Cap. 5 useremo come base.
+**Telegram (grammY).** Il canale consigliato per iniziare. Setup veloce con `@BotFather`, supporto a immagini, file, voce, gruppi, messaggi formattati. È quello che useremo come base nel Cap. 6.
 
 **WhatsApp (Baileys).** Il più "naturale" per uso personale e familiare. La libreria Baileys parla il protocollo non ufficiale di WhatsApp Web; richiede di tenere il telefono online e di scansionare un QR. Funziona bene ma è il canale più sensibile a cambi lato Meta.
 
 **Slack (Bolt) e Discord (discord.js).** I canali da team. Slack per uso lavorativo "office", Discord per community e team più informali. Entrambi gestiscono bene gruppi, mention gating e thread.
 
-**Signal (signal-cli) e iMessage (BlueBubbles).** I canali per chi vuole privacy (Signal) o per chi vive nell'ecosistema Apple (iMessage). BlueBubbles è la via supportata; il vecchio binding `imsg` è in fase di deprecazione.
+**Signal (signal-cli) e iMessage (plugin nativo).** I canali per chi vuole privacy (Signal) o per chi vive nell'ecosistema Apple (iMessage). Dal 2026 il plugin nativo iMessage è il default; il vecchio ponte BlueBubbles è deprecato.
 
 **Microsoft Teams, Matrix, Google Chat, Feishu, LINE, IRC, Mattermost, Nextcloud Talk, Nostr, Synology Chat, Tlon, Twitch, Zalo, WeChat, QQ, WebChat.** L'arcipelago lungo, utile in casi specifici. WeChat e QQ sono particolarmente importanti per chi opera in Cina; Matrix per chi vuole un canale federato; Nostr per chi vive nell'ecosistema crittografico decentralizzato.
 
@@ -272,7 +283,7 @@ Accanto alle skill esistono i **tool nativi** del Gateway (filesystem, shell, we
 
 OpenClaw è pensato per il **multi-agente**: nulla impedisce di avere su un solo Gateway una assistente personale (Polly), un agente "famiglia" (Finn), un agente di marketing (Max). Ognuno con SOUL, IDENTITY, MEMORY e cron diversi. Le sessioni e i workspace sono isolati, il routing dei canali decide chi risponde a chi.
 
-Il Cap. 9 e il Cap. 10 sono dedicati a questo, ma è utile saperlo già da subito: l'unità minima di OpenClaw è *l'agente*, non *il sistema*. Se ti accorgi che il tuo agente fa "troppe cose" (gestisce posta, codice, casa, finanze, bambini), il problema non è che è poco capace — è che ha un mansionario sovraccarico. La risposta è quasi sempre **specializzare**: dividere il lavoro fra più agenti, ognuno con un SOUL.md mirato.
+I Capitoli 10–12 sono dedicati a questo, ma è utile saperlo già da subito: l'unità minima di OpenClaw è *l'agente*, non *il sistema*. Se ti accorgi che il tuo agente fa "troppe cose" (gestisce posta, codice, casa, finanze, bambini), il problema non è che è poco capace — è che ha un mansionario sovraccarico. La risposta è quasi sempre **specializzare**: dividere il lavoro fra più agenti, ognuno con un SOUL.md mirato.
 
 ### Come ispezionare l'agente: i comandi che userai sempre
 
@@ -327,18 +338,18 @@ openclaw heartbeat status
 # === Workspace sul disco (utile anche solo con ls) ===
 
 # i file canonici e la cartella memory/
-ls -la ~/.openclaw/polly-workspace/
+ls -la ~/.openclaw/workspace-polly/
 
 # ispezionare un file di identità
-cat ~/.openclaw/polly-workspace/IDENTITY.md
+cat ~/.openclaw/workspace-polly/IDENTITY.md
 
 # storia delle modifiche, se sotto Git
-git -C ~/.openclaw/polly-workspace/ log --oneline -10
+git -C ~/.openclaw/workspace-polly/ log --oneline -10
 ```
 
 Il pattern è sempre lo stesso: dalla salute del sistema (`status`) si scende verso il pezzo specifico (canale, agente, sessione, skill, cron) e poi al file su disco. Il Cap. 15 espande questa griglia in un vero e proprio runbook diagnostico.
 
-**(#) Debug:** se l'agente "non capisce" una preferenza che tu sei sicuro di aver dato, esegui questa sequenza prima di qualsiasi altra cosa: (1) `cat USER.md` e cerca la preferenza letterale; (2) `grep -r "parola-chiave" ~/.openclaw/polly-workspace/` per vedere se è finita in un file diverso da quelli canonici; (3) `openclaw sessions show <session-id>` per controllare quali bootstrap files sono stati effettivamente caricati nell'ultimo turno. Nove volte su dieci il problema è alla riga 2: la preferenza esiste, ma è in un file con un nome che OpenClaw non legge.
+**(#) Debug:** se l'agente "non capisce" una preferenza che tu sei sicuro di aver dato, esegui questa sequenza prima di qualsiasi altra cosa: (1) `cat USER.md` e cerca la preferenza letterale; (2) `grep -r "parola-chiave" ~/.openclaw/workspace-polly/` per vedere se è finita in un file diverso da quelli canonici; (3) `openclaw sessions show <session-id>` per controllare quali bootstrap files sono stati effettivamente caricati nell'ultimo turno. Nove volte su dieci il problema è alla riga 2: la preferenza esiste, ma è in un file con un nome che OpenClaw non legge.
 
 **Prompt pronto:**
 > "Apri il tuo workspace. Elenca i file presenti nella radice e dimmi, per ognuno, se è uno degli otto file canonici di OpenClaw e che ruolo gioca. Segnala se manca qualcuno dei canonici e se ce ne sono di non canonici che vorresti che spostassi o caricassi a mano."
@@ -355,9 +366,9 @@ Il pattern è sempre lo stesso: dalla salute del sistema (`status`) si scende ve
 | L'agente "dimentica" cose importanti | Le note finiscono in conversazione, non vengono salvate sui file di identità o di memoria | Chiedi esplicitamente "salva questo in USER.md" o "aggiungi questa regola al SOUL.md"; verifica che il file sia stato modificato. |
 | L'agente non risponde a un messaggio recente | Heartbeat non ancora scattato (default ~30 min), Gateway giù, o canale disconnesso | `openclaw status` per il Gateway, `openclaw channels status` per i canali. Se il problema è il canale, riavvia quello, non tutto. |
 | Confondere SOUL.md, AGENTS.md e IDENTITY.md | Nomi simili, ruoli sovrapponibili | SOUL = personalità e confini (chi è). AGENTS = istruzioni operative (come lavora). IDENTITY = biglietto da visita (nome, emoji, vibe). |
-| Il BOOTSTRAP.md è ancora lì dopo settimane | Il rito di bootstrap non è andato a buon fine al primo avvio | Vai al Cap. 6: la procedura prevede di rispondere alle domande dentro la TUI fino a quando il file viene cancellato automaticamente. |
+| Il BOOTSTRAP.md è ancora lì dopo settimane | Il rito di bootstrap non è andato a buon fine al primo avvio | Vai al Cap. 7: la procedura prevede di rispondere alle domande dentro la TUI fino a quando il file viene cancellato automaticamente. |
 | L'agente ha "regole" che non ricordi di aver scritto | Skill installata che ha modificato AGENTS.md o ha aggiunto istruzioni ai bootstrap files | Apri AGENTS.md e cerca i blocchi aggiunti dalle skill (di solito hanno marker tipo `<!-- skill:nome -->`). Rimuovi ciò che non vuoi e disinstalla la skill se necessario. |
-| Risposte estremamente lente o costose | HEARTBEAT.md troppo lungo, oppure note giornaliere enormi caricate ad ogni turno | Tieni HEARTBEAT.md sotto le 20 righe; archivia note vecchie con un cron settimanale di "compaction" (vedi Cap. 17). |
+| Risposte estremamente lente o costose | HEARTBEAT.md troppo lungo, oppure note giornaliere enormi caricate ad ogni turno | Tieni HEARTBEAT.md sotto le 20 righe; archivia note vecchie con un cron settimanale di "compaction" (vedi Cap. 18). |
 | Conversazioni di gruppo che esplodono | Mention gating disattivato | Riattiva `mention_gating: true` per il canale di gruppo o aggiungi reply tags più stringenti. |
 | Una sessione "vede" cose di un'altra sessione | Session scope su `main` o `per-peer` quando volevi `per-channel-peer` | Cambia `session.scope` nella config del Gateway o dell'agente, riavvia, verifica con `openclaw sessions list`. |
 

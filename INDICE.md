@@ -49,6 +49,10 @@ Indice piatto, senza la struttura narrativa del README. Utile come riferimento r
 21. [Capitolo 21 — L'ecosistema OpenClaw [★]](./PARTE-VIII-Visione-futuro/21-ecosistema-openclaw.md)
 22. [Capitolo 22 — Il futuro del lavoro con gli agenti [★]](./PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md)
 
+## Capitolo Extra
+
+- [Capitolo Extra — HomeClaw: il tuo Alexa locale con Raspberry Pi 5 e OpenClaw [★★★]](./capitolo-extra-homeclaw.md)
+
 ## Appendici
 
 - [Appendice A — Glossario](./Appendici/A-glossario.md)

@@ -16,7 +16,7 @@
 
 ## Prerequisiti
 
-Aver scelto dove installare OpenClaw nel [Capitolo 3](./03-scegliere-dove-installare-openclaw.md). Avere Docker Desktop ≥ 4.60 (macOS, Windows) oppure Docker Engine ≥ 27 (Linux), con almeno 8 GB di RAM disponibili per la VM Docker. Conoscenza base del terminale: navigare fra cartelle, leggere un file YAML, seguire un `docker run` senza panico.
+Aver scelto dove installare OpenClaw nel [Capitolo 3](./03-scegliere-dove-installare-openclaw.md). Avere Docker Desktop ≥ 4.60 (macOS, Windows) oppure Docker Engine ≥ 27 (Linux). Sulla RAM, una precisazione: per il **Livello 1** (container per-session) bastano i 4 GB minimi del Capitolo 3; gli **8 GB disponibili per la VM Docker** servono solo se punti ai livelli con microVM o gVisor (Livello 3+). Conoscenza base del terminale: navigare fra cartelle, leggere un file YAML, seguire un `docker run` senza panico.
 
 Verifica veloce dei prerequisiti, da incollare in un terminale:
 
@@ -33,6 +33,8 @@ free -m | awk '/Mem:/{print $2}'
 
 Se hai venti minuti e vuoi partire stasera al Livello 1, questi sono i cinque comandi essenziali. Il resto del capitolo è il *perché*; questi cinque comandi sono il *come*.
 
+**(!) Attenzione:** questo TL;DR usa due file che vengono creati nelle sezioni successive: `Dockerfile.sandbox` (sezione "Costruire l'immagine") e `verify-sandbox.sh` (sezione "Verificare l'isolamento"). Se lo esegui adesso, i comandi 1 e 4 falliscono: leggilo come anteprima del percorso, torna qui quando hai i due file pronti.
+
 ```bash
 # 1. build the hardened sandbox image
 docker build -f Dockerfile.sandbox \
@@ -47,11 +49,15 @@ sed -i.bak \
   ~/.openclaw/config.yaml
 
 # 4. restart and run the smoke tests
-openclaw restart && bash verify-sandbox.sh
+openclaw gateway restart && \
+  bash verify-sandbox.sh
 
-# 5. schedule a weekly rebuild
+# 5. schedule a weekly rebuild (Fri 07:00);
+#    the script wraps the build command of
+#    step 1 with --no-cache (see the section
+#    "Manutenzione del sandbox nel tempo")
 crontab -l | { cat; echo \
-  '0 7 * * 5 docker build --no-cache ...'; \
+  '0 7 * * 5 bash ~/.openclaw/rebuild.sh'; \
 } | crontab -
 ```
 
@@ -169,7 +175,7 @@ cd openclaw
 ./scripts/docker/setup.sh
 ```
 
-Il setup monta due volumi: `~/.openclaw` (config) e `~/openclaw/workspace` (file dell'agente). Per attivare anche il sandbox per-session *dentro* il Gateway containerizzato:
+Il setup monta come volume un solo albero: `~/.openclaw/` — lo stato (config, credenziali, log) e, al suo interno, `~/.openclaw/workspace/` con i file dell'agente. Per attivare anche il sandbox per-session *dentro* il Gateway containerizzato:
 
 ```bash
 OPENCLAW_SANDBOX=1 ./scripts/docker/setup.sh
@@ -215,13 +221,17 @@ ENTRYPOINT ["/usr/bin/timeout", "300"]
 CMD ["bash"]
 ```
 
-Verifica della firma della base image con `cosign` (Sigstore), prima di farla entrare nella tua build:
+Se il publisher dell'immagine base firma con `cosign` (Sigstore), verifica la firma prima di farla entrare nella tua build. L'esempio che segue è **generico**: identity e issuer corretti li trovi nella documentazione di firma del publisher (non tutte le immagini ufficiali, Debian inclusa, pubblicano firme cosign — in quel caso il pinning per digest resta la tua difesa principale):
 
 ```bash
+# generic example — adapt identity/issuer
+# to the publisher's signing docs
 cosign verify \
-  --certificate-identity-regexp '.*@debian\.org' \
-  --certificate-oidc-issuer-regexp '.*' \
-  debian:bookworm-slim
+  --certificate-identity \
+    '<signer-identity>' \
+  --certificate-oidc-issuer \
+    '<oidc-issuer-url>' \
+  <image>:<tag>
 ```
 
 Build e tag locali:
@@ -329,9 +339,18 @@ api.telegram.org
 
 Il container OpenClaw imposta `HTTP_PROXY` e `HTTPS_PROXY` su `http://squid:3128` e perde la capacità di parlare con qualunque altro dominio.
 
-Approccio 2 — **iptables sull'host** quando vuoi una difesa a livello kernel anche sopra Docker:
+Approccio 2 — **iptables sull'host** quando vuoi una difesa a livello kernel anche sopra Docker. Una premessa: i bridge Docker hanno nomi auto-generati (`br-<id>`); per usare un nome stabile come `br-openclaw` devi fissarlo alla creazione della rete, oppure ricavare quello reale:
 
 ```bash
+# option A: fix the bridge name at creation
+docker network create openclaw-egress \
+  -o com.docker.network.bridge.name=br-openclaw
+
+# option B: derive the auto-generated name
+NET_ID=$(docker network inspect \
+  openclaw-egress -f '{{.Id}}')
+BRIDGE="br-${NET_ID:0:12}"
+
 # default deny on the openclaw-egress bridge
 sudo iptables -I FORWARD -i br-openclaw -j DROP
 sudo iptables -I FORWARD -i br-openclaw \
@@ -435,7 +454,7 @@ docker run --rm --runtime=runsc \
   python3 -c 'print("hello from gvisor")'
 ```
 
-L'overhead è di circa il 10–30% sui workload I/O-pesanti (lettura/scrittura file, rete intensiva) e quasi nullo sui carichi compute-bound, che sono la maggioranza per OpenClaw. **MAGI** estende questo modello: un singolo Sentry ospita più agenti, ognuno con la propria *security context*, e impedisce a un agente compromesso di vedere lo stato degli altri. È particolarmente utile in setup multi-agente (parte IV).
+L'overhead è di circa il 10–30% sui workload I/O-pesanti (lettura/scrittura file, rete intensiva) e quasi nullo sui carichi compute-bound. Qui serve onestà: OpenClaw è un carico prevalentemente **I/O-bound** — legge file, scrive log, parla in rete con i provider — quindi quell'overhead lo paghi davvero. Su un agente personale resta quasi impercettibile (i colli di bottiglia veri sono la latenza del modello e della rete), ma su workload intensi di filesystem — build npm, sync di cartelle — si sente: vedi anche la riga `runsc` nella tabella "Errori comuni". **MAGI** estende questo modello: un singolo Sentry ospita più agenti, ognuno con la propria *security context*, e impedisce a un agente compromesso di vedere lo stato degli altri. È particolarmente utile in setup multi-agente (parte IV).
 
 ### Tabella decisionale — quale livello scegliere
 
@@ -457,7 +476,7 @@ Indipendentemente dal livello scelto, queste sei mosse vanno fatte sempre:
 2. `--cap-drop=ALL` e poi, eventualmente, `--cap-add` solo le capability strettamente necessarie.
 3. `--read-only` sul filesystem del container, con `tmpfs` per `/tmp` e `/run`.
 4. Profilo seccomp personalizzato (parti dal default Docker e *toglie* syscall, non aggiunge).
-5. Disabilitare mDNS dentro la rete Docker per prevenire lateral movement (`/etc/avahi/avahi-daemon.conf` → `disable-publishing=yes`).
+5. Disabilitare mDNS per prevenire lateral movement: si fa **sull'host** (`/etc/avahi/avahi-daemon.conf` → `disable-publishing=yes`); le immagini slim del container non hanno Avahi a bordo.
 6. `--pids-limit=512` e `--memory=2g` per evitare che un agente impazzito esaurisca le risorse dell'host.
 
 Il file `compose.override.yaml` finale, per chi usa Docker Compose, somiglia a questo:
@@ -479,7 +498,7 @@ services:
     networks: [openclaw-egress]
 ```
 
-**Prima e dopo, nello stesso comando.** Per capire cosa cambia davvero, confronta un `docker run` ingenuo con la versione hardenata:
+**Prima e dopo, nello stesso comando.** Per capire cosa cambia davvero, confronta un `docker run` ingenuo con la versione hardened:
 
 ```bash
 # BEFORE — naive, do NOT copy
@@ -499,7 +518,7 @@ docker run -d --name openclaw \
   --memory=2g \
   --security-opt=no-new-privileges:true \
   --network openclaw-egress \
-  -v ~/openclaw/work:/home/claw/work:rw \
+  -v ~/.openclaw/workspace:/home/claw/work:rw \
   openclaw-sandbox:bookworm-slim
 ```
 
@@ -565,7 +584,7 @@ Tenere conto dei costi del sandbox evita la frustrazione del "perché va così p
 
 Sul Mac Mini base 16 GB la combinazione "Gateway containerizzato + microVM" sta comoda. Se vai su un Raspberry Pi 5 (8 GB), tieniti al solo Livello 1 e disattiva il sandbox sul main agent.
 
-**Bolletta.** Un Mac Mini M4 con OpenClaw acceso 24/7 e Gateway containerizzato consuma in media 8–10 W in più rispetto a idle (misurato a parete con un Shelly Plug). In Italia, a tariffa media 0,28 €/kWh, sono circa **2,00–2,50 € al mese**. Su un VPS, il costo del livello "microVM" si traduce in genere in uno scatto di taglia (1 vCPU → 2 vCPU): conta 2–4 € al mese in più sui provider europei mainstream.
+**Bolletta.** Un Mac Mini M4 con OpenClaw acceso 24/7 e Gateway containerizzato consuma in media 8–10 W in più rispetto a idle (misurato a parete con un Shelly Plug). In Italia, a tariffa media 0,30 €/kWh, sono circa **2,00–2,50 € al mese**. Su un VPS, il costo del livello "microVM" si traduce in genere in uno scatto di taglia (1 vCPU → 2 vCPU): conta 2–4 € al mese in più sui provider europei mainstream.
 
 ### Manutenzione del sandbox nel tempo
 
@@ -577,7 +596,7 @@ Un sandbox non è un setup "una tantum": invecchia. Tre abitudini che pagano, e 
 # Linux — cron, weekly Friday at 07:00
 crontab -e
 # add the following line:
-0 7 * * 5 cd ~/openclaw && \
+0 7 * * 5 cd ~/.openclaw && \
   docker build --no-cache \
   -f Dockerfile.sandbox \
   -t openclaw-sandbox:bookworm-slim . \
@@ -605,7 +624,7 @@ WantedBy=timers.target
   <array>
     <string>/bin/bash</string>
     <string>-lc</string>
-    <string>cd ~/openclaw &amp;&amp; \
+    <string>cd ~/.openclaw &amp;&amp; \
       docker build --no-cache \
       -f Dockerfile.sandbox \
       -t openclaw-sandbox:bookworm-slim .</string>
@@ -637,7 +656,7 @@ Cinque passi, in quest'ordine, senza saltarne nessuno.
 1. **Stop al Gateway**, subito. Il primo riflesso giusto è togliere all'agente la capacità di fare altri danni. Niente "indagine in corso, lascialo acceso così vediamo che fa": prima si ferma, poi si guarda.
 
    ```bash
-   openclaw stop
+   openclaw gateway stop
    docker stop openclaw && \
      docker network disconnect openclaw-egress \
      openclaw 2>/dev/null || true
@@ -649,7 +668,7 @@ Cinque passi, in quest'ordine, senza saltarne nessuno.
    tar czf ~/openclaw-incident-$(date +%F).tgz \
      ~/.openclaw/audit.log \
      ~/.openclaw/config.yaml \
-     ~/openclaw/workspace
+     ~/.openclaw/workspace
    ```
 
 3. **Ruota tutte le credenziali** che l'agente ha potuto vedere: API key Anthropic/OpenAI, token GitHub/GitLab, secret di skill terze, password di servizi a cui avesse accesso via `gog`. Considera "viste" anche quelle che pensavi protette dal credential proxy: in dubbio, ruota.
@@ -689,7 +708,7 @@ Il sandbox è la base della sicurezza, ma non la copre tutta. Tre direzioni natu
 - [ ] Docker Desktop ≥ 4.60 (o Engine ≥ 27) installato e funzionante
 - [ ] Ho letto la mappa minacce → livelli e capito quale livello mi copre
 - [ ] Immagine `openclaw-sandbox:bookworm-slim` costruita con `FROM ... @sha256:` (digest)
-- [ ] `cosign verify` superato sulla base image
+- [ ] `cosign verify` superato sulla base image (se il publisher pubblica firme Sigstore)
 - [ ] Container verificato girare come `uid 1000` con `CapEff: 0`
 - [ ] `workspaceAccess` configurato al livello minimo che fa funzionare l'agente
 - [ ] Egress filtering attivo via Squid o iptables, allowlist scritta a mano
@@ -709,7 +728,7 @@ Il sandbox è la base della sicurezza, ma non la copre tutta. Tre direzioni natu
 - [Multi-Agent gVisor Isolation (MAGI)](https://gvisor.dev/blog/2026/04/15/magi-multi-agent-gvisor-isolation/) — annuncio Google MAGI
 - [Your Container Is Not a Sandbox (2026)](https://emirb.github.io/blog/microvm-2026/) — perché Docker da solo non basta
 - [Sandboxing Claude Code in Docker: From Naive to Hardened](https://www.rasha.me/blog/sandboxing-claude-code-in-docker) — guida pratica all'hardening progressivo
-- [Trail of Bits — claude-code-devcontainer](https://github.com/trailofbits/claude-code-devcontainer) — riferimento per devcontainer hardenati
+- [Trail of Bits — claude-code-devcontainer](https://github.com/trailofbits/claude-code-devcontainer) — riferimento per devcontainer hardened
 - [Sigstore / cosign — Verifying Container Images](https://docs.sigstore.dev/cosign/verifying/verify/) — firmare e verificare le immagini base
 - [Rootless mode (Docker docs)](https://docs.docker.com/engine/security/rootless/) — come far girare il demone Docker senza root
 - [Running OpenClaw in Docker (Simon Willison TIL)](https://til.simonwillison.net/llms/openclaw-docker) — setup pratico

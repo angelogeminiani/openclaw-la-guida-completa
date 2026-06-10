@@ -33,9 +33,9 @@ Martedì, 6:45. Il cronjob mattutino di HomeClaw si sveglia. Lo fa in silenzio �
 
 6:58. Entri in cucina per il caffè. Dici "Ehi Claw." Il ReSpeaker accende un anello blu. Tu: "Buongiorno." Lui, dopo un secondo e mezzo: "Buongiorno. Oggi alle dieci hai la call con Lorenzo sul progetto HomeClaw. Il treno per Milano di domani mattina è confermato. Tre email importanti — te le mando su Telegram?" Dici "Sì, grazie." Il LED pulsa verde per due secondi, poi si spegne.
 
-7:15. Il bambino più piccolo entra in cucina: "Ehi Claw, quanto fa sette per otto?" LED blu, poi pensa, poi "Cinquantasei." LED spento. La skill `educator` riconosce la voce del bambino (speaker ID locale) e risponde come Q, l'agente educativo, non come HomeClaw.
+7:15. Il bambino più piccolo entra in cucina: "Ehi Claw, quanto fa sette per otto?" LED blu, poi pensa, poi "Cinquantasei." LED spento. Lo speaker ID locale riconosce la voce del bambino e la richiesta viene instradata a Q, l'agente con ruolo educativo — non a HomeClaw.
 
-7:30. Apri il forno per mettere dentro qualcosa. "Ehi Claw, timer venti minuti." Il LED pulsa verde, HomeClaw non dice nulla (regola SOUL.md: comandi banali = nessuna voce, solo LED). Alle 7:50 l'anello pulsa rosso e una voce morbida dice "Il forno è pronto."
+7:30. Apri il forno per mettere dentro qualcosa. "Ehi Claw, timer venti minuti." Il LED pulsa verde, HomeClaw non dice nulla (regola SOUL.md: comandi banali = nessuna voce, solo LED). Alle 7:50 l'anello lampeggia giallo e una voce morbida dice "Il forno è pronto."
 
 14:30. Torni dall'ufficio. "Ehi Claw, suona quel pezzo che mi piace la domenica." HomeClaw chiama Home Assistant, che chiama Sonos, che parte. HomeClaw non dice niente — il rumore di Radiohead che parte è la conferma.
 
@@ -129,7 +129,7 @@ Funziona, è veloce da mettere in piedi, costa poco. Qualità STT mediocre in am
 
 ### Tier B — Mono-stanza produzione (€380)
 
-Lo stesso nodo, ma con accelerazione hardware: Raspberry Pi 5 16GB + AI HAT+ 2 con Hailo-10H + ReSpeaker USB 4-Mic Array per direzionalità e beamforming + altoparlante decente. Whisper gira sul NPU in 0,6 secondi contro i 2,3 sulla CPU, un piccolo LLM (Nemotron-3B, Phi-3-mini) può girare in locale per le query semplici, e la latenza cala sotto i 2 secondi per le richieste "veloci".
+Lo stesso nodo, ma con accelerazione hardware: Raspberry Pi 5 16GB + AI HAT+ 2 con Hailo-10H + ReSpeaker USB 4-Mic Array per direzionalità e beamforming + altoparlante decente. Whisper gira sul NPU in 0,7 secondi contro i 2,3 sulla CPU, un piccolo LLM (Nemotron-3B, Phi-3-mini) può girare in locale per le query semplici, e la latenza cala sotto i 2 secondi per le richieste "veloci".
 
 Qui la tua voce suona come un vero assistente, non come un esperimento maker. Latenza tipica: 1,5–2,5 secondi. È il setup che ti consiglio se hai deciso di prenderla sul serio.
 
@@ -150,10 +150,10 @@ Per chi vuole "Ehi Claw" dappertutto e non solo alla scrivania. Configurazione a
 | Alimentatore | Ufficiale USB-C 27W | €14 | Il HAT+2 richiede corrente piena; alimentatori da 15W causano throttling |
 | Storage | microSD A2 64GB, classe U3 | €12 | Se hai già l'AI HAT+ 2 occupi lo slot PCIe; usa microSD veloce o SSD USB 3 |
 | Raffreddamento | Dissipatore attivo ufficiale | €5 | Obbligatorio sotto il HAT; il Pi5 scalda parecchio |
-| Microfono | ReSpeaker USB 4-Mic Array (Seeed 107100001) | €75 | Usa **USB**, non il HAT GPIO: i driver del ReSpeaker 2-Mic HAT sono problematici sul Pi 5 con kernel 6.x |
+| Microfono | ReSpeaker USB 4-Mic Array (Seeed 107990193) | €75 | Usa **USB**, non il HAT GPIO: i driver del ReSpeaker 2-Mic HAT sono problematici sul Pi 5 con kernel 6.x |
 | Altoparlante | JBL Go 3 (Bluetooth) o casse USB alimentate | €40 | Il Pi5 non ha jack analogico: serve USB audio, Bluetooth o DAC HAT |
 | Case | Stampa 3D "HomeClaw lobster" | €0–30 | STL gratuiti sulla community Discord OpenClaw (vedi sezione "Il build fisico") |
-| **Totale Tier B** | | **~€360** | |
+| **Totale Tier B** | | **~€380** | |
 
 Per il Tier A sostituisci: ReSpeaker → microfono USB da €15, AI HAT+ 2 → nulla, Pi5 16GB → Pi5 8GB. Scendi a €130 riciclando l'altoparlante.
 
@@ -256,10 +256,14 @@ Installa ciascuno nel proprio virtualenv (`script/setup` in ognuna delle cartell
 Verifica post-installazione:
 
 ```bash
-systemctl status wyoming-openwakeword wyoming-faster-whisper wyoming-piper
+systemctl status \
+  wyoming-openwakeword \
+  wyoming-faster-whisper \
+  wyoming-piper \
+  wyoming-satellite
 ```
 
-Tutti e tre devono mostrare `active (running)`.
+Tutti e quattro devono mostrare `active (running)`.
 
 ### Step 4. Scegliere il modello Whisper
 
@@ -307,6 +311,8 @@ cd homeclaw-repo
 openclaw skills install ./skill
 openclaw agents bind HomeClaw --channel voice --via homeclaw-bridge
 ```
+
+<!-- TODO: sostituire github.com/tuo-account/ con l'URL reale prima della stampa -->
 
 La skill è in Python (è il linguaggio nativo dell'ecosistema Wyoming). Implementa un client TCP che si connette a `wyoming-satellite` sulla porta 10700, orchestra il flusso di conversazione, chiama l'agente HomeClaw tramite l'OpenClaw SDK, e invia le risposte a `wyoming-piper` per la sintesi.
 
@@ -379,7 +385,7 @@ Qui inizia la parte che nei tutorial viene sempre glissata. Quando l'altoparlant
 **1. Echo acustico.** Quando HomeClaw parla, il suo stesso TTS entra nel microfono e viene interpretato come input. Risultato: HomeClaw si interrompe da solo, o peggio, wake word a vuoto perché si chiama "Ehi Claw" mentre sta dicendo "...ehi, bella domanda" (esempio reale che mi è successo).
 
 Soluzioni in ordine di efficacia:
-- **ReSpeaker USB 4-Mic Array con AEC hardware attivo**. Il chip XMOS XVF3510 a bordo fa acoustic echo cancellation in hardware. È il motivo per cui l'ho consigliato come microfono: un semplice USB lavalier non lo fa.
+- **ReSpeaker USB 4-Mic Array con AEC hardware attivo**. Il chip XMOS XVF-3000 a bordo fa acoustic echo cancellation in hardware. È il motivo per cui l'ho consigliato come microfono: un semplice USB lavalier non lo fa.
 - **webrtc audio processing** lato software. Il `wyoming-satellite` accetta `--mic-auto-gain` e `--mic-noise-suppression` (flag `--help` per lista completa). Impostalo a livello 2 come punto di partenza.
 - **Disabilita la captura durante il playback**. Trick semplice: quando Piper sta riproducendo, spegni il mic. Non puoi interrompere HomeClaw parlando, ma elimina al 100% il problema di eco. Flag `--no-duplex-capture` nel wyoming-satellite.
 
@@ -419,7 +425,7 @@ Non è Alexa-ma-locale: ha buchi. Elencarli è onesto e salva una settimana di f
 
 ## Prompt pronto — il SOUL.md di HomeClaw
 
-HomeClaw ha esigenze diverse da un agente Telegram. Le risposte devono essere brevissime (un TTS di 30 secondi stanca), senza Markdown, senza elenchi puntati, e devono essere robuste all'ambiguità del parlato. Ecco un SOUL.md di partenza (versione completa nel repo in `soul-templates/SOUL.md`):
+HomeClaw ha esigenze diverse da un agente Telegram. Le risposte devono essere brevissime (un TTS di 30 secondi stanca), senza Markdown, senza elenchi puntati, e devono essere robuste all'ambiguità del parlato. Ecco un SOUL.md di partenza. La versione completa è nel repo, in `soul-templates/SOUL.md` — attenzione: i template del repo sono **in inglese** (convenzione del progetto), quindi traduci o adatta le regole qui sotto se vuoi un SOUL.md italiano come questo:
 
 > "Sei HomeClaw, un assistente vocale locale che vive su un Raspberry Pi nel salotto. Le tue risposte vengono lette ad alta voce da un sintetizzatore vocale. Regole non negoziabili:
 >
@@ -429,7 +435,7 @@ HomeClaw ha esigenze diverse da un agente Telegram. Le risposte devono essere br
 > - **Conferma silenziosa per comandi banali.** Per 'timer N minuti', 'accendi la luce', 'spegni la sveglia' → NON parlare, risposta `[SILENT_OK]` e il LED verde fa da conferma. Parola = costo d'attenzione; non sprecarla.
 > - **Smart home**: usa la skill `home-assistant`. Rispondi solo 'Fatto' o 'Non ho trovato [nome]'.
 > - **Routing modello**: meteo/orari/math/controllo casa → Nemotron-3B locale. Brainstorming/email/coding/ricerca → Claude Sonnet. Topic sensibili (password, medici, finanze) → SEMPRE locale, MAI cloud.
-> - **Privacy**: le query con keyword ['password', 'banca', 'diagnosi', 'medicina', nomi dei familiari minori] non escono mai dall'hub. Se non puoi rispondere in locale di' 'questa è meglio che la guardi tu' e mandala su Telegram criptata.
+> - **Privacy**: le query con keyword ['password', 'banca', 'diagnosi', 'medicina', nomi dei familiari minori] non escono mai dall'hub. Se non puoi rispondere in locale di' 'questa è meglio che la guardi tu' e mandala su Telegram.
 > - **Conferma esplicita per azioni irreversibili**: inviare email, fare acquisti, cancellare eventi, modificare il budget di casa → chiedi 'confermo HomeClaw' esplicitamente. Se la conferma non arriva in 10 secondi, abortisci silenziosamente.
 > - **Modalità notte**: tra le 22:00 e le 7:00, voce più bassa, LED al 10%, risposte ancora più brevi, niente notifiche proattive."
 
@@ -515,7 +521,7 @@ Installare è il 20% del lavoro. Domarlo è l'80%. Ecco una tabella di marcia pe
 
 **Giorno 6 — Aggiungi un agente specializzato**. Es: Q (educativo) per i bambini, con speaker ID che lo attiva quando una voce giovane pronuncia "Ehi Claw". Testa con tuoi figli.
 
-**Giorno 7 — Misura onestamente**. Quante volte HomeClaw ha aiutato? Quante ha fallito? Quanto costano le API nel periodo (`openclaw costs`)? Quanto Alexa ti sarebbe costata in abbonamento? Decidi: continui, migliori, o torni indietro. È un progetto serio solo se lo metti alla prova.
+**Giorno 7 — Misura onestamente**. Quante volte HomeClaw ha aiutato? Quante ha fallito? Quanto costano le API nel periodo (`openclaw cost report --since 7d`)? Quanto Alexa ti sarebbe costata in abbonamento? Decidi: continui, migliori, o torni indietro. È un progetto serio solo se lo metti alla prova.
 
 ---
 
@@ -564,7 +570,7 @@ Il file `esphome/satellite-esp32s3-box3.yaml` nel repo contiene una configurazio
 
 **Opzione 2 — Raspberry Pi Zero 2 W + ReSpeaker 2-Mic HAT + altoparlante (€75/stanza)**. Più flessibile, più lavoro: Pi OS 64-bit sul Zero 2 W + wyoming-satellite locale + wake word leggero. Sul Zero 2 W il 2-Mic HAT funziona bene. Audio migliore dell'ESP32-S3 grazie al codec WM8960. Ma devi gestire un altro Linux.
 
-Il Gateway OpenClaw non cambia — le skill vedono ogni satellite come un peer del canale `voice` con un nome diverso (`homeclaw-studio`, `homeclaw-cucina`, `homeclaw-camera`). Puoi far sapere all'agente dove si trova ogni peer nel file `~/.openclaw/homeclaw-workspace/peers.yaml`:
+Il Gateway OpenClaw non cambia — le skill vedono ogni satellite come un peer del canale `voice` con un nome diverso (`homeclaw-studio`, `homeclaw-cucina`, `homeclaw-camera`). Puoi far sapere all'agente dove si trova ogni peer nel file `~/.openclaw/workspace-homeclaw/peers.yaml`. Nota: `peers.yaml` **non è incluso nel repo** — crealo a mano con questo contenuto:
 
 ```yaml
 peers:
@@ -626,7 +632,7 @@ L'agente non risponde per niente?
 │           → controlla catena STT→bridge→agent:
 │           ├── journalctl -u wyoming-faster-whisper -f (STT lavora?)
 │           ├── journalctl -u homeclaw-bridge -f (bridge riceve?)
-│           └── openclaw logs --agent HomeClaw -f (agent risponde?)
+│           └── openclaw logs --agent HomeClaw --follow (risponde?)
 │
 ├── Latenza >4 secondi?
 │   ├── Su Tier A senza NPU? → passa a Tier B, o modello base-int8 (non small)
@@ -657,7 +663,7 @@ L'agente non risponde per niente?
 
 **L'audio Bluetooth si sgancia ogni 10 secondi.** Il Pi mette in power-save il modulo BT. Aggiungi `Disable=Handsfree,FakePlayer` in `/etc/bluetooth/main.conf` + restart `bluetoothd`. Oppure passa a un altoparlante USB — più affidabile di BT per applicazioni always-on.
 
-**OpenClaw risponde in inglese anche se parlo italiano.** Whisper autoauto-detect della lingua sbaglia su frasi corte. Forza l'italiano con `--language it` nel service `wyoming-faster-whisper`. Nel SOUL.md: "Rispondi sempre in italiano, a meno che il comando non sia esplicitamente in un'altra lingua."
+**OpenClaw risponde in inglese anche se parlo italiano.** L'auto-detect della lingua di Whisper sbaglia sulle frasi corte. Verifica che il flag `--language it` sia presente nel service `wyoming-faster-whisper` — nei service file del repo c'è già; se hai scritto il service a mano, aggiungilo. Nel SOUL.md: "Rispondi sempre in italiano, a meno che il comando non sia esplicitamente in un'altra lingua."
 
 **"Ehi Claw" riconosciuto, ma il comando successivo trascritto male.** Di solito è questione di finestra di silenzio prima della trascrizione. Aumenta `--vad-threshold 0.3` nel satellite (più permissivo sul silenzio) e `--max-recording-seconds 15`.
 
@@ -671,9 +677,12 @@ Tutto il materiale di questo capitolo — il bridge Python completo, i systemd s
 homeclaw-repo/
 ├── README.md                          # Guida di installazione end-to-end
 ├── LICENSE                            # MIT
+├── CHANGELOG.md
+├── CONTRIBUTING.md
 ├── skill/
 │   ├── SKILL.md                       # Definizione della skill OpenClaw
 │   ├── bridge.py                      # Il bridge Wyoming↔OpenClaw
+│   ├── openclaw_client.py             # Client per il Gateway OpenClaw
 │   └── requirements.txt
 ├── systemd/                           # 6 service file pronti da copiare
 │   ├── wyoming-openwakeword.service
@@ -687,21 +696,24 @@ homeclaw-repo/
 │   ├── requirements.txt
 │   └── README.md
 ├── soul-templates/                    # Template configurazione agente
-│   ├── SOUL.md
+│   ├── SOUL.md                        # (in inglese)
 │   ├── IDENTITY.md
 │   ├── TOOLS.md
 │   └── AGENTS.md
 ├── scripts/
 │   ├── install-tier-b.sh              # Installer one-shot per Tier B
 │   ├── doctor.sh                      # Diagnostica integrata
+│   ├── backup.sh                      # Backup config + workspace
 │   └── benchmark.sh                   # Misura latenza end-to-end
 ├── esphome/
-│   └── satellite-esp32s3-box3.yaml    # Satellite Tier C pronto
+│   ├── satellite-esp32s3-box3.yaml    # Satellite Tier C pronto
+│   └── secrets.yaml.example           # Template credenziali Wi-Fi
 └── docs/
     ├── architecture.md                # Diagramma completo + protocol flow
     ├── hardware-bom.md                # BOM con link verificati
     ├── wakeword-training.md           # Come addestrare "Ehi Claw"
     ├── home-assistant-integration.md  # Bridge HA dettagliato
+    ├── speaker-id.md                  # Training profili speaker ID
     └── troubleshooting.md             # Manuale troubleshooting esteso
 ```
 
@@ -732,7 +744,7 @@ Licenza MIT. Clona, fork, migliora, contribuisci — è open-source come OpenCla
 - [ ] Test edge-case: "Ehi Claw, leggi la mia ultima email" → riassunto di 2 frasi + dettagli su Telegram
 - [ ] Prima settimana completata: SOUL.md rivisto almeno 3 volte, wake word fine-tuned
 - [ ] Backup della cartella `.openclaw/` + immagine microSD su disco esterno
-- [ ] `openclaw costs` controllato: rientri nel budget stimato
+- [ ] `openclaw cost report` controllato: rientri nel budget stimato
 
 ---
 
@@ -740,10 +752,14 @@ Licenza MIT. Clona, fork, migliora, contribuisci — è open-source come OpenCla
 
 Il Capitolo 17 (skill personalizzate) ti dà i mattoni per aggiungere a HomeClaw comandi specifici della tua casa: una skill `lista-spesa` che sincronizza con Todoist, una `ricette` che legge i libri di cucina digitalizzati in Obsidian, una `bimbi` che fa domande-indovinelli quando senti la voce dei bambini. Il Capitolo 18 (cron avanzati) permette abitudini vocali proattive: "Ogni mattina alle 7:15 saluta buongiorno e leggi il meteo se sta per piovere, solo se c'è qualcuno sveglio in casa."
 
-Il Capitolo 11 (coordinamento multi-agente) si sposa con il Tier C in modo interessante: HomeClaw come agente voice "front-end" e, dietro, Polly per gli orari, Max per il marketing, Q per le domande dei bambini, Finn per la famiglia. HomeClaw sente la voce, capisce di chi è il dominio, e delega. Il lobster non è solo — ha un team.
+Il Capitolo 12 (comunicazione e coordinamento tra agenti) si sposa con il Tier C in modo interessante: HomeClaw come agente voice "front-end" e, dietro, Polly per gli orari, Max per il marketing, Q per le domande dei bambini, Finn per la famiglia. HomeClaw sente la voce, capisce di chi è il dominio, e delega. Il lobster non è solo — ha un team.
 
 E quando, tra un anno, vorrai far rispondere HomeClaw con il tono di tua madre che ti chiama a pranzo, troverai che Piper permette di clonare voci con 30 minuti di registrazioni autentiche e un Google Colab. Ma quella è un'altra storia, e forse un altro capitolo.
 
 ---
 
 *Capitolo extra scritto il 24 aprile 2026. Lo stack open-source voice evolve rapidamente; verifica versioni di `wyoming-*` e driver Hailo prima di iniziare. Benchmark eseguiti su Raspberry Pi 5 16GB con AI HAT+ 2 e kernel 6.12, ReSpeaker USB 4-Mic Array, Piper `it_IT-paola-medium`. Codice completo e MIT-licensed nel repo del libro, cartella `homeclaw-repo/`.*
+
+---
+
+[← Capitolo 22](./PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md)  ·  [Indice](./README.md)  ·  [Appendici →](./Appendici/A-glossario.md)

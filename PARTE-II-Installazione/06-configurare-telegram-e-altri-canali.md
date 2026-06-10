@@ -7,7 +7,7 @@
 - Quando scegliere WhatsApp via Baileys (rischio ban) e quando passare alla Cloud API ufficiale, alla luce della stretta Meta del 15 gennaio 2026 sui chatbot general-purpose.
 - Come configurare Slack (Bolt + Socket Mode) e Discord (privileged intents, slash commands) per uso lavorativo, con gli scope minimi che ti salvano da un audit di sicurezza.
 - Come collegare iMessage (plugin nativo, BlueBubbles come fallback), Signal (`signal-cli`), Matrix (appservice), WeChat (plugin Tencent), Microsoft Teams, Google Chat, Feishu, LINE e IRC.
-- Come instradare più canali verso lo stesso agente con sessione condivisa, e come usare la `dmPolicy` per decidere chi può scrivergli.
+- Come instradare più canali verso lo stesso agente, unificando la sessione quando serve, e come usare la `dmPolicy` per decidere chi può scrivergli.
 
 ## Prerequisiti
 
@@ -20,13 +20,13 @@ openclaw channels list
 openclaw gateway status
 ```
 
-Il primo comando mostra l'elenco dei canali supportati dalla tua versione (cambia di mese in mese: la documentazione ufficiale è la fonte di verità). Il secondo conferma che il Gateway è in ascolto e pronto ad accettare un nuovo canale.
+Il primo comando mostra l'elenco dei canali **configurati** sulla tua installazione, con lo stato di ognuno (a installazione fresca la lista è vuota o contiene solo il canale scelto nel wizard del Cap. 5). L'elenco dei canali *supportati* dalla tua versione cambia di mese in mese: la fonte di verità è la documentazione ufficiale, `docs.openclaw.ai/channels`. Il secondo comando conferma che il Gateway è in ascolto e pronto ad accettare un nuovo canale.
 
 ## Contenuto principale
 
-Sono le 19:00 di un mercoledì. Hai pianificato il digest serale, l'agente è acceso, il modello risponde. Manca una sola decisione: su quale chat ti scrive? Telegram impiega cinque minuti a configurarsi, WhatsApp Business tre giorni di verifica Meta, WhatsApp con Baileys due settimane prima del primo ban. Questo capitolo ti porta dalla scelta del canale al primo "ciao, ti sento" — senza fare il giro lungo.
+Sono le 19:00 di un mercoledì. Hai pianificato il digest serale, l'agente è acceso, il modello risponde. Manca una sola decisione: su quale chat ti scrive? Telegram impiega cinque minuti a configurarsi, WhatsApp Business tre giorni di verifica Meta, WhatsApp con Baileys tra le due e le otto settimane prima del primo ban. Questo capitolo ti porta dalla scelta del canale al primo "ciao, ti sento" — senza fare il giro lungo.
 
-**(i) Pro tip:** i comandi e i nomi di canale di questo capitolo si riferiscono a OpenClaw `0.18+` (la serie attiva nella primavera 2026). Prima di copia-incollare verifica con `openclaw --version` e, in caso di differenze, consulta `docs.openclaw.ai/channels` per la sintassi della tua versione. Le piattaforme esterne (Telegram Bot API, Meta, Slack, Discord) cambiano in modo indipendente e ancora più rapido.
+**(i) Pro tip:** i comandi e i nomi di canale di questo capitolo si riferiscono alla serie `2026.x` di OpenClaw attiva nella primavera 2026. Prima di copia-incollare verifica con `openclaw --version` e, in caso di differenze, consulta `docs.openclaw.ai/channels` per la sintassi della tua versione. Le piattaforme esterne (Telegram Bot API, Meta, Slack, Discord) cambiano in modo indipendente e ancora più rapido.
 
 ### TL;DR — Telegram in cinque minuti
 
@@ -65,11 +65,11 @@ Lettura rapida: parti da **Telegram** (costo zero, rischio zero, cinque minuti).
 
 ### Perché il canale conta più di quanto sembri
 
-Quando si sceglie il canale di un agente personale la tentazione è di guardare solo a "quale chat uso più spesso io". È un buon punto di partenza, ma manca tre dimensioni che diventano evidenti solo dopo qualche settimana di uso reale.
+Quando si sceglie il canale di un agente personale la tentazione è di guardare solo a "quale chat uso più spesso io". È un buon punto di partenza, ma mancano tre dimensioni che diventano evidenti solo dopo qualche settimana di uso reale.
 
 La prima è **chi controlla il canale**. Telegram ha una Bot API documentata, gratuita e stabile dal 2015; il giorno in cui Telegram decide di cambiare le regole, le cambia per tutti e in modo trasparente. WhatsApp è esattamente l'opposto: Meta detiene controllo unilaterale, le regole cambiano senza preavviso, e gli strumenti non ufficiali (Baileys e simili) vivono in una zona grigia che si è ristretta moltissimo nel 2025-2026. La seconda dimensione è il **modello di interazione**: 1-a-1 (DM personale), gruppo piccolo (famiglia, team), canale broadcast (community), server multi-canale (Slack, Discord). Un agente che funziona benissimo in DM diventa rumoroso e invadente in un gruppo se non hai pensato al *mention gating*. La terza è **dove vivono i tuoi interlocutori**: una designer freelance in Italia probabilmente usa WhatsApp con i clienti, Telegram con la community, Slack con l'agenzia. Servono più canali, e il punto è farli convergere su un singolo agente che mantenga il contesto.
 
-OpenClaw risolve questo terzo punto nativamente. Il Gateway è un *long-running process* che riceve messaggi da più piattaforme e li instrada nello stesso *session store*: se inizi una conversazione su WhatsApp e la continui su Telegram, l'agente ricorda il filo perché il contesto è condiviso. Per arrivare lì serve però aver configurato ogni canale con cura, e quasi sempre il primo è Telegram.
+OpenClaw risolve questo terzo punto nativamente. Il Gateway è un *long-running process* che riceve messaggi da più piattaforme e li instrada nello stesso *session store*. Una precisazione importante: di default ogni coppia canale+utente ha la **propria** sessione (`per-channel-peer`) — se inizi una conversazione su WhatsApp e la continui su Telegram, l'agente *non* ricorda il filo, a meno che tu non abbia attivato esplicitamente la *session unification* e mappato le identità (lo vediamo nella sezione "Multi-canale" in fondo al capitolo). Per arrivare lì serve aver configurato ogni canale con cura, e quasi sempre il primo è Telegram.
 
 **(i) Pro tip:** non collegare tutti i canali nel primo pomeriggio. Aggiungi un canale per volta, lavoraci sopra una settimana, poi passa al successivo. Tre canali configurati male sono peggio di un canale configurato bene.
 
@@ -85,7 +85,7 @@ Apri Telegram (app o desktop) e cerca `@BotFather`. È il bot ufficiale di Teleg
 /newbot
 ```
 
-BotFather chiede due informazioni in sequenza. Il **nome visibile** del bot — può contenere spazi e maiuscole, è quello che gli interlocutori vedranno nell'header della chat (es. "Polly Personal Assistant"). Lo **username** — deve terminare per `bot` o `_bot`, è univoco a livello globale e diventa parte dell'URL del bot (`t.me/polly_pa_bot`). Conviene sceglierlo coerente con il nome che darai all'agente nel `IDENTITY.md`.
+BotFather chiede due informazioni in sequenza. Il **nome visibile** del bot — può contenere spazi e maiuscole, è quello che gli interlocutori vedranno nell'header della chat (es. "Polly Personal Assistant"). Lo **username** — deve terminare per `bot` o `_bot`, è univoco a livello globale e diventa parte dell'URL del bot (`t.me/polly_pa_bot`). Conviene sceglierlo coerente con il nome che hai dato all'agente nell'`IDENTITY.md` scritto nel Capitolo 5.
 
 Quando lo username è accettato, BotFather risponde con un messaggio che contiene una stringa di questo tipo:
 
@@ -130,7 +130,7 @@ openclaw config set \
 openclaw gateway reload
 ```
 
-Il `reload` ricarica la config senza riavviare l'intero processo: utile quando aggiungi un canale a sistema già in funzione. Se non parte, `openclaw gateway logs --tail 50` mostra il motivo (token malformato, conflitto di porte, errore di rete).
+Il `reload` ricarica la config senza riavviare l'intero processo: utile quando aggiungi un canale a sistema già in funzione. Se non parte, `openclaw logs --follow` mostra il motivo in tempo reale (token malformato, conflitto di porte, errore di rete).
 
 #### Il primo test di andata e ritorno
 
@@ -140,7 +140,7 @@ Cerca su Telegram lo username che hai scelto, apri la chat e premi `/start`. Se 
 
 Se ricevi una risposta entro qualche secondo — anche solo un "Sì, ti sento, sono pronto" — il canale è operativo. Da questo momento ogni messaggio in quella chat viene processato dall'agente, ogni risposta dell'agente torna a te.
 
-**(#) Debug:** se non arriva niente, controlla nell'ordine: (1) `openclaw channels status` indica `telegram: connected`? (2) `openclaw gateway logs --tail 100` mostra messaggi in ingresso quando scrivi? (3) il bot esiste davvero su `https://t.me/<username>`? (4) non hai per caso un secondo Gateway che fa long-polling sullo stesso token? Telegram permette **un solo** consumatore per token: se due processi cercano di leggere in parallelo, ognuno ruba i messaggi dell'altro. Spegni quello vecchio prima di accendere il nuovo.
+**(#) Debug:** se non arriva niente, controlla nell'ordine: (1) `openclaw channels status` indica `telegram: connected`? (2) `openclaw logs --follow` mostra messaggi in ingresso quando scrivi? (3) il bot esiste davvero su `https://t.me/<username>`? (4) non hai per caso un secondo Gateway che fa long-polling sullo stesso token? Telegram permette **un solo** consumatore per token: se due processi cercano di leggere in parallelo, ognuno ruba i messaggi dell'altro. Spegni quello vecchio prima di accendere il nuovo.
 
 #### Gruppi e mention gating
 
@@ -230,11 +230,11 @@ Per limitare il rischio, applica almeno tre regole: (1) **bassa frequenza** — 
 
 #### Cloud API ufficiale: l'unica strada a prova di ban
 
-Se hai un caso d'uso *business* (azienda, freelance con partita IVA, e-commerce, support clienti), la strada giusta è la **WhatsApp Business Cloud API**. È a pagamento, richiede un *Business Service Provider* registrato (Twilio, MessageBird, 360dialog, Meta diretto) e un processo di verifica del numero, ma in cambio non rischi nulla: è il canale ufficiale, supportato e documentato.
+Se hai un caso d'uso *business* (azienda, freelance con partita IVA, e-commerce, support clienti), la strada giusta è la **WhatsApp Business Cloud API**. È a pagamento, richiede un *Business Service Provider* registrato (Twilio, MessageBird, 360dialog, Meta diretto) e un processo di verifica del numero, ma in cambio non rischi nulla: è il canale ufficiale, supportato e documentato. Va detto chiaramente: per un **privato senza attività registrata** la Cloud API è di fatto inaccessibile — la verifica business di Meta richiede una partita IVA o un'azienda. Se sei un privato, le tue opzioni reali su WhatsApp sono Baileys (con i rischi visti sopra) o, meglio, un altro canale.
 
 Il pricing è cambiato sostanzialmente. Dal **1° luglio 2025** Meta è passata da un modello a *conversazione* a un modello *per-messaggio*: ogni template inviato si paga singolarmente. Le tariffe variano per nazione del *destinatario* (non del mittente) e per categoria del messaggio:
 
-- **Marketing** — la più cara, indicativamente $0,01–0,14 per messaggio a seconda del paese.
+- **Marketing** — la più cara, indicativamente $0,01–0,14 (~€0,01–0,13) per messaggio a seconda del paese.
 - **Utility / Authentication** — circa 80-90% meno costosa del marketing.
 - **Service** — gratuite se inviate entro la *customer service window* aperta da un messaggio del cliente.
 - **Click-to-WhatsApp** — gratuite per 72 ore dopo un messaggio iniziato da un annuncio.
@@ -411,7 +411,7 @@ Se ti serve uno di questi canali in modo serio, la documentazione ufficiale (`do
 
 ### Multi-canale: stesso agente, contesto condiviso
 
-Una delle caratteristiche distintive di OpenClaw è che lo stesso Gateway gestisce contemporaneamente più canali, mantenendo un *session store* condiviso. Configuri Telegram, WhatsApp e Slack: lo stesso agente risponde su tutti e tre, e la memoria dell'interazione è la stessa.
+Una delle caratteristiche distintive di OpenClaw è che lo stesso Gateway gestisce contemporaneamente più canali sopra un unico *session store*. Configuri Telegram, WhatsApp e Slack: lo stesso agente risponde su tutti e tre e, se attivi la *session unification*, anche la memoria dell'interazione diventa la stessa.
 
 Visivamente, il flusso ha questa forma:
 
@@ -542,7 +542,7 @@ I prompt che seguono sono pensati per essere incollati direttamente in chat con 
 
 ## Errori comuni e come risolverli
 
-Tabella spezzata in due per leggibilità su A5.
+Tabella spezzata in quattro per leggibilità su A5.
 
 Errori di Telegram:
 

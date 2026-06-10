@@ -88,6 +88,12 @@ L'ecosistema attorno a OpenClaw (Moltbook, hosted platforms, fondazione) e cosa 
 - [Capitolo 21 — L'ecosistema OpenClaw `[★]`](./PARTE-VIII-Visione-futuro/21-ecosistema-openclaw.md)
 - [Capitolo 22 — Il futuro del lavoro con gli agenti `[★]`](./PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md)
 
+### 📁 Capitolo Extra
+
+Un progetto completo che mette insieme tutto il libro: l'assistente vocale di casa, locale e open-source, costruito su Raspberry Pi 5 e OpenClaw.
+
+- [Capitolo Extra — HomeClaw: il tuo Alexa locale con Raspberry Pi 5 e OpenClaw `[★★★]`](./capitolo-extra-homeclaw.md) — con il codice completo nella cartella [`homeclaw-repo/`](./homeclaw-repo/)
+
 ### 📁 [Appendici](./Appendici/)
 
 Materiali di riferimento rapido da tenere a portata di mano:
@@ -134,8 +140,6 @@ Ogni capitolo segue la stessa struttura:
 6. **Errori comuni** — diagnostica e fix
 7. **Checklist di fine capitolo**
 
-I capitoli che non hanno ancora le sezioni "Errori comuni" e "Checklist" contengono **placeholder strutturati** (tabelle e bullet vuoti marcati `_TODO_`) come traccia per la stesura definitiva.
-
 ### Box ricorrenti
 
 | Box | Significato |
@@ -168,11 +172,13 @@ Con [Pandoc](https://pandoc.org):
 
 ```bash
 # PDF unico (richiede LaTeX installato)
-pandoc README.md PARTE-*/[0-9]*.md Appendici/*.md \
+pandoc README.md PARTE-*/[0-9]*.md \
+  capitolo-extra-homeclaw.md Appendici/*.md \
   -o openclaw-guida.pdf --toc --toc-depth=2
 
 # ePub
-pandoc README.md PARTE-*/[0-9]*.md Appendici/*.md \
+pandoc README.md PARTE-*/[0-9]*.md \
+  capitolo-extra-homeclaw.md Appendici/*.md \
   -o openclaw-guida.epub --toc --toc-depth=2 \
   --metadata title="OpenClaw: Guida Completa"
 ```
@@ -187,7 +193,7 @@ OpenClaw evolve molto velocemente — se trovi informazioni datate (versioni di 
 
 ## Date e versioning
 
-- **Versione di riferimento**: aprile 2026
+- **Versione di riferimento**: maggio 2026
 - **Eventi inclusi**: ban Anthropic del 4 aprile 2026, acquisizione Moltbook da parte di Meta (10 marzo 2026), ingresso di Steinberger in OpenAI (14 febbraio 2026)
 - **Software**: OpenClaw v.x.y al momento della stesura. La CLI può cambiare: verifica sempre con `openclaw --version` e leggi il changelog ufficiale.
 
@@ -203,7 +209,7 @@ OpenClaw evolve rapidamente. Verifica i comandi e i prezzi prima di seguirli all
 
 ## Licenza
 
-Vedi [`LICENSE`](./LICENSE-BOOK) nel repository. I contenuti sono distribuiti sotto Creative Commons BY-SA 4.0.
+Vedi [`LICENSE-BOOK`](./LICENSE-BOOK) nel repository. I contenuti sono distribuiti sotto Creative Commons BY-SA 4.0.
 
 Il codice è distribuito sotto licenza [`MIT`](./LICENSE).
 

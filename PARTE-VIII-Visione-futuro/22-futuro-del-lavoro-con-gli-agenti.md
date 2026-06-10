@@ -50,4 +50,4 @@ Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-r
 
 ---
 
-[← Capitolo 21](./21-ecosistema-openclaw.md)  ·  [Indice](../README.md)  ·  [Appendici →](../Appendici/A-glossario.md)
+[← Capitolo 21](./21-ecosistema-openclaw.md)  ·  [Indice](../README.md)  ·  [Capitolo Extra — HomeClaw →](../capitolo-extra-homeclaw.md)
