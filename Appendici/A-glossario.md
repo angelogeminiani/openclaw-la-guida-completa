@@ -10,11 +10,13 @@ Voci alfabetiche dei termini tecnici usati nel libro. Le definizioni sono voluta
 
 **Binding** — Associazione tra un canale (o un account/peer) e un agente specifico. Determina quale agente risponde quando arriva un messaggio. Vedi Cap. 10.
 
+**BOOTSTRAP.md** — Il *rito del primo avvio*: file creato da OpenClaw che guida l'onboarding, propaga le risposte in IDENTITY/USER/SOUL e poi si auto-cancella. Se resta nel workspace, il bootstrap è fallito. Vedi Cap. 7.
+
 **BYOK** — Bring Your Own Key. Modello in cui l'utente fornisce le proprie API key al tool, anziché pagare il tool che a sua volta paga il provider. È il modello di OpenClaw.
 
 **Canale** — Mezzo di comunicazione tra utente e agente: Telegram, WhatsApp, Slack, Discord, Signal, iMessage, Matrix, WeChat, e oltre 20 supportati. Vedi Cap. 6.
 
-**ClawHub** — Il registry ufficiale delle skill della community (`clawhub.com`). 700+ skill, ma con noti problemi di sicurezza (~20% identificate come malevole). Vedi Cap. 13, 17.
+**ClawHub** — Il registry ufficiale delle skill della community (`clawhub.com`). Oltre 10.000 pacchetti a inizio 2026, ma con noti problemi di sicurezza: l'audit indipendente di febbraio 2026 contò 341 skill malevole su 2.857 allora presenti. Vedi Cap. 13, 17.
 
 **CLI** — Command-Line Interface. L'interfaccia a riga di comando di OpenClaw (`openclaw …`).
 
@@ -23,6 +25,8 @@ Voci alfabetiche dei termini tecnici usati nel libro. Le definizioni sono voluta
 **Gateway** — Il control plane di OpenClaw, esposto come WebSocket locale (`ws://127.0.0.1:18789`). Gestisce sessioni, canali, tool ed eventi. Tutto ciò che entra ed esce passa di qui (Cap. 20).
 
 **Heartbeat** — Il *battito* periodico dell'agente (default ~30 min): si sveglia, controlla i cron, processa la coda dei messaggi, torna in attesa.
+
+**HEARTBEAT.md** — Le istruzioni che l'agente esegue a ogni battito periodico: cosa controllare, cosa ignorare, quando svegliarti. Uno degli 8 file canonici del workspace. Vedi Cap. 2.
 
 **IDENTITY.md** — Il *biglietto da visita* dell'agente: nome, emoji, vibe, descrizione breve.
 
@@ -35,6 +39,8 @@ Voci alfabetiche dei termini tecnici usati nel libro. Le definizioni sono voluta
 **LLM** — Large Language Model. Modello AI generativo come Claude, GPT, Gemini, Nemotron. OpenClaw è model-agnostic.
 
 **Lobster (workflow shell)** — Shell di workflow nativa di OpenClaw: pipeline composabili tipizzate, local-first. Trasforma skill e tool in automazioni sicure.
+
+**MEMORY.md** — La memoria a lungo termine dell'agente: fatti durevoli distillati dalle note giornaliere (`memory/YYYY-MM-DD.md`). Uno degli 8 file canonici del workspace. Vedi Cap. 2, 16.
 
 **Moltbook** — Social network in stile Reddit dove solo agenti AI possono postare; gli umani osservano. Lanciato il 28 gennaio 2026, acquistato da Meta il 10 marzo 2026. Vedi Cap. 21.
 
@@ -50,7 +56,7 @@ Voci alfabetiche dei termini tecnici usati nel libro. Le definizioni sono voluta
 
 **Routing** — Logica del Gateway che instrada i messaggi in arrivo verso l'agente corretto in base al binding configurato.
 
-**Session** — Unità di conversazione tra utente e agente. Tipi: main (chat 1:1), group isolation, activation modes, queue modes, reply-back. Vedi Cap. 2, 20.
+**Session** — Unità di conversazione tra utente e agente. Gli *scope* principali: main (chat 1:1) e `per-channel-peer` (una sessione per coppia canale+utente — il default). Da non confondere con le modalità di attivazione e di coda (activation modes, queue modes), che regolano *come* la sessione reagisce. Vedi Cap. 2, 20.
 
 **Skill** — Una directory contenente un file `SKILL.md` con metadati e istruzioni. Le skill possono essere bundled (incluse), globali (installate dall'utente) o di workspace (specifiche per un agente — priorità massima). Vedi Cap. 17.
 
@@ -58,7 +64,7 @@ Voci alfabetiche dei termini tecnici usati nel libro. Le definizioni sono voluta
 
 **SOUL.md** — La *personalità* dell'agente: tono, limiti, valori, confini etici. È qui che si definisce cosa l'agente *non* deve mai fare.
 
-**Submolt** — Termine colloquiale per gli agenti registrati su Moltbook (analogo a *redditor* su Reddit).
+**Submolt** — Le community tematiche di Moltbook (analogo dei *subreddit* su Reddit), dentro cui gli agenti registrati postano e commentano. Vedi Cap. 21.
 
 **Token** — Unità minima di testo processata da un LLM (~3-4 caratteri). Il pricing API è espresso in $/M token (input e output separatamente).
 
@@ -72,10 +78,10 @@ Voci alfabetiche dei termini tecnici usati nel libro. Le definizioni sono voluta
 
 **Webhook** — Endpoint HTTP che riceve eventi in tempo reale da un servizio esterno. Alcuni canali e integrazioni usano webhook.
 
-**Workspace** — Cartella dedicata di un agente (`.openclaw/[nome]-workspace`) che contiene identità, tool, cron e memoria. Ogni agente ha il proprio workspace isolato.
+**Workspace** — Cartella dedicata di un agente, con identità, tool, cron e memoria. L'agente principale vive in `~/.openclaw/workspace/`; gli agenti aggiuntivi in `~/.openclaw/workspace-<nome>/` (es. `workspace-polly`). Ogni workspace è isolato. Vedi Cap. 2, 10.
 
 **ZeroClaw** — Binary minimale (3,4 MB), deny-by-default, ideale per edge computing.
 
 ---
 
-[← Capitolo 22](../PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md)  ·  [Indice](../README.md)  ·  [Appendice B →](./B-comandi-cli-riferimento-rapido.md)
+[← Capitolo Extra — HomeClaw](../capitolo-extra-homeclaw.md)  ·  [Indice](../README.md)  ·  [Appendice B →](./B-comandi-cli-riferimento-rapido.md)

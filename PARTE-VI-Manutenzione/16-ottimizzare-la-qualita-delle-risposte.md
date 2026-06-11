@@ -50,7 +50,7 @@ Un SOUL.md efficace non è un tema libero: la community ha convergito su quattro
   costa meno di un errore.
 ```
 
-**Boundaries — i confini non negoziabili.** Cosa l'agente non fa *mai*, qualunque cosa gli venga chiesto, da te o — peggio — da un contenuto esterno. È la sezione più importante per la sicurezza: come vedrai nel [Capitolo 13](../PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md), i Boundaries sono anche la prima linea di difesa contro la prompt injection:
+**Boundaries — i confini non negoziabili.** Cosa l'agente non fa *mai*, qualunque cosa gli venga chiesto, da te o — peggio — da un contenuto esterno. È la sezione più importante per la sicurezza: come hai visto nel [Capitolo 13](../PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md), i Boundaries sono anche la prima linea di difesa contro la prompt injection:
 
 ```markdown
 ## Boundaries
@@ -61,7 +61,7 @@ Un SOUL.md efficace non è un tema libero: la community ha convergito su quattro
   con Angelo, mai altrove.
 ```
 
-**Vibe — la voce.** Come parla: registro, calore, ironia, gestione degli errori. Negli schemi dell'Appendice C questa sezione si chiama `Tone`: stesso concetto, nome diverso — scegline uno e mantienilo. Attenzione alla trappola già segnalata nel Capitolo 2: "diretta e calda, mai apologetica" è Vibe; "massimo 200 parole" è una regola operativa e va in AGENTS.md:
+**Vibe — la voce.** Come parla: registro, calore, ironia, gestione degli errori. È lo stesso nome che trovi nei template dell'Appendice C. Attenzione alla trappola già segnalata nel Capitolo 2: "diretta e calda, mai apologetica" è Vibe; "massimo 200 parole" è una regola operativa e va in AGENTS.md:
 
 ```markdown
 ## Vibe
@@ -104,10 +104,10 @@ Il [Capitolo 15](./15-care-and-feeding-tenere-l-agente-in-salute.md) ha messo il
 cd ~/.openclaw/workspace-polly
 git add SOUL.md AGENTS.md
 git commit -m "soul: shorter replies, no apologies"
-git tag soul-2026-06-08
+git tag soul-2026-05-25
 ```
 
-Da quel momento ogni iterazione è reversibile riga per riga: se la modifica peggiora le cose, `git checkout soul-2026-06-08 -- SOUL.md` riporta indietro solo l'anima, senza toccare memoria e note. E `git log --oneline SOUL.md` diventa la storia documentata del carattere del tuo agente — leggerla dopo tre mesi è istruttivo quanto rileggere le conversazioni.
+Da quel momento ogni iterazione è reversibile riga per riga: se la modifica peggiora le cose, `git checkout soul-2026-05-25 -- SOUL.md` riporta indietro solo l'anima, senza toccare memoria e note. E `git log --oneline SOUL.md` diventa la storia documentata del carattere del tuo agente — leggerla dopo tre mesi è istruttivo quanto rileggere le conversazioni.
 
 C'è un dettaglio operativo che brucia ore ai principianti: i file canonici vengono caricati **all'inizio della sessione**. Se editi il SOUL.md mentre una conversazione è aperta, l'agente continua a usare la versione che ha in testa. Per forzare la rilettura immediata scrivi **`/reload`** nel canale — un comando slash come il `/status` del Capitolo 14 — oppure avvia una sessione nuova. È il primo controllo da fare quando "la modifica non ha funzionato": nove volte su dieci ha funzionato benissimo, ma non è mai stata letta.
 
@@ -173,7 +173,7 @@ Fino al 4 aprile 2026 molti sceglievano il modello una volta sola — "il più p
 | heartbeat e cron | Haiku, Flash, Kimi K2.5 |
 | privacy totale | Nemotron locale |
 
-Tradotto in pratica: **Claude Opus 4.6** (via API key) per il ragionamento difficile e le decisioni delicate — è il più costoso e va usato con parsimonia, su richiesta e non come default. **Claude Sonnet 4.6** — il default di questo libro — o **GPT-5.1** per il lavoro quotidiano. **Claude Haiku, Gemini Flash, Kimi K2.5, MiniMax M2.5** per heartbeat, cron e task ripetitivi: rispondere `HEARTBEAT_OK` non richiede un premio Nobel, e i battiti sono quasi metà dei token della giornata. **Nemotron (Nvidia) o Llama in locale** per gli agenti che trattano dati che non devono uscire di casa: qualità inferiore sui task complessi, ma costo zero per token e privacy totale. Infine la **sottoscrizione ChatGPT Pro** ($200/mese, ~€185) resta l'alternativa flat-rate per gli agenti ad alto volume. Il routing che assegna i modelli — globale, per agente, per tipo di task — si configura nella config del Gateway: lo YAML completo è nel Capitolo 14.
+Tradotto in pratica: **Claude Opus 4.6** (via API key) per il ragionamento difficile e le decisioni delicate — è il più costoso e va usato con parsimonia, su richiesta e non come default. **Claude Sonnet 4.6** — il default di questo libro — o **GPT-5.1** per il lavoro quotidiano. **Claude Haiku, Gemini Flash, Kimi K2.5, MiniMax M2.5** per heartbeat, cron e task ripetitivi: rispondere `HEARTBEAT_OK` non richiede un premio Nobel, e i battiti sono quasi il 40% dei token della giornata (i conti sono nel Capitolo 14). **Nemotron (Nvidia) o Llama in locale** per gli agenti che trattano dati che non devono uscire di casa: qualità inferiore sui task complessi, ma costo zero per token e privacy totale. Infine la **sottoscrizione ChatGPT Pro** ($200/mese, ~€185) resta l'alternativa flat-rate per gli agenti ad alto volume. Il routing che assegna i modelli — globale, per agente, per tipo di task — si configura nella config del Gateway: lo YAML completo è nel Capitolo 14.
 
 Il punto che riguarda *questo* capitolo è un altro, e sorprende tutti la prima volta: **il SOUL.md si tara sul modello**. Claude e GPT non rispondono allo stesso modo alle stesse istruzioni: uno prende alla lettera gli esempi, l'altro pesa di più le regole astratte; uno eccede in cautela, l'altro in iniziativa. Se cambi modello a un agente — per costi, per il ban, per curiosità — metti in conto una settimana di ri-taratura: rilancia il tuo test set (arriva nella prossima sezione), osserva dove il tono o l'obbedienza alle regole sono cambiati, e ritocca. Un SOUL.md eccellente su Sonnet può produrre risposte legnose su un modello economico: non è un peggioramento del tuo lavoro, è un destinatario diverso che legge le stesse istruzioni.
 

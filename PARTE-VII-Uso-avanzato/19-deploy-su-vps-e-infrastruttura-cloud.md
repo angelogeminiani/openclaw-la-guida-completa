@@ -46,7 +46,7 @@ Il panorama 2026 dei deploy OpenClaw in cloud si è assestato su cinque nomi ric
 | Render | $7–25 (~€6–23) | always-on prevedibile |
 | Google Cloud | variabile | chi è già su GCP |
 
-La logica di scelta sta in tre domande. Vuoi *provare* il deploy cloud senza impegno? Railway, oggi pomeriggio. Vuoi un VPS che parta già hardenizzato senza lavoro manuale? DigitalOcean. Vuoi il miglior prezzo, datacenter UE e pieno controllo, accettando un'ora di hardening fatto da te? Hetzner — ed è la strada che questo capitolo percorre per intero, dal server vuoto al Gateway in produzione. Google Cloud e Render coprono nicchie precise che vediamo tra poco. A qualunque cifra della tabella vanno **sommati i token LLM** (€15–80/mese per un agente personale tipico — Cap. [14](../PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md)).
+La logica di scelta sta in tre domande. Vuoi *provare* il deploy cloud senza impegno? Railway, oggi pomeriggio. Vuoi un VPS che parta già hardenizzato senza lavoro manuale? DigitalOcean. Vuoi il miglior prezzo, datacenter UE e pieno controllo, accettando un'ora di hardening fatto da te? Hetzner — ed è la strada che questo capitolo percorre per intero, dal server vuoto al Gateway in produzione. Google Cloud e Render coprono nicchie precise che vediamo tra poco. A qualunque cifra della tabella vanno **sommati i token LLM**: secondo le fasce del Cap. [14](../PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md), $6–30 (~€5,50–28)/mese per un uso leggero, $50–150 (~€46–138) per uno moderato.
 
 ### Railway: in cloud in 5–8 minuti
 
@@ -59,7 +59,7 @@ Railway è il modo più rapido in assoluto per vedere OpenClaw girare in cloud: 
 
 **(i) Pro tip:** il volume su `/data` non è un'opzione, è *la* differenza tra un giocattolo e un deploy. Verificalo subito: riavvia il servizio dalla dashboard Railway e controlla che l'agente ricordi il nome che gli hai dato. Se non lo ricorda, il volume non è montato dove crede lui.
 
-Il limite di Railway è il modello di costo: paghi RAM e vCPU al minuto (~€10/GB di RAM/mese, ~€20/vCPU/mese), perfetto per servizi che dormono, penalizzante per un agente con heartbeat ogni 30 minuti e cron sparsi che non dorme mai. Un piccolo OpenClaw sempre attivo finisce facilmente a €30–50/mese: il triplo di Hetzner per metà delle risorse. E i piani free/hobby hanno limiti di esecuzione che troncano i task lunghi (browser automation, trascrizioni). Usalo per quello in cui eccelle — capire in un pomeriggio se il cloud fa per te — e poi trasloca: la procedura di migrazione qui sotto vale anche in uscita da Railway.
+Il limite di Railway è il modello di costo: paghi RAM e vCPU al minuto (~$10/GB di RAM/mese (~€9), ~$20/vCPU/mese (~€18)), perfetto per servizi che dormono, penalizzante per un agente con heartbeat ogni 30 minuti e cron sparsi che non dorme mai. Un piccolo OpenClaw sempre attivo finisce facilmente a $35–55 (~€32–50)/mese: il triplo di Hetzner per metà delle risorse. E i piani free/hobby hanno limiti di esecuzione che troncano i task lunghi (browser automation, trascrizioni). Usalo per quello in cui eccelle — capire in un pomeriggio se il cloud fa per te — e poi trasloca: la procedura di migrazione qui sotto vale anche in uscita da Railway.
 
 ### DigitalOcean Marketplace: sicuro by default
 
@@ -113,16 +113,21 @@ rsync --archive --chown=claw:claw \
 
 D'ora in poi entri come `claw` e usi `sudo` quando serve. Un processo compromesso sotto un utente normale fa molti meno danni di uno sotto root — è lo stesso principio del container non-root del Cap. 4, un piano più in basso.
 
-**Passo 3 — hardening base.** Tre interventi, dieci minuti:
+**Passo 3 — hardening base.** Quattro interventi, dieci minuti:
 
 ```bash
 sudo apt update && sudo apt -y upgrade
-sudo apt -y install ufw fail2ban
+sudo apt -y install ufw fail2ban \
+  unattended-upgrades
+sudo dpkg-reconfigure -plow \
+  unattended-upgrades
 
 # firewall: inbound SSH only
 sudo ufw allow OpenSSH
 sudo ufw enable
 ```
+
+`unattended-upgrades` installa da solo le patch di sicurezza di Ubuntu: su un server headless acceso 24/7 che non guarderai per settimane non è un optional — il caso ClawJacked (Cap. 20) è la storia di istanze rimaste non patchate.
 
 `ufw` è il firewall: la regola sopra dice "in ingresso solo SSH, tutto il resto chiuso" — e nota cosa *non* apriamo: nessuna porta per il Gateway, ci pensa Tailscale tra poco. **fail2ban** è un demone che legge i log di autenticazione e banna temporaneamente gli IP che sbagliano password in raffica: con la config di default copre SSH senza che tu debba toccare nulla. Terzo intervento, chiudere l'accesso via password in `/etc/ssh/sshd_config`:
 
@@ -145,6 +150,8 @@ echo '/swapfile none swap sw 0 0' | \
 ```
 
 Se sul laptop usavi il sandbox Docker del Cap. 4 — e dovresti — il VPS non è il posto dove rinunciarci: installa Docker (`sudo apt -y install docker.io`, poi `sudo usermod -aG docker claw`), porta con te il tuo `Dockerfile.sandbox` e ricostruisci l'immagine sul server con `docker build --no-cache`. L'hardening guadagnato nel Cap. 4 (container non-root, egress allowlist, credential proxy) viaggia tutto dentro file di config: la migrazione non te lo toglie, a patto di non "semplificare temporaneamente" per far prima. Le semplificazioni temporanee sui server sono permanenti.
+
+**(!) Attenzione:** Docker **scavalca ufw**. Quando pubblichi una porta con `-p 8080:80`, Docker scrive le proprie regole direttamente in iptables, *prima* di quelle del firewall: quella porta è raggiungibile da internet anche se ufw dice "inbound SSH only". Sul VPS, quindi: non pubblicare mai porte dei container verso l'esterno, e se proprio devi, lega il bind al loopback (`-p 127.0.0.1:8080:80`). Il sandbox del Cap. 4, usato com'è descritto lì, non pubblica porte — ma una "semplificazione temporanea" potrebbe.
 
 **Passo 5 — Node 22.16+ e OpenClaw.** Ubuntu 24.04 non ha di serie un Node abbastanza recente; usa NodeSource come nel Cap. 5:
 
@@ -289,7 +296,7 @@ Fix: `sudo loginctl enable-linger <utente>`.
 - [ ] Provider scelto e VPS provisionato
 - [ ] Hardening base completato: SSH key-only, firewall attivo, fail2ban
 - [ ] Tailscale (o equivalente) per accesso senza esporre porte pubbliche
-- [ ] Backup periodico della cartella `.openclaw/` su storage esterno
+- [ ] Backup periodico della cartella `~/.openclaw/` su storage esterno
 - [ ] `openclaw doctor` non segnala warning
 - [ ] Backup `--include-workspace` creato PRIMA della migrazione
 - [ ] Output di `doctor` pre/post migrazione confrontati con `diff`

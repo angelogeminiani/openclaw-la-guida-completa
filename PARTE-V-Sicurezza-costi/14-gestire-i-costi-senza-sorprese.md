@@ -25,7 +25,7 @@ costo = token in ingresso × prezzo input
       + token in uscita  × prezzo output
 ```
 
-I *token* sono i frammenti di testo che il modello legge e produce (in italiano, grossolanamente, una parola vale 1,5–2 token). I prezzi sono espressi per milione di token e — punto cruciale — l'output costa sempre molto più dell'input, in genere cinque volte tanto.
+I *token* sono i frammenti di testo che il modello legge e produce (in italiano, grossolanamente, una parola vale 1,5–2 token). I prezzi sono espressi per milione di token e — punto cruciale — l'output costa sempre molto più dell'input, in genere quattro–cinque volte tanto.
 
 C'è un dettaglio che sorprende tutti i principianti: l'agente non paga solo quello che *tu* scrivi. A ogni chiamata reinvia l'intero contesto della sessione — i file canonici (SOUL.md, AGENTS.md, USER.md…), le note di memoria del giorno, la storia della conversazione. Riprendi l'esempio del [Capitolo 2](../PARTE-I-Capire-OpenClaw/02-anatomia-di-un-agente-openclaw.md): quando Polly prepara il brief sul cliente Rossi consuma circa 3.500 token in ingresso e 250 in uscita. Di quei 3.500, il tuo messaggio ne pesa forse 30: tutto il resto è contesto. Costo del singolo task: circa un centesimo su Claude Sonnet 4.6. Innocuo. Ma un centesimo ripetuto da un cron in loop per una notte intera diventa una bolletta vera.
 
@@ -34,7 +34,7 @@ Come promesso nel Capitolo 2, ecco la contabilità trasformata in regole di budg
 | Tipo di task | Budget tipico |
 |---|---|
 | Messaggio semplice | < $0,02 |
-| Brief con 1–2 skill | $0,02–0,05 |
+| Brief con 1–2 skill | $0,02–0,12 |
 | Ricerca web + sintesi | $0,05–0,15 |
 | Ragionamento lungo (Opus) | $0,30–1,00 |
 
@@ -63,7 +63,7 @@ Prima della storia, i numeri. Questa è la fotografia dei prezzi a maggio 2026, 
 
 \* I modelli locali non hanno costo per token, ma richiedono hardware adeguato (GPU consigliata) ed elettricità: vedi il confronto TCO del [Capitolo 3](../PARTE-II-Installazione/03-scegliere-dove-installare-openclaw.md).
 
-Tre fasce, in pratica. I **premium** (Opus 4.6, Codex 5.4) costano 5–25 volte i modelli medi e vanno riservati al ragionamento difficile. I **medi** (Sonnet 4.6 — il default di questo libro —, GPT-5.1, Gemini Pro, Mistral Large) sono il cavallo da lavoro quotidiano. Gli **economici** (Haiku 4.5, Gemini Flash, GPT-5.1 mini, Kimi K2.5, MiniMax M2.5) costano centesimi e sono perfetti per heartbeat, cron e task ripetitivi. Tieni questa tabella sottomano: tutto il resto del capitolo ci torna sopra.
+Tre fasce, in pratica. I **premium** vanno riservati al ragionamento difficile: Opus 4.6 costa 5–12 volte i modelli medi, Codex 5.4 "solo" il doppio di Sonnet — premium più per posizionamento che per prezzo. I **medi** (Sonnet 4.6 — il default di questo libro —, GPT-5.1, Gemini Pro, Mistral Large) sono il cavallo da lavoro quotidiano. Gli **economici** (Haiku 4.5, Gemini Flash, GPT-5.1 mini, Kimi K2.5, MiniMax M2.5) costano centesimi e sono perfetti per heartbeat, cron e task ripetitivi. Tieni questa tabella sottomano: tutto il resto del capitolo ci torna sopra.
 
 ### Il terremoto del 4 aprile 2026
 
@@ -100,7 +100,7 @@ In altre parole: che tu scelga API key o extra usage, per OpenClaw oggi su Claud
 
 L'impatto sui costi dipende interamente dal profilo. Un utente intensivo che girava Opus 4.6 con ~500K token in ingresso e 200K in uscita al giorno passa da $200/mese (~€185, piano Max) a circa $675/mese (~€620) di API: 3,4 volte tanto. Un utente moderato che pagava i $20 del piano Pro e consumava come un piano da $150 si ritrova un aumento di 7 volte o più. Paradossalmente, gli utenti davvero leggeri possono perfino *risparmiare*: un consumo da $6–10 al mese di API costa meno dei $20 della vecchia sottoscrizione. La sofferenza è tutta di chi consumava molto pagando un prezzo fisso basso — che era esattamente il "loophole" che Anthropic ha chiuso.
 
-Le reazioni della community sono state immediate. Steinberger ha definito la decisione "triste per l'ecosistema" e ha rivelato che lui e Dave Morin hanno cercato di convincere Anthropic, ottenendo solo un ritardo di una settimana. Garry Tan (Y Combinator): "Potrebbe rivelarsi un errore strategico o un colpo di genio." Molti utenti sono migrati verso modelli OpenAI (GPT-5.1, Codex 5.4), modelli locali (Nemotron) o verso ChatGPT Pro come provider principale.
+Le reazioni della community sono state immediate. Steinberger — pur ormai in OpenAI dal 14 febbraio — ha definito la decisione "triste per l'ecosistema" e ha rivelato che lui e Dave Morin avevano cercato di convincere Anthropic, ottenendo solo un ritardo di una settimana. Garry Tan (Y Combinator): "Potrebbe rivelarsi un errore strategico o un colpo di genio." Molti utenti sono migrati verso modelli OpenAI (GPT-5.1, Codex 5.4), modelli locali (Nemotron) o verso ChatGPT Pro come provider principale.
 
 La lezione per te è una sola, e vale più di ogni tabella di prezzi: **non costruire mai un workflow critico su un singolo provider**. La natura model-agnostic di OpenClaw — il modello lo porti tu, e puoi cambiarlo — è passata in una notte da dettaglio architetturale a polizza assicurativa. Usala.
 
@@ -190,7 +190,7 @@ Dopo la modifica, `openclaw gateway restart` e verifica con `/status` nel canale
 
 **6. Ridurre il contesto stantio.** Ogni chiamata reinvia l'intero contesto della sessione: una conversazione lasciata aperta per giorni accumula storia morta che paghi a ogni messaggio. Regola pratica: avvia sessioni nuove regolarmente e non usare una chat infinita come archivio — per ricordare le cose c'è la memoria persistente, che costa molto meno della storia di sessione.
 
-**(i) Pro tip — Caso studio: da $200/mese a $15/mese.** Un utente della community ha ricostruito il proprio setup dopo il ban usando: 2 VPS da $5/mese (~€4,99, Hostinger) per ridondanza + Kimi K2.5 come modello primario + MiniMax M2.5 come fallback economico. Totale: ~$15/mese (~€14) contro i $200 (~€185) precedenti. Non è la stessa qualità di Opus, ma è sufficiente per il 90% dei workflow quotidiani. La lezione: il routing multi-modello non è un'ottimizzazione opzionale — è una necessità.
+**(i) Pro tip — Caso studio: da $200/mese a $15/mese.** Un utente della community ha ricostruito il proprio setup dopo il ban usando: 2 VPS da €4,99/mese di listino (Hostinger) per ridondanza + Kimi K2.5 come modello primario + MiniMax M2.5 come fallback economico. Totale: ~$15/mese (~€14) contro i $200 (~€185) precedenti. Non è la stessa qualità di Opus, ma è sufficiente per il 90% dei workflow quotidiani. La lezione: il routing multi-modello non è un'ottimizzazione opzionale — è una necessità.
 
 ### Monitorare la spesa
 

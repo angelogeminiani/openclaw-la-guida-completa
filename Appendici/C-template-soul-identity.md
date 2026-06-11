@@ -23,7 +23,7 @@
 ## Core Truths
 - [verità fondamentali su chi sei e per chi lavori]
 
-## Tone
+## Vibe
 - [come comunichi: registro, lunghezza, formattazione]
 
 ## Boundaries (cosa NON fare mai)

@@ -21,7 +21,9 @@ Aver scelto dove installare OpenClaw nel [Capitolo 3](./03-scegliere-dove-instal
 Verifica veloce dei prerequisiti, da incollare in un terminale:
 
 ```bash
-docker --version            # >= 27 on Linux, >= 4.60 client
+docker --version       # Engine >= 27
+# Docker Desktop: check version >= 4.60
+# in Settings -> About (not in --version)
 docker info | grep -i microvm
 uname -m                    # arm64, x86_64
 free -m | awk '/Mem:/{print $2}'
@@ -33,7 +35,7 @@ free -m | awk '/Mem:/{print $2}'
 
 Se hai venti minuti e vuoi partire stasera al Livello 1, questi sono i cinque comandi essenziali. Il resto del capitolo è il *perché*; questi cinque comandi sono il *come*.
 
-**(!) Attenzione:** questo TL;DR usa due file che vengono creati nelle sezioni successive: `Dockerfile.sandbox` (sezione "Costruire l'immagine") e `verify-sandbox.sh` (sezione "Verificare l'isolamento"). Se lo esegui adesso, i comandi 1 e 4 falliscono: leggilo come anteprima del percorso, torna qui quando hai i due file pronti.
+**(!) Attenzione:** questo capitolo si *legge* prima dell'installazione ma si *esegue* dopo: i comandi 3 e 4 presuppongono OpenClaw già installato (è il [Capitolo 5](./05-installazione-step-by-step.md) — senza, `~/.openclaw/config.yaml` non esiste e `openclaw` non è nel PATH). In più, il TL;DR usa due file creati nelle sezioni successive: `Dockerfile.sandbox` (sezione "Costruire l'immagine") e `verify-sandbox.sh` (sezione "Verificare l'isolamento"). Leggilo come anteprima del percorso; torna qui a installazione fatta, con i due file pronti.
 
 ```bash
 # 1. build the hardened sandbox image
@@ -104,7 +106,7 @@ Pensa all'isolamento come a una scala. Ogni gradino aggiunge protezione e qualch
 
 **Livello 2 — Gateway containerizzato completo.** L'intero OpenClaw, Gateway compreso, gira dentro Docker Compose. Nessuna installazione sull'host. È la scelta naturale per VPS e per chi vuole un ambiente "usa e getta" che si ricostruisce da zero in trenta secondi.
 
-**Livello 3 — Docker Sandboxes (microVM).** Da Docker Desktop 4.60+ in poi, ogni sandbox può girare dentro una microVM Firecracker o equivalente, con un kernel Linux dedicato. Boot time intorno ai 125 ms, overhead < 5 MiB per VM. È isolamento *hardware-grade*: anche un container compromesso non vede l'host.
+**Livello 3 — Docker Sandboxes (microVM).** Da Docker Desktop 4.60+ in poi, ogni sandbox può girare dentro una microVM Firecracker o equivalente, con un kernel Linux dedicato. Boot time intorno ai 125 ms, overhead dell'hypervisor sotto i 5 MiB per VM (il footprint runtime complessivo resta sui ~250 MB: vedi la tabella dei costi più avanti). È isolamento *hardware-grade*: anche un container compromesso non vede l'host.
 
 **Livello 4 — gVisor (runsc) e MAGI.** Runtime container che intercetta le syscall in user space (il "Sentry") e le re-implementa, dimezzando la superficie d'attacco anche se l'agente sfrutta una vulnerabilità del kernel. **MAGI** (Multi-Agent gVisor Isolation), pubblicato da Google ad aprile 2026, aggiunge isolamento per-agente all'interno dello stesso processo Sentry: ideale quando un team di agenti gira sulla stessa macchina e non vuoi che un agente compromesso veda gli altri.
 
@@ -522,7 +524,7 @@ docker run -d --name openclaw \
   openclaw-sandbox:bookworm-slim
 ```
 
-Le differenze in chiaro: niente API key in env (arrivano via credential proxy), niente accesso a `/home`, niente `--network host`, niente capability extra, niente filesystem scrivibile, limiti di processi e memoria, immagine *pinnata* per tag (e per digest nel Dockerfile).
+Le differenze in chiaro: niente API key in env (arrivano via credential proxy), niente accesso a `/home`, niente `--network host`, niente capability extra, niente filesystem scrivibile, limiti di processi e memoria, immagine *pinnata* per tag (e per digest nel Dockerfile). Una nota sul mount del workspace: qui è `rw` perché l'esempio mostra un agente già operativo, ma il livello effettivo lo decide `workspaceAccess` nella config — parti da `ro` come consigliato sopra e passa a `rw` solo quando sai perché ti serve.
 
 ### Verificare l'isolamento: tre smoke test
 
@@ -593,15 +595,23 @@ Un sandbox non è un setup "una tantum": invecchia. Tre abitudini che pagano, e 
 **Ogni venerdì, ricostruisci da zero.** Le base image accumulano CVE; un rebuild settimanale chiude la finestra. Tre versioni dello stesso comando, una per OS:
 
 ```bash
+# create the rebuild script used by the TL;DR
+cat > ~/.openclaw/rebuild.sh <<'EOF'
+#!/usr/bin/env bash
+# weekly sandbox rebuild + smoke test
+cd ~/.openclaw
+docker build --no-cache \
+  -f Dockerfile.sandbox \
+  -t openclaw-sandbox:bookworm-slim .
+bash verify-sandbox.sh
+EOF
+chmod +x ~/.openclaw/rebuild.sh
+
 # Linux — cron, weekly Friday at 07:00
 crontab -e
 # add the following line:
-0 7 * * 5 cd ~/.openclaw && \
-  docker build --no-cache \
-  -f Dockerfile.sandbox \
-  -t openclaw-sandbox:bookworm-slim . \
-  && bash verify-sandbox.sh \
-  >> ~/.openclaw/rebuild.log 2>&1
+0 7 * * 5 bash ~/.openclaw/rebuild.sh \
+  >> ~/.openclaw/logs/rebuild.log 2>&1
 ```
 
 ```ini
@@ -666,7 +676,7 @@ Cinque passi, in quest'ordine, senza saltarne nessuno.
 
    ```bash
    tar czf ~/openclaw-incident-$(date +%F).tgz \
-     ~/.openclaw/audit.log \
+     ~/.openclaw/logs/audit.log \
      ~/.openclaw/config.yaml \
      ~/.openclaw/workspace
    ```

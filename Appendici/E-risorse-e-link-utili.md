@@ -258,6 +258,4 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 
 ---
 
----
-
-[← Appendice D](./D-checklist-sicurezza.md)  ·  [Indice](../README.md)  ·  [Indice →](../README.md)
+[← Appendice D](./D-checklist-sicurezza.md)  ·  [Indice](../README.md)

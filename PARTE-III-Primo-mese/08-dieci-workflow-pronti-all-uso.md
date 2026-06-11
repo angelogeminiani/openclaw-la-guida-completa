@@ -10,7 +10,7 @@
 
 ## Prerequisiti
 
-Aver fatto l'onboarding del tuo agente ([Capitolo 7](./07-prima-conversazione-onboarding-agente.md)). La skill `gog` (Gmail, Calendar, Drive) è già installata dal wizard del [Capitolo 5](../PARTE-II-Installazione/05-installazione-step-by-step.md): qui basta quella. Il [Capitolo 9](./09-aggiungere-strumenti-e-integrazioni.md) serve solo per gli approfondimenti (scope OAuth, CRM, strumenti di lavoro).
+Aver fatto l'onboarding del tuo agente ([Capitolo 7](./07-prima-conversazione-onboarding-agente.md)). La skill `gog` (Gmail, Calendar, Drive) è già installata dal wizard del [Capitolo 5](../PARTE-II-Installazione/05-installazione-step-by-step.md): per i workflow personali basta quella più la ricerca web del wizard; i workflow business richiedono le integrazioni indicate scheda per scheda. Il [Capitolo 9](./09-aggiungere-strumenti-e-integrazioni.md) serve solo per gli approfondimenti (scope OAuth, CRM, strumenti di lavoro).
 
 ## Contenuto principale
 
@@ -37,7 +37,7 @@ La prima volta va quasi sempre così: il digest arriva puntuale ma è lungo dodi
 
 *Workflow personale.* Ogni venerdì alle 18:00 un messaggio nel gruppo di famiglia mette in fila la logistica del weekend: attività dei figli, chi porta e chi ritira, conflitti di orario. È il mestiere di Finn, l'agente "famiglia" del cast di questo libro. Prerequisiti: un gruppo Telegram con il partner, l'agente aggiunto al gruppo (Capitolo 6) e i calendari rilevanti visibili a `gog` — incluso quello condiviso, che è il pezzo che quasi tutti dimenticano.
 
-*Skill: gog, canale WhatsApp/Telegram con gruppo. Costo: ~€3–7/mese.*
+*Skill: gog, canale Telegram con gruppo. Costo: ~€3–7/mese.*
 
 **Prompt pronto:**
 > "Crea un cron che ogni venerdì alle 18:00 mandi un messaggio nel gruppo Telegram 'Famiglia' con: (1) attività dei bambini di sabato e domenica con orario e luogo, (2) chi porta e chi ritira, (3) eventuali conflitti di orario tra i miei impegni e quelli del partner. Pesca i dati dal mio Google Calendar e dal calendario condiviso. Tono casual, max 8 righe."
@@ -70,10 +70,10 @@ Il vincolo di approvazione nel prompt non è prudenza di maniera: un agente con 
 
 *Workflow business.* Ogni mattina l'agente guarda chi si è iscritto al tuo prodotto nelle ultime 24 ore, distingue i lead piccoli da quelli enterprise, scrive ai primi e prepara i secondi per te. È la specialità di Sam, l'agente vendite. Prerequisiti: un CRM collegato (Attio o HubSpot, Capitolo 9), Exa per l'arricchimento dei profili e — punto delicato — lo scope di *invio* su Gmail: è l'unico workflow del capitolo a richiederlo davvero.
 
-*Skill: gog, CRM (Attio/HubSpot), ricerca web (Exa People API). Costo: ~€18–46/mese.*
+*Skill: gog, CRM (Attio/HubSpot), ricerca web (arricchimento via Exa). Costo: ~€18–46/mese.*
 
 **Prompt pronto:**
-> "Ogni mattina alle 9:00 leggi le nuove iscrizioni delle ultime 24 ore dal CRM. Per ogni lead: (1) categorizza per valore stimato (small/mid/enterprise) usando l'arricchimento via Exa People API, (2) per i lead 'small' invia in autonomia un'email di benvenuto leggera (passa dal mio Gmail), (3) per i lead 'enterprise' arricchisci il profilo con news recenti dell'azienda e mettilo nella mia coda di follow-up con bozza di email da approvare. Mai inviare email a un 'enterprise' senza mia conferma esplicita."
+> "Ogni mattina alle 9:00 leggi le nuove iscrizioni delle ultime 24 ore dal CRM. Per ogni lead: (1) categorizza per valore stimato (small/mid/enterprise) usando l'arricchimento via Exa, (2) per i lead 'small' invia in autonomia un'email di benvenuto leggera (passa dal mio Gmail), (3) per i lead 'enterprise' arricchisci il profilo con news recenti dell'azienda e mettilo nella mia coda di follow-up con bozza di email da approvare. Mai inviare email a un 'enterprise' senza mia conferma esplicita."
 
 **(!) Attenzione:** non dare lo scope di invio il primo giorno. Fai girare il workflow una settimana in modalità bozza — tutte le email in coda di approvazione, anche le "small" — e leggi cosa *avrebbe* mandato. Solo quando le bozze sono indistinguibili dalle tue, concedi l'invio autonomo per la fascia small. È la versione operativa della regola del Capitolo 9: si parte read-only, si allarga dopo.
 
@@ -142,9 +142,11 @@ La prima settimana serve a calibrare la difficoltà: il problema "da terza eleme
 
 C'è un workflow che non compare nelle liste della community ma che i Capitoli 3 e 5 hanno già apparecchiato: l'agente che si prende cura della propria infrastruttura. Una volta a settimana: backup completo, report dei costi, controllo dei cron falliti. I comandi li conosci già:
 
+*Skill: nessuna extra (hook `cost-tracker` del wizard). Costo: <€1/mese su un modello economico.*
+
 ```bash
 openclaw backup create --include-workspace
-openclaw cost report --since today
+openclaw cost report --since 7d
 ```
 
 **Prompt pronto:**

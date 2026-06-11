@@ -48,14 +48,17 @@ Le date da ricordare, in fila:
 
 Il marketing AI ha mescolato in una sola parola — "assistente" — tre categorie che funzionano in modi profondamente diversi. È la distinzione che decide se le tue aspettative saranno confermate o tradite.
 
-| Caratteristica | Chatbot (ChatGPT, Claude chat) | Assistente proattivo (Siri, Alexa, Google Assistant) | Agente autonomo (OpenClaw) |
-|---|---|---|---|
-| Inizio dell'azione | sempre l'utente | utente o trigger predefinito (sveglia, calendario) | utente, trigger, oppure l'agente stesso (cron, heartbeat) |
-| Memoria | sessione corrente, opzionale persistente | template ristretti (preferenze, lista spesa) | persistente, multi-livello, editabile |
-| Strumenti | quelli decisi dal vendor | quelli decisi dal vendor | configurabili dall'utente, espandibili a runtime |
-| Esecuzione fra una richiesta e l'altra | nessuna | nessuna | sì, in background 24/7 |
-| Integrazioni | preconfezionate | preconfezionate | qualsiasi cosa abbia un'API o una shell |
-| Lock-in del modello (vincolo al fornitore) | totale | totale | nessuno (BYOK) |
+Il confronto regge su sei assi.
+
+**Chi inizia l'azione.** Nel chatbot (ChatGPT, Claude chat), sempre l'utente. Nell'assistente proattivo (Siri, Alexa, Google Assistant), l'utente o un trigger predefinito — la sveglia, il calendario. Nell'agente autonomo, l'utente, un trigger, oppure l'agente stesso, via cron e heartbeat.
+
+**Memoria.** Il chatbot ricorda la sessione corrente, con persistenza opzionale; l'assistente ha template ristretti (preferenze, lista della spesa); l'agente ha una memoria persistente, multi-livello e — soprattutto — editabile da te.
+
+**Strumenti e integrazioni.** Per chatbot e assistenti li decide il vendor, preconfezionati. Per l'agente li configuri tu, li espandi a runtime, e si integra con qualsiasi cosa abbia un'API o una shell.
+
+**Esecuzione fra una richiesta e l'altra.** Chatbot e assistenti: nessuna. L'agente lavora in background, 24 ore su 24.
+
+**Lock-in del modello.** Totale per chatbot e assistenti, vincolati al fornitore. Nessuno per l'agente: il modello lo porti tu (BYOK) e lo cambi quando vuoi.
 
 Un chatbot non sa che ora è quando non gli stai parlando. Un assistente proattivo sa che ora è ma agisce solo dentro i binari che il vendor ha previsto. Un agente autonomo sa che ora è, decide cosa fare di sua iniziativa entro confini che hai scritto tu, e quando non sa cosa fare ti scrive per chiedere. È il tipo di differenza che si capisce solo dopo qualche giorno di convivenza, ed è il motivo per cui il Capitolo 7 di questo libro è dedicato esclusivamente ai primi dieci minuti di onboarding.
 
@@ -113,14 +116,12 @@ Claire Vo, che ha scritto sulla guida-fiume di Lenny's Newsletter una delle anal
 
 OpenClaw non è solo nel suo segmento, e tutto il libro presuppone che il lettore sia in grado di scegliere consapevolmente. La tabella seguente riassume le sei alternative più rilevanti a maggio 2026.
 
-| Alternativa | Target | Sandboxing | Lock-in modello | Maturità | Quando sceglierla |
-|---|---|---|---|---|---|
-| **NanoClaw** | hobbisti e dev prudenti | container Docker isolati per chat | Claude-only | giovane ma stabile | vuoi il minimo set-up sicuro e non ti serve il multi-canale ricco |
-| **NemoClaw** (Nvidia) | enterprise | OpenShell a livello kernel + policy YAML | multi (router locale/cloud) | early enterprise | hai requisiti di compliance e vuoi lo stack Nvidia |
-| **IronClaw** (NEAR AI) | privacy-first | sandbox Rust con focus memory safety | model-agnostic | early | privilegi safety formale e zero telemetria |
-| **ZeroClaw** | edge computing | binary 3,4 MB, deny-by-default | model-agnostic | early | vuoi un agente su device costretto (Pi, micro-VPS) |
-| **Moltworker** | non vuoi gestire infrastruttura | sandbox gestita da Cloudflare | proprietaria del provider | hosted | preferisci l'esperienza serverless |
-| **Claude Code / Codex CLI** | sviluppatori | nessuna (gira nel terminale) | Anthropic / OpenAI | maturo | il tuo unico caso d'uso è il coding |
+- **NanoClaw** — per hobbisti e dev prudenti. Container Docker isolati per chat, solo Claude, giovane ma stabile. Sceglilo se vuoi il minimo set-up sicuro e non ti serve il multi-canale ricco.
+- **NemoClaw** (Nvidia) — per l'enterprise. Sandboxing OpenShell a livello kernel con policy YAML, multi-modello via router locale/cloud, maturità early enterprise. Sceglilo se hai requisiti di compliance e vuoi lo stack Nvidia.
+- **IronClaw** (NEAR AI) — per chi mette la privacy prima di tutto. Sandbox in Rust con focus sulla memory safety, model-agnostic, ancora early. Sceglilo se privilegi la safety formale e la zero telemetria.
+- **ZeroClaw** — per l'edge computing. Un binary di 3,4 MB, deny-by-default, model-agnostic, early. Sceglilo per un agente su device costretto (Raspberry Pi, micro-VPS).
+- **Moltworker** — per chi non vuole gestire infrastruttura. Sandbox gestita da Cloudflare, modello proprietario del provider, esperienza hosted/serverless.
+- **Claude Code / Codex CLI** — per sviluppatori. Nessun sandboxing (girano nel terminale), vincolati ad Anthropic/OpenAI, maturi. Sceglili se il tuo unico caso d'uso è il coding.
 
 In termini pratici: scegli OpenClaw quando vuoi il sistema più completo, multi-canale, multi-agente, con la possibilità di sostituire il modello in qualsiasi momento; scegli NanoClaw se preferisci un perimetro più piccolo e ti basta Claude; scegli NemoClaw se la conversazione che dovrai fare con il tuo team di sicurezza prevede già la parola "policy"; scegli IronClaw se la sicurezza la prendi sul serio fin dal linguaggio con cui è scritto il software; scegli Claude Code o Codex CLI se non ti interessa l'agente personale e ti basta uno strumento da terminale per programmare. Il libro dedica capitoli specifici a ciascuna alternativa quando entra nei rispettivi temi (sicurezza al Cap. 13, deploy al Cap. 19, ecosistema al Cap. 21).
 
@@ -170,4 +171,4 @@ Per l'elenco completo delle fonti del libro, vedi [Appendice E](../Appendici/E-r
 
 ---
 
-[← README](../README.md)  ·  [Indice](../README.md)  ·  [Capitolo 2 →](./02-anatomia-di-un-agente-openclaw.md)
+[← README parte](./README.md)  ·  [Indice](../README.md)  ·  [Capitolo 2 →](./02-anatomia-di-un-agente-openclaw.md)

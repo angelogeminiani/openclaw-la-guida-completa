@@ -11,10 +11,14 @@
 - [ ] SOUL.md con regole esplicite su cosa l'agente NON deve fare
 - [ ] `openclaw update` eseguito almeno settimanalmente
 - [ ] `openclaw security audit` eseguito almeno mensilmente
-- [ ] File `.env` protetto e mai condiviso
+- [ ] Nessun segreto in chiaro in file `.env`: le credenziali
+      vivono cifrate in `~/.openclaw/credentials/`
+- [ ] Porta 18789 non raggiungibile da internet
+      (`lsof -i :18789` → bind su `127.0.0.1`)
 - [ ] Nessuna skill di terze parti non verificata installata
 - [ ] Bot non esposto in gruppi pubblici
-- [ ] Screen Sharing e Remote Login configurati per accesso di emergenza
+- [ ] Accesso remoto d'emergenza configurato in modo sicuro
+      (SSH/Tailscale, mai esposto su internet — Cap. 15)
 
 ## 2. Checklist hardening Docker (al setup e dopo ogni modifica)
 
@@ -34,8 +38,9 @@
 - [ ] Token con scope minimo e `read-only` di default
 - [ ] Documentato in `TOOLS.md` come l'agente deve usare il tool
 - [ ] Documentato in `SOUL.md` cosa il tool NON può fare
-- [ ] Credenziali in `.openclaw/.env` (mai inline nel codice o nei prompt)
-- [ ] Backup recente della configurazione `.openclaw/`
+- [ ] Credenziali cifrate in `~/.openclaw/credentials/`
+      (mai in `.env`, inline nel codice o nei prompt)
+- [ ] Backup recente dell'intera cartella `~/.openclaw/`
 
 ## 4. Checklist post-incident
 
@@ -56,7 +61,8 @@
 - [ ] File modificati fuori dai workspace dell'agente
 - [ ] Skill installate che non ricordi di aver autorizzato
 - [ ] Account di terze parti che mostrano accessi da IP sconosciuti
-- [ ] Configurazioni `.env` modificate senza tua azione
+- [ ] File in `~/.openclaw/` (config o credenziali) modificati
+      senza tua azione
 - [ ] L'agente che chiede credenziali aggiuntive in modo inusuale
 
 ---

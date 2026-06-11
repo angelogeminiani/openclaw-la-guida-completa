@@ -20,6 +20,7 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
 | `openclaw doctor` | Diagnostica automatica delle configurazioni (`--fix` ripara) | 5, 15 |
 | `openclaw logs --follow` | Log del Gateway in tempo reale | 5, 14, 15 |
 | `openclaw cost report --since <periodo>` | Report dei costi LLM (richiede hook `cost-tracker`) | 5, 8, 14, 15 |
+| `openclaw sessions list` | Elenca le sessioni attive | 2 |
 | `openclaw update` | Aggiorna OpenClaw alla versione più recente | 13, 14, 15 |
 
 ## Agenti
@@ -49,6 +50,13 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
 |---------|-------------|----------|
 | `openclaw cron list` | Elenca i cron attivi per agente | 14, 15, 18 |
 | `openclaw cron disable <id>` | Disattiva un cron (es. un loop impazzito) | 5, 14 |
+| `openclaw cron add` | Crea un job (flag: `--cron`, `--at`, `--every`, `--tz`, `--session`, `--model`) | 18 |
+| `openclaw cron show <id>` | Dettaglio del job e rotta di consegna | 18 |
+| `openclaw cron edit <id>` | Modifica prompt o modello del job | 18 |
+| `openclaw cron run <id> --wait` | Esecuzione di test immediata | 18 |
+| `openclaw cron remove <id>` | Elimina il job | 18 |
+| `openclaw cron runs --id <id>` | Storico esiti e durate dei run | 18 |
+| `openclaw cron status` | Stato complessivo dello scheduler | 18 |
 
 ## Sicurezza
 
@@ -60,13 +68,17 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
 
 | Comando | Descrizione | Capitolo |
 |---------|-------------|----------|
-| `openclaw skills install <nome>` | Installa una skill da ClawHub o sorgente locale | 17 |
+| `openclaw skills install <nome>` | Installa una skill da ClawHub o sorgente locale (le globali vanno in `~/.openclaw/skills/`) | 17 |
+| `openclaw skills configure <nome>` | Configura una skill installata (es. `gog`) | 9 |
+| `clawhub publish` | Pubblica una skill sul registry ClawHub | 17 |
+| `clawhub sync` | Sincronizza le skill locali con ClawHub | 17 |
 
 ## Comandi in-channel (da inviare al bot)
 
 | Comando | Descrizione | Capitolo |
 |---------|-------------|----------|
 | `/status` | Modello, token e costi della sessione corrente | 14 |
+| `/reload` | Ricarica i file del workspace nella sessione corrente | 16 |
 
 ## Note
 

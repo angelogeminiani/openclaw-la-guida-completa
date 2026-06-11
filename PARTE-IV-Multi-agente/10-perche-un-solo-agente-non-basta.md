@@ -99,7 +99,7 @@ openclaw gateway restart
 
 Il binding può scendere anche sotto il livello del canale: lo stesso bot Telegram può instradare il gruppo famiglia verso un agente e i messaggi diretti verso un altro, usando il peer come discriminante. È il pattern già visto di sfuggita nel Capitolo 6 con il channel binding di Slack (`#sales` → Sam, `#support` → Holly): canali e gruppi diversi, agenti diversi, stesso Gateway. La sintassi esatta dei binding per peer e la comunicazione agente→agente sono materia del [Capitolo 12](./12-comunicazione-e-coordinamento-tra-agenti.md).
 
-Una cosa che il binding *non* cambia: le sessioni restano separate per canale e per interlocutore (il default `per-channel-peer` del Capitolo 6). Dare un canale a Max non fonde le conversazioni: ogni coppia canale-persona resta un filo a sé, a meno di unificazione esplicita.
+Una cosa che il binding *non* cambia: le sessioni restano separate per canale e per interlocutore (il default `per-channel-peer` del Capitolo 2). Dare un canale a Max non fonde le conversazioni: ogni coppia canale-persona resta un filo a sé, a meno di unificazione esplicita.
 
 **(i) Pro tip:** lo schema esatto della config evolve con le versioni di OpenClaw. Prima di copiare blocchi YAML da guide trovate in giro (incluso questo libro), confrontali con la Configuration reference ufficiale — il link è in fondo al capitolo — e verifica la tua versione con `openclaw --version`.
 

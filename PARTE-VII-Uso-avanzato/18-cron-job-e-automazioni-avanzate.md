@@ -73,7 +73,7 @@ by priority. If nothing relevant: 'Free day.'" \
 
 Smontiamolo pezzo per pezzo, perché ogni flag è una decisione.
 
-**Lo schedule.** Tre forme possibili: `--at` per il colpo singolo (un timestamp ISO oppure un relativo come `20m`; i job one-shot si auto-cancellano dopo il successo), `--every` per l'intervallo fisso (`--every 1h`), `--cron` per l'espressione classica a cinque campi: minuto, ora, giorno del mese, mese, giorno della settimana. `0 7 * * *` = ogni giorno alle 7:00; `0 18 * * 5` = venerdì alle 18:00.
+**Lo schedule.** Tre forme possibili: `--at` per il colpo singolo (un timestamp ISO oppure un relativo come `20m`; aggiungi `--delete-after-run` perché il job si cancelli da solo dopo il successo), `--every` per l'intervallo fisso (`--every 1h`), `--cron` per l'espressione classica a cinque campi: minuto, ora, giorno del mese, mese, giorno della settimana. `0 7 * * *` = ogni giorno alle 7:00; `0 18 * * 5` = venerdì alle 18:00.
 
 **La timezone è obbligatoria** — non per la CLI, che senza `--tz` accetta comunque il job, ma per la tua sanità mentale. Senza timezone esplicita i timestamp vengono trattati come UTC e le espressioni seguono l'orologio della macchina che ospita il Gateway: il giorno in cui sposti l'agente dal Mac mini a un VPS di Francoforte, o il giorno del cambio dell'ora legale, il digest delle 7:00 arriva alle 6:00, alle 8:00 o mai (il Capitolo 15 ha già raccontato questo guasto dal lato della diagnosi). Scrivi `--tz "Europe/Rome"` su ogni job, sempre, anche quando "tanto il server è in Italia".
 
@@ -106,11 +106,11 @@ openclaw cron remove <id>
 
 **(i) Pro tip:** il modo più rapido di creare un cron resta il linguaggio naturale: scrivi all'agente "ogni mattina alle 7 (ora di Roma) mandami il digest" e sarà lui a chiamare lo scheduler con i flag giusti. Funziona perché l'agente ha i tool cron fra le sue capacità. Il motivo per cui questo capitolo ti mostra comunque la CLI è che *tu* devi saper verificare cosa ha creato: `openclaw cron show <id>` dopo ogni cron "dettato a voce" è l'abitudine che distingue il power user.
 
-C'è infine un tranello di sintassi che merita il suo paragrafo, perché produce cron che scattano sei volte al mese invece di una. Quando compili **sia** il giorno del mese **sia** il giorno della settimana, il parser (croner, lo standard Vixie) li combina in **OR**, non in AND:
+C'è infine un tranello di sintassi che merita il suo paragrafo, perché produce cron che scattano sei volte al mese invece di una. Quando compili **sia** il giorno del mese **sia** il giorno della settimana, il parser (croner, che segue la semantica Vixie) li combina in **OR**, non in AND:
 
 ```text
 # Intended: 9:00 on the 15th, only if Monday
-# Actual: every 15th AND every Monday
+# Actual: every 15th OR every Monday (union)
 0 9 15 * 1
 ```
 
@@ -169,7 +169,7 @@ one-shot cron 30 minutes before it (--at,
 public channels and sends me a 3-line brief.
 ```
 
-I job one-shot si auto-cancellano dopo l'esecuzione: la sera lo scheduler è pulito, e domattina il mattutino riseminerà. Questo è il meta-cron "sicuro": figli a vita breve, numero limitato dal calendario stesso.
+I job one-shot creati con `--delete-after-run` si cancellano da soli dopo l'esecuzione: la sera lo scheduler è pulito, e domattina il mattutino riseminerà. Questo è il meta-cron "sicuro": figli a vita breve, numero limitato dal calendario stesso.
 
 Il meta-cron *ricorsivo* — un job ricorrente che crea altri job ricorrenti — è un'altra categoria di rischio, perché senza freni la popolazione di cron può solo crescere. L'esempio canonico, monitoraggio competitor, scritto per esteso e **con stop-condition**:
 

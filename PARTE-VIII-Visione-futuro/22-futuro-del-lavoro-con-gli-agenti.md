@@ -148,7 +148,7 @@ e gestibili (vedi la sezione sull'AI Act).
 - [ ] Ho deciso se accettare la challenge dei 7 giorni
 - [ ] Conosco le 3 questioni etiche chiave (privacy, consenso, responsabilità)
 - [ ] Mi sono fatto un'opinione informata sul ruolo della regolamentazione
-- [ ] So a quali aree del mio lavoro vorrei applicare OpenClaw per primi
+- [ ] So quali aree del mio lavoro vorrei affidare per prime a OpenClaw
 - [ ] So se il mio uso rientra nell'esenzione personale dell'AI Act o negli obblighi del 2 agosto 2026
 - [ ] Ho scelto il task del Day 1 della mia challenge
 

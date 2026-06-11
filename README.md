@@ -173,13 +173,13 @@ Con [Pandoc](https://pandoc.org):
 ```bash
 # PDF unico per la stampa (richiede LaTeX installato)
 pandoc README.md PARTE-*/[0-9]*.md \
-  capitolo-extra-homeclaw.md Appendici/*.md \
+  capitolo-extra-homeclaw.md Appendici/[A-E]-*.md \
   --lua-filter=tools/strip-external-links.lua \
   -o openclaw-guida.pdf --toc --toc-depth=2
 
 # ePub
 pandoc README.md PARTE-*/[0-9]*.md \
-  capitolo-extra-homeclaw.md Appendici/*.md \
+  capitolo-extra-homeclaw.md Appendici/[A-E]-*.md \
   -o openclaw-guida.epub --toc --toc-depth=2 \
   --metadata title="OpenClaw: Guida Completa"
 ```
@@ -198,7 +198,7 @@ OpenClaw evolve molto velocemente — se trovi informazioni datate (versioni di 
 
 - **Versione di riferimento**: maggio 2026
 - **Eventi inclusi**: ban Anthropic del 4 aprile 2026, acquisizione Moltbook da parte di Meta (10 marzo 2026), ingresso di Steinberger in OpenAI (14 febbraio 2026)
-- **Software**: OpenClaw v.x.y al momento della stesura. La CLI può cambiare: verifica sempre con `openclaw --version` e leggi il changelog ufficiale.
+- **Software**: OpenClaw 2026.4.27 al momento della stesura. La CLI può cambiare: verifica sempre con `openclaw --version` e leggi il changelog ufficiale.
 
 OpenClaw evolve rapidamente. Verifica i comandi e i prezzi prima di seguirli alla lettera.
 
