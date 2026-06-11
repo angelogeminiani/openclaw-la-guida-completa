@@ -171,9 +171,10 @@ Aprilo in [Obsidian](https://obsidian.md), VS Code, o qualsiasi editor Markdown.
 Con [Pandoc](https://pandoc.org):
 
 ```bash
-# PDF unico (richiede LaTeX installato)
+# PDF unico per la stampa (richiede LaTeX installato)
 pandoc README.md PARTE-*/[0-9]*.md \
   capitolo-extra-homeclaw.md Appendici/*.md \
+  --lua-filter=tools/strip-external-links.lua \
   -o openclaw-guida.pdf --toc --toc-depth=2
 
 # ePub
@@ -182,6 +183,8 @@ pandoc README.md PARTE-*/[0-9]*.md \
   -o openclaw-guida.epub --toc --toc-depth=2 \
   --metadata title="OpenClaw: Guida Completa"
 ```
+
+Il filtro `tools/strip-external-links.lua` serve per l'edizione stampata: converte i link esterni in solo-titolo (niente URL lunghi sulla pagina). Gli URL completi restano nell'[Appendice E](./Appendici/E-risorse-e-link-utili.md), che è la bibliografia online del libro. Nell'ePub i link restano cliccabili, quindi il filtro non si applica.
 
 ### Contribuire
 

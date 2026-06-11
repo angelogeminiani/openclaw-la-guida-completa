@@ -2,6 +2,16 @@
 
 Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli: OpenClaw evolve rapidamente e alcune risorse possono aver cambiato indirizzo.
 
+## La bibliografia online
+
+Questa appendice è la **bibliografia del libro**. La versione di riferimento — sempre aggiornata, con tutti i link cliccabili — vive sul repository GitHub del libro, nella cartella `Appendici/`:
+
+`github.com/angelogeminiani/openclaw-la-guida-completa`
+
+Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel corpo dei capitoli (sarebbero illeggibili e non cliccabili su carta): trovi titolo e autore di ogni fonte nel capitolo, e l'indirizzo completo qui nella versione online. Inquadra il QR code per aprirla:
+
+![QR code — bibliografia online del libro](./qr-bibliografia-online.png)
+
 ## Indice delle fonti
 
 
@@ -16,6 +26,16 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | Wikipedia — OpenClaw | Storica | https://en.wikipedia.org/wiki/OpenClaw |
 | Wikipedia — Moltbook | Storica | https://en.wikipedia.org/wiki/Moltbook |
 
+### Concetti e architettura (documentazione ufficiale)
+
+| Risorsa | Autore | URL |
+|---------|--------|-----|
+| Heartbeat — meccanica del battito e isolamento di sessione | OpenClaw Docs | https://docs.openclaw.ai/gateway/heartbeat |
+| Agent bootstrapping — primo avvio e file canonici | OpenClaw Docs | https://docs.openclaw.ai/start/bootstrapping |
+| Architecture overview — moduli (Gateway, agenti, skill, sessioni) | OpenClaw GitHub | https://github.com/openclaw/openclaw/blob/main/docs/concepts/architecture.md |
+| Memory concepts — i quattro strati di memoria | OpenClaw GitHub | https://github.com/openclaw/openclaw/blob/main/docs/concepts/memory.md |
+| Messages and queue modes (`interrupt`, `steer`, `followup`, `collect`) | OpenClaw Docs | https://docs.openclaw.ai/concepts/messages |
+
 ### Guide e tutorial
 
 | Risorsa | Autore | URL |
@@ -26,11 +46,14 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | OpenClaw Explained | KDnuggets | https://www.kdnuggets.com/openclaw-explained-the-free-ai-agent-tool-going-viral-already-in-2026 |
 | OpenClaw Setup Guide 2026 | Popular AI Tools | https://popularaitools.ai/blog/openclaw-setup-guide-2026 |
 | OpenClaw Income Generation Stories | OpenClaw Desktop Blog | https://openclawdesktop.com/blog/openclaw-income-generation-community-stories.html |
+| OpenClaw Workspace Files Explained | Roberto Capodieci (Medium) | https://capodieci.medium.com/ai-agents-003-openclaw-workspace-files-explained-soul-md-agents-md-heartbeat-md-and-more-5bdfbee4827a |
+| SOUL.md & Identity — Designing Your Agent's Personality | Learn OpenClaw | https://learnopenclaw.com/core-concepts/soul-md |
 
 ### Installazione, onboarding e troubleshooting
 
 | Risorsa | Autore | URL |
 |---------|--------|-----|
+| Install — indice ufficiale di tutti i percorsi | OpenClaw Docs | https://docs.openclaw.ai/install/ |
 | Onboarding overview — documentazione ufficiale | OpenClaw Docs | https://docs.openclaw.ai/start/onboarding-overview |
 | Onboarding wizard (CLI) — reference | OpenClaw Docs | https://docs.openclaw.ai/start/wizard |
 | Getting started — quickstart ufficiale | OpenClaw Docs | https://docs.openclaw.ai/start/getting-started |
@@ -119,6 +142,7 @@ Tutte le fonti consultate e citate nel libro. Verifica i link prima di seguirli:
 | Slack Socket Mode — reference | Slack API | https://api.slack.com/apis/socket-mode |
 | Slack — Creating an app with Bolt for JavaScript | Slack Developer Docs | https://docs.slack.dev/tools/bolt-js/creating-an-app/ |
 | Slack — Hello World Bolt tutorial | Slack API | https://api.slack.com/tutorials/tracks/hello-world-bolt |
+| Slack — App-Level Tokens (token types) | Slack API | https://api.slack.com/authentication/token-types#app-level |
 | Discord — Message Content Privileged Intent FAQ | Discord Developer Support | https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ |
 | Discord Privileged Gateway Intents 2026 — practical guide | Space-Node | https://space-node.net/blog/discord-gateway-intents-message-content-2026 |
 | Discord.js — Gateway Intents guide | discord.js | https://discordjs.guide/legacy/popular-topics/intents |
