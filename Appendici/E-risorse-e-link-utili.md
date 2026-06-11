@@ -35,6 +35,8 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 | Architecture overview — moduli (Gateway, agenti, skill, sessioni) | OpenClaw GitHub | https://github.com/openclaw/openclaw/blob/main/docs/concepts/architecture.md |
 | Memory concepts — i quattro strati di memoria | OpenClaw GitHub | https://github.com/openclaw/openclaw/blob/main/docs/concepts/memory.md |
 | Messages and queue modes (`interrupt`, `steer`, `followup`, `collect`) | OpenClaw Docs | https://docs.openclaw.ai/concepts/messages |
+| Skills — formato SKILL.md, posizioni e precedenza | OpenClaw Docs | https://docs.openclaw.ai/tools/skills |
+| Creating skills — guida ufficiale allo sviluppo | OpenClaw Docs | https://docs.openclaw.ai/tools/creating-skills |
 
 ### Guide e tutorial
 
@@ -195,6 +197,13 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 | Anthropic provider docs (OpenClaw) | OpenClaw Docs | https://docs.openclaw.ai/providers/anthropic |
 | Apple Mac Mini price hike to $799 (AI memory shortage, mag 2026) | Fortune | https://fortune.com/2026/05/02/apple-mac-minis-starting-price-hike-799-ai-demand-supply-shortage/ |
 
+### Regolamentazione
+
+| Risorsa | Fonte | URL |
+|---------|-------|-----|
+| Regolamento (UE) 2024/1689 (AI Act) — testo ufficiale | EUR-Lex | https://eur-lex.europa.eu/eli/reg/2024/1689/oj |
+| AI Act — Regulatory framework on AI | Commissione europea | https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai |
+
 ### Podcast e video
 
 | Risorsa | Piattaforma | URL |
@@ -214,6 +223,8 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 | UniClaw | https://uniclaw.ai |
 | Plus One (Every) | https://every.to/plus-one |
 | ClawHub (skill registry) | https://clawhub.com |
+| ClawHub CLI (repo del registry, `publish` e `sync`) | https://github.com/openclaw/clawhub |
+| Superpowers — framework di skill (Jesse Vincent) | https://github.com/obra/superpowers |
 | OpenClaw Desktop | https://openclawdesktop.com |
 | Railway (1-Click Deploy) | https://railway.com/deploy/openclaw |
 | DigitalOcean (1-Click Deploy tutorial) | https://www.digitalocean.com/community/tutorials/how-to-run-openclaw |

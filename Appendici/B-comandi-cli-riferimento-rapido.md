@@ -16,8 +16,11 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
 | Comando | Descrizione | Capitolo |
 |---------|-------------|----------|
 | `openclaw status` | Stato corrente di OpenClaw (running/stopped) | 15 |
-| `openclaw doctor` | Diagnostica automatica delle configurazioni | 5, 15 |
-| `openclaw update` | Aggiorna OpenClaw alla versione più recente | 13, 15 |
+| `openclaw gateway start\|stop\|restart\|status` | Controlla il processo Gateway | 5, 14, 15 |
+| `openclaw doctor` | Diagnostica automatica delle configurazioni (`--fix` ripara) | 5, 15 |
+| `openclaw logs --follow` | Log del Gateway in tempo reale | 5, 14, 15 |
+| `openclaw cost report --since <periodo>` | Report dei costi LLM (richiede hook `cost-tracker`) | 5, 8, 14, 15 |
+| `openclaw update` | Aggiorna OpenClaw alla versione più recente | 13, 14, 15 |
 
 ## Agenti
 
@@ -30,14 +33,22 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
 
 | Comando | Descrizione | Capitolo |
 |---------|-------------|----------|
-| `openclaw channels login --channel telegram` | Collega un bot Telegram via token | 6 |
+| `openclaw channels login --channel telegram` | Collega un bot Telegram via token | 6, 15 |
 | `openclaw channels status` | Stato dei canali connessi | 15 |
+
+## Backup
+
+| Comando | Descrizione | Capitolo |
+|---------|-------------|----------|
+| `openclaw backup create` | Archivio `.tar.gz` di stato e workspace | 5, 15 |
+| `openclaw backup restore <file>` | Ripristina un archivio di backup | 5, 15 |
 
 ## Cron job
 
 | Comando | Descrizione | Capitolo |
 |---------|-------------|----------|
-| `openclaw crons list` | Elenca i cron attivi per agente | 15, 18 |
+| `openclaw cron list` | Elenca i cron attivi per agente | 14, 15, 18 |
+| `openclaw cron disable <id>` | Disattiva un cron (es. un loop impazzito) | 5, 14 |
 
 ## Sicurezza
 
@@ -49,7 +60,7 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
 
 | Comando | Descrizione | Capitolo |
 |---------|-------------|----------|
-| `openclaw plugins install` | Installa una skill da ClawHub o sorgente locale | 17 |
+| `openclaw skills install <nome>` | Installa una skill da ClawHub o sorgente locale | 17 |
 
 ## Comandi in-channel (da inviare al bot)
 
