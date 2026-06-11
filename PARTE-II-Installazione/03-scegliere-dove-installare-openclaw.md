@@ -94,7 +94,7 @@ Il VPS è il modo in cui gira oggi la maggior parte degli agenti OpenClaw "seri"
 | Render | da $7 (~€6,50) | always-on |
 | Hostinger KVM 2 | €4,99 | low-cost |
 
-Vanno **sommati i token LLM**: €15–80/mese per un agente "normale" (Cap. [14](../PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md)).
+Vanno **sommati i token LLM**: $6–30 (~€5,50–28)/mese per un uso leggero, $50–150 (~€46–138) per uno moderato (le fasce del Cap. [14](../PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md)).
 
 **La quarta via nascosta: i free tier.** **Oracle Cloud Free Tier** regala in perpetuo un'instance ARM fino a **4 OCPU + 24 GB di RAM** in regioni come Francoforte: su carta, meglio di un CX42 a costo zero. I cavilli: Oracle si riprende le istanze quasi inattive (un cron con un piccolo carico periodico ti mette al riparo — i dettagli della anti-idle policy sono nel Cap. [19](../PARTE-VII-Uso-avanzato/19-deploy-su-vps-e-infrastruttura-cloud.md)), l'account va aperto almeno una volta al mese, e la disponibilità al provisioning è capricciosa. Perfetto per imparare, ma il SLA "best effort" non è production-grade; gli altri free tier sono troppo piccoli o a scadenza.
 
@@ -324,15 +324,41 @@ Qualunque via tu scelga, il prossimo capitolo affronta una domanda che non puoi 
 
 ## Errori comuni e come risolverli
 
-| Sintomo | Causa probabile | Fix |
-|---|---|---|
-| "Lo metto sul MacBook di lavoro per provare" | Sottovalutazione dell'accesso pieno al sistema | Mai. Mac mini dedicato, VPS o utenza isolata. La regola d'oro vince sempre. |
-| Bolletta VPS triplicata in due settimane | Bandwidth a consumo o LLM verboso | Imposta budget alert sul provider LLM. |
-| L'agente "lagga" | VPS in regione lontana dal modello LLM | Stesso continente del provider LLM (per Anthropic = `us-east`). |
-| Il piano BYOK non accetta la mia Claude Pro | Ban Anthropic del 4 aprile 2026 | API key pay-as-you-go o piano all-inclusive (MaxClaw, OpenClaw Cloud). |
-| Raspberry Pi inutilizzabile dopo qualche giorno | Workload pesante o microSD lenta | NVMe USB 3.0 (~€25); per browser automation, Mac mini o VPS. |
-| Mac mini spento dal temporale, workspace corrotto | Niente UPS, niente backup | UPS via USB + `rsync` notturno verso storage esterno. |
-| Aperta la porta 18789 sul VPS "per debug" | Esposizione del control plane | Chiudi subito (`ufw delete allow 18789`) e usa Tailscale. Considera l'istanza compromessa. |
+**Sintomo:** "lo metto sul MacBook di lavoro per provare".
+Causa: sottovalutazione dell'accesso pieno al sistema.
+Fix: mai. Mac mini dedicato, VPS o utenza isolata. La
+regola d'oro vince sempre.
+
+**Sintomo:** bolletta VPS triplicata in due settimane.
+Causa: bandwidth a consumo o LLM verboso.
+Fix: imposta budget alert sul provider LLM.
+
+**Sintomo:** l'agente "lagga".
+Causa: VPS in regione lontana dal modello LLM.
+Fix: stesso continente del provider LLM (per Anthropic =
+`us-east`).
+
+**Sintomo:** il piano BYOK non accetta la mia Claude Pro.
+Causa: ban Anthropic del 4 aprile 2026.
+Fix: API key pay-as-you-go o piano all-inclusive
+(MaxClaw, OpenClaw Cloud).
+
+**Sintomo:** Raspberry Pi inutilizzabile dopo qualche
+giorno.
+Causa: workload pesante o microSD lenta.
+Fix: NVMe USB 3.0 (~€25); per browser automation, Mac
+mini o VPS.
+
+**Sintomo:** Mac mini spento dal temporale, workspace
+corrotto.
+Causa: niente UPS, niente backup.
+Fix: UPS via USB + `rsync` notturno verso storage
+esterno.
+
+**Sintomo:** aperta la porta 18789 sul VPS "per debug".
+Causa: esposizione del control plane.
+Fix: chiudi subito (`ufw delete allow 18789`) e usa
+Tailscale. Considera l'istanza compromessa.
 
 ## Checklist di fine capitolo
 

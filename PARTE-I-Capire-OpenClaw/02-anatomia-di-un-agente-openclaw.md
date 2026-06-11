@@ -271,16 +271,49 @@ Il pattern è sempre lo stesso: dalla salute del sistema (`status`) si scende al
 
 ## Errori comuni e come risolverli
 
-| Sintomo | Causa probabile | Fix |
-|---------|-----------------|-----|
-| L'agente "dimentica" cose importanti | Le note restano in conversazione, non sui file di memoria | Chiedi esplicitamente "salva questo in USER.md"; verifica che il file sia cambiato. |
-| L'agente non risponde a un messaggio | Gateway giù o canale disconnesso (l'heartbeat non c'entra) | `openclaw status`, poi `openclaw channels status`. Se è il canale, riavvia quello. |
-| Confondere SOUL, AGENTS e IDENTITY | Nomi simili, ruoli sovrapponibili | SOUL = personalità. AGENTS = istruzioni operative. IDENTITY = biglietto da visita. |
-| BOOTSTRAP.md ancora lì dopo settimane | Bootstrap fallito al primo avvio | Vai al Cap. 7: rispondi alle domande nella TUI finché il file si auto-cancella. |
-| "Regole" che non ricordi di aver scritto | Skill che ha modificato AGENTS.md | Cerca in AGENTS.md i marker tipo `<!-- skill:nome -->`; rimuovi e disinstalla se serve. |
-| Risposte lente o costose | HEARTBEAT.md troppo lungo o note giornaliere enormi | HEARTBEAT.md sotto le 20 righe; archivia note vecchie con un cron di compaction (Cap. 18). |
-| Conversazioni di gruppo che esplodono | Mention gating disattivato | Riattiva `mentionGating: true` per il canale di gruppo. |
-| Una sessione "vede" cose di un'altra | Scope su `main` o `per-peer` invece di `per-channel-peer` | Cambia `session.scope`, riavvia, verifica con `openclaw sessions list`. |
+**Sintomo:** l'agente "dimentica" cose importanti.
+Causa: le note restano in conversazione, non sui file di
+memoria.
+Fix: chiedi esplicitamente "salva questo in USER.md";
+verifica che il file sia cambiato.
+
+**Sintomo:** l'agente non risponde a un messaggio.
+Causa: Gateway giù o canale disconnesso (l'heartbeat non
+c'entra).
+Fix: `openclaw status`, poi `openclaw channels status`.
+Se è il canale, riavvia quello.
+
+**Sintomo:** confondere SOUL, AGENTS e IDENTITY.
+Causa: nomi simili, ruoli sovrapponibili.
+Fix: SOUL = personalità. AGENTS = istruzioni operative.
+IDENTITY = biglietto da visita.
+
+**Sintomo:** BOOTSTRAP.md ancora lì dopo settimane.
+Causa: bootstrap fallito al primo avvio.
+Fix: vai al Cap. 7: rispondi alle domande nella TUI
+finché il file si auto-cancella.
+
+**Sintomo:** "regole" che non ricordi di aver scritto.
+Causa: skill che ha modificato AGENTS.md.
+Fix: cerca in AGENTS.md i marker tipo
+`<!-- skill:nome -->`; rimuovi e disinstalla se serve.
+
+**Sintomo:** risposte lente o costose.
+Causa: HEARTBEAT.md troppo lungo o note giornaliere
+enormi.
+Fix: HEARTBEAT.md sotto le 20 righe; archivia note
+vecchie con un cron di compaction (Cap. 18).
+
+**Sintomo:** conversazioni di gruppo che esplodono.
+Causa: mention gating disattivato.
+Fix: riattiva `mentionGating: true` per il canale di
+gruppo.
+
+**Sintomo:** una sessione "vede" cose di un'altra.
+Causa: scope su `main` o `per-peer` invece di
+`per-channel-peer`.
+Fix: cambia `session.scope`, riavvia, verifica con
+`openclaw sessions list`.
 
 ## Checklist di fine capitolo
 

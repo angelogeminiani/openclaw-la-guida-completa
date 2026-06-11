@@ -144,12 +144,31 @@ Quando racconti a qualcuno che usi OpenClaw, ricevi quasi sempre tre risposte. V
 
 ## Errori comuni e come risolverli
 
-| Sintomo | Causa probabile | Fix |
-|---------|-----------------|-----|
-| Confondere OpenClaw con Claude o ChatGPT | Marketing AI poco preciso, abitudine ai chatbot | OpenClaw è un *framework* che usa un LLM (Claude, GPT, Nemotron, ecc.). Il framework agisce, l'LLM ragiona. |
-| Aspettarsi che l'agente "indovini" cosa fare | Mindset da chatbot conversazionale | Trattare OpenClaw come un dipendente da onboardare: serve specificare ruolo, compiti, confini (vedi Cap. 7). |
-| Volerlo provare "giusto un attimo" sul portatile di lavoro | Non si percepisce ancora il rischio dell'accesso pieno al sistema | Fermarsi e leggere i Cap. 3, 4 e 13 prima di installare. La prima installazione va su un dispositivo dedicato. |
-| Trattare OpenClaw come uno Zapier più sofisticato | Confondere automazione deterministica e ragionamento | Vedi sezione "Tre obiezioni": se i tuoi workflow non hanno bisogno di ragionamento, OpenClaw è overkill — resta su Zapier o n8n. |
+**Sintomo:** confondere OpenClaw con Claude o ChatGPT.
+Causa: marketing AI poco preciso, abitudine ai chatbot.
+Fix: OpenClaw è un *framework* che usa un LLM (Claude,
+GPT, Nemotron, ecc.). Il framework agisce, l'LLM ragiona.
+
+**Sintomo:** aspettarsi che l'agente "indovini" cosa fare.
+Causa: mindset da chatbot conversazionale.
+Fix: trattare OpenClaw come un dipendente da onboardare:
+serve specificare ruolo, compiti, confini (vedi Cap. 7).
+
+**Sintomo:** volerlo provare "giusto un attimo" sul
+portatile di lavoro.
+Causa: non si percepisce ancora il rischio dell'accesso
+pieno al sistema.
+Fix: fermarsi e leggere i Cap. 3, 4 e 13 prima di
+installare. La prima installazione va su un dispositivo
+dedicato.
+
+**Sintomo:** trattare OpenClaw come uno Zapier più
+sofisticato.
+Causa: confondere automazione deterministica e
+ragionamento.
+Fix: vedi sezione "Tre obiezioni": se i tuoi workflow non
+hanno bisogno di ragionamento, OpenClaw è overkill —
+resta su Zapier o n8n.
 
 ## Checklist di fine capitolo
 

@@ -172,8 +172,10 @@ Con [Pandoc](https://pandoc.org):
 
 ```bash
 # PDF unico per la stampa (richiede LaTeX installato)
+# (l'Appendice E resta fuori dal PDF: è la
+#  bibliografia online, in stampa c'è il QR)
 pandoc README.md PARTE-*/[0-9]*.md \
-  capitolo-extra-homeclaw.md Appendici/[A-E]-*.md \
+  capitolo-extra-homeclaw.md Appendici/[A-D]-*.md \
   --lua-filter=tools/strip-external-links.lua \
   -o openclaw-guida.pdf --toc --toc-depth=2
 

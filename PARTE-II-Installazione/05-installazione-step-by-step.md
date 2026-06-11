@@ -396,17 +396,53 @@ I tre prompt che usi nei primi cinque minuti di vita dell'agente. Copia, incolla
 
 ## Errori comuni e come risolverli
 
-| Sintomo | Causa probabile | Fix |
-|---|---|---|
-| Lo script `curl … install.sh` fallisce | Proxy aziendale o certificate pinning | Scarica con `curl -O`, ispeziona, lancia `bash install.sh`. |
-| `openclaw: command not found` dopo `npm install -g` | `npm` global bin non in `PATH` | Aggiungi `export PATH="$(npm prefix -g)/bin:$PATH"` a `~/.zshrc`, riapri il terminale. |
-| `Node version too old` | Node < 22.16 | Installa Node 24 (raccomandato) o 22.16+ via `nvm install 22.16 && nvm use 22.16`. |
-| `Anthropic API key invalid` o `subscription not allowed` | Claude Pro/Max bloccata dal 4 aprile 2026 | Genera una API key da `console.anthropic.com`. Vedi Cap. 14. |
-| `openclaw gateway status` dice "stopped" | Gateway non avviato come daemon | `openclaw gateway --install-daemon` oppure `openclaw gateway start`. |
-| Porta `18789` già in uso | Altro processo la sta tenendo | `lsof -i :18789`; cambia porta in `~/.openclaw/config.yaml`. |
-| `openclaw doctor` segnala "schema mismatch" | `config.yaml` di una versione precedente | `openclaw doctor --fix`; se fallisce, rinomina la config e rifai il wizard. |
-| OAuth Google fallisce sul setup `gog` | Browser non aperto, redirect URI bloccato | `openclaw skills configure gog` con Chrome come browser di default. |
-| Spese salite all'improvviso | `cost-tracker` spento, agente in loop | `openclaw cost report --since 24h`; ferma il cron con `openclaw cron list && openclaw cron disable <id>`. |
+**Sintomo:** lo script `curl … install.sh` fallisce.
+Causa: proxy aziendale o certificate pinning.
+Fix: scarica con `curl -O`, ispeziona, lancia
+`bash install.sh`.
+
+**Sintomo:** `openclaw: command not found` dopo
+`npm install -g`.
+Causa: `npm` global bin non in `PATH`.
+Fix: aggiungi
+`export PATH="$(npm prefix -g)/bin:$PATH"` a `~/.zshrc`,
+riapri il terminale.
+
+**Sintomo:** `Node version too old`.
+Causa: Node < 22.16.
+Fix: installa Node 24 (raccomandato) o 22.16+ via
+`nvm install 22.16 && nvm use 22.16`.
+
+**Sintomo:** `Anthropic API key invalid` o
+`subscription not allowed`.
+Causa: Claude Pro/Max bloccata dal 4 aprile 2026.
+Fix: genera una API key da `console.anthropic.com`. Vedi
+Cap. 14.
+
+**Sintomo:** `openclaw gateway status` dice "stopped".
+Causa: Gateway non avviato come daemon.
+Fix: `openclaw gateway --install-daemon` oppure
+`openclaw gateway start`.
+
+**Sintomo:** porta `18789` già in uso.
+Causa: altro processo la sta tenendo.
+Fix: `lsof -i :18789`; cambia porta in
+`~/.openclaw/config.yaml`.
+
+**Sintomo:** `openclaw doctor` segnala "schema mismatch".
+Causa: `config.yaml` di una versione precedente.
+Fix: `openclaw doctor --fix`; se fallisce, rinomina la
+config e rifai il wizard.
+
+**Sintomo:** OAuth Google fallisce sul setup `gog`.
+Causa: browser non aperto, redirect URI bloccato.
+Fix: `openclaw skills configure gog` con Chrome come
+browser di default.
+
+**Sintomo:** spese salite all'improvviso.
+Causa: `cost-tracker` spento, agente in loop.
+Fix: `openclaw cost report --since 24h`; ferma il cron
+con `openclaw cron list && openclaw cron disable <id>`.
 
 ## Checklist di fine capitolo
 

@@ -699,18 +699,58 @@ Il sandbox è la base della sicurezza, ma non la copre tutta. Tre direzioni natu
 
 ## Errori comuni e come risolverli
 
-| Sintomo | Causa probabile | Fix |
-|---|---|---|
-| Container exit code 1 al primo avvio | Immagine sandbox non costruita o non aggiornata | `docker build -f Dockerfile.sandbox` e verifica con `docker images`. |
-| L'agente non scrive nel workspace | `workspaceAccess: "none"` o `"ro"` di default | Cambia in `"rw"` solo quando hai capito le implicazioni. |
-| Chiamate ad API esterne falliscono | Egress allowlist incompleta | Aggiungi il dominio in `allow.txt` o nella allowlist Squid; ricarica. |
-| Container gira come root | Manca `USER 1000` nel Dockerfile o override del compose | Aggiungi `USER 1000` e `chown -R 1000:1000` al volume montato. |
-| `env` dentro il container espone le API key | Credential proxy disattivato o variabili passate via `-e` | Attiva `credentials.mode: "proxy"`, rimuovi `-e ANTHROPIC_API_KEY`. |
-| microVM non parte su macOS | Docker Desktop < 4.60 o Virtualization framework disattivato | Aggiorna Docker Desktop, abilita "Use Virtualization framework" nelle Preferences. |
-| `runsc` lento in modo anomalo | Workload I/O-pesante (build npm, sync Drive) | Limita gVisor agli agent secondari; lascia il main agent su runc. |
-| Ogni `openclaw update` rompe il sandbox | Override del config su file con permessi sbagliati | Versiona `~/.openclaw/config.yaml` in Git e ripristina il diff dopo l'update. |
-| `cosign verify` fallisce sull'immagine base | Tag re-pushato o firma scaduta | Aggiorna il digest nel `FROM`, ri-verifica, ricostruisci. |
-| WSL2 non vede la microVM | Nested virtualization disattivata nel BIOS | Abilita VT-x/AMD-V e "Virtualization in firmware" nel BIOS, riavvia. |
+**Sintomo:** container exit code 1 al primo avvio.
+Causa: immagine sandbox non costruita o non aggiornata.
+Fix: `docker build -f Dockerfile.sandbox` e verifica con
+`docker images`.
+
+**Sintomo:** l'agente non scrive nel workspace.
+Causa: `workspaceAccess: "none"` o `"ro"` di default.
+Fix: cambia in `"rw"` solo quando hai capito le
+implicazioni.
+
+**Sintomo:** chiamate ad API esterne falliscono.
+Causa: egress allowlist incompleta.
+Fix: aggiungi il dominio in `allow.txt` o nella allowlist
+Squid; ricarica.
+
+**Sintomo:** container gira come root.
+Causa: manca `USER 1000` nel Dockerfile o override del
+compose.
+Fix: aggiungi `USER 1000` e `chown -R 1000:1000` al
+volume montato.
+
+**Sintomo:** `env` dentro il container espone le API key.
+Causa: credential proxy disattivato o variabili passate
+via `-e`.
+Fix: attiva `credentials.mode: "proxy"`, rimuovi
+`-e ANTHROPIC_API_KEY`.
+
+**Sintomo:** microVM non parte su macOS.
+Causa: Docker Desktop < 4.60 o Virtualization framework
+disattivato.
+Fix: aggiorna Docker Desktop, abilita "Use Virtualization
+framework" nelle Preferences.
+
+**Sintomo:** `runsc` lento in modo anomalo.
+Causa: workload I/O-pesante (build npm, sync Drive).
+Fix: limita gVisor agli agent secondari; lascia il main
+agent su runc.
+
+**Sintomo:** ogni `openclaw update` rompe il sandbox.
+Causa: override del config su file con permessi sbagliati.
+Fix: versiona `~/.openclaw/config.yaml` in Git e
+ripristina il diff dopo l'update.
+
+**Sintomo:** `cosign verify` fallisce sull'immagine base.
+Causa: tag re-pushato o firma scaduta.
+Fix: aggiorna il digest nel `FROM`, ri-verifica,
+ricostruisci.
+
+**Sintomo:** WSL2 non vede la microVM.
+Causa: nested virtualization disattivata nel BIOS.
+Fix: abilita VT-x/AMD-V e "Virtualization in firmware"
+nel BIOS, riavvia.
 
 ## Checklist di fine capitolo
 

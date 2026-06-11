@@ -411,20 +411,37 @@ Da incollare in chat con l'agente appena il primo canale (di solito Telegram) è
 
 Errori di Telegram e WhatsApp:
 
-| Sintomo | Causa probabile | Fix |
-|---|---|---|
-| Il bot non risponde | Token errato o secondo Gateway in long-polling | `openclaw channels status`; rigenerare token; spegnere il duplicato |
-| Bot risponde a tutto in gruppo | Mention gating off + privacy off | `/setprivacy` su `enabled` + `mentionGating: true` |
-| Account bannato (Baileys) | Traffico eccessivo, fingerprinting | Numero secondario, meno frequenza, Cloud API |
-| Webhook Cloud API non riceve | Verify token mancante o URL non HTTPS | Verificare nella console Meta; serve HTTPS pubblico o tunnel |
+**Sintomo:** il bot non risponde.
+Causa: token errato o secondo Gateway in long-polling.
+Fix: `openclaw channels status`; rigenerare token;
+spegnere il duplicato.
+
+**Sintomo:** bot risponde a tutto in gruppo.
+Causa: mention gating off + privacy off.
+Fix: `/setprivacy` su `enabled` + `mentionGating: true`.
+
+**Sintomo:** account bannato (Baileys).
+Causa: traffico eccessivo, fingerprinting.
+Fix: numero secondario, meno frequenza, Cloud API.
+
+**Sintomo:** webhook Cloud API non riceve.
+Causa: verify token mancante o URL non HTTPS.
+Fix: verificare nella console Meta; serve HTTPS pubblico
+o tunnel.
 
 Errori di Slack/Discord/iMessage:
 
-| Sintomo | Causa probabile | Fix |
-|---|---|---|
-| Slack: `not_authed` | Token `xapp-...` o `xoxb-...` non valido | Rigenerare i token o reinstallare l'app |
-| Discord: bot non legge i messaggi | MESSAGE_CONTENT intent non attivo | Developer Portal → Bot → attivare l'intent |
-| iMessage nativo non funziona | Full Disk Access non concesso | macOS → Privacy → Full Disk Access → OpenClaw |
+**Sintomo:** Slack: `not_authed`.
+Causa: token `xapp-...` o `xoxb-...` non valido.
+Fix: rigenerare i token o reinstallare l'app.
+
+**Sintomo:** Discord: bot non legge i messaggi.
+Causa: MESSAGE_CONTENT intent non attivo.
+Fix: Developer Portal → Bot → attivare l'intent.
+
+**Sintomo:** iMessage nativo non funziona.
+Causa: Full Disk Access non concesso.
+Fix: macOS → Privacy → Full Disk Access → OpenClaw.
 
 ## Checklist di fine capitolo
 
