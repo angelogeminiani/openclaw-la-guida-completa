@@ -78,6 +78,7 @@
     --footer-line: #3a2a20;
     --code-bg: #2a1d16;
     --code-ink: #f4e6d6;
+    --btn-dark-bg: #1c1410;   /* dark CTA pill (e.g. "Metti una stella") */
   }
 
   /* ---- dark theme tokens ---- */
@@ -111,6 +112,7 @@
     --footer-line: #2a2018;
     --code-bg: #100c09;
     --code-ink: #f4e6d6;
+    --btn-dark-bg: #4a3a2c;   /* lighter brown so white text stays high-contrast in dark */
   }
 
   /* respect OS preference when the user hasn't chosen explicitly */
@@ -142,6 +144,7 @@
       --footer-muted: #8d7868;
       --footer-line: #2a2018;
       --code-bg: #100c09;
+      --btn-dark-bg: #4a3a2c;
     }
   }
 
@@ -427,12 +430,10 @@
   .gh-proof .star-ico { color: #e8a13a; font-size: 1.2rem; }
   .gh-star-btn {
     display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px;
-    font-weight: 700; font-size: 0.9rem; background: var(--ink); color: #fff; border: none; cursor: pointer;
+    font-weight: 700; font-size: 0.9rem; background: var(--btn-dark-bg); color: #fff; border: none; cursor: pointer;
     transition: transform .15s, background .15s;
   }
   .gh-star-btn:hover { background: var(--coral); transform: translateY(-2px); text-decoration: none; color: #fff; }
-  :root[data-theme="dark"] .gh-star-btn { background: #34281f; }
-  :root[data-theme="dark"] .gh-star-btn:hover { background: var(--coral); }
 
   /* -------- floating share bar -------- */
   #shareRail {
@@ -1208,7 +1209,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
 
     // -- GitHub stars social proof (live, with count-up) ----------------------------------------------
     var starEl = document.getElementById("ghStarCount");
-    if (starEl) {
+    if (starEl && window.fetch) {
       fetch("https://api.github.com/repos/" + REPO)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
