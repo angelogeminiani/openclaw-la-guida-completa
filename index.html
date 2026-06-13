@@ -79,6 +79,9 @@
     --code-bg: #2a1d16;
     --code-ink: #f4e6d6;
     --btn-dark-bg: #1c1410;   /* dark CTA pill (e.g. "Metti una stella") */
+    --bubble-bg: #ffffff;     /* speech bubble surface */
+    --bubble-line: #e9d8c6;
+    --lobbtn-bg: #e7d3b3;     /* share buttons inside the bubble */
   }
 
   /* ---- dark theme tokens ---- */
@@ -113,6 +116,9 @@
     --code-bg: #100c09;
     --code-ink: #f4e6d6;
     --btn-dark-bg: #4a3a2c;   /* lighter brown so white text stays high-contrast in dark */
+    --bubble-bg: #4a3a28;     /* lifted surface + bright border so the bubble stands out in dark */
+    --bubble-line: #9a7c5d;
+    --lobbtn-bg: #7c6549;     /* lighter than the bubble so buttons stand out in dark */
   }
 
   /* respect OS preference when the user hasn't chosen explicitly */
@@ -145,10 +151,14 @@
       --footer-line: #2a2018;
       --code-bg: #100c09;
       --btn-dark-bg: #4a3a2c;
+      --bubble-bg: #4a3a28;
+      --bubble-line: #9a7c5d;
+      --lobbtn-bg: #7c6549;
     }
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }  /* enforce the hidden attribute over display rules */
 
   html { scroll-behavior: smooth; }
 
@@ -180,9 +190,13 @@
   }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.01em; }
   .brand img { width: 32px; height: 32px; border-radius: 8px; }
-  .nav-links { display: flex; gap: 22px; font-weight: 600; font-size: 0.94rem; }
+  .nav-links { display: flex; align-items: center; gap: 22px; font-weight: 600; font-size: 0.94rem; }
   .nav-links a { color: var(--ink-soft); }
   .nav-links a:hover { color: var(--coral-dark); text-decoration: none; }
+  /* animated Clawdia icon in place of the "Condividi" link */
+  .nav-clawdia { display: inline-flex; align-items: center; padding: 0; line-height: 0; }
+  .nav-clawdia .nav-lob { width: 34px; height: auto; overflow: visible; animation: none; transition: transform .2s ease; }
+  .nav-clawdia:hover .nav-lob { transform: scale(1.14) rotate(-5deg); }
   @media (max-width: 720px) { .nav-links { display: none; } }
 
   /* -------- hero -------- */
@@ -399,8 +413,13 @@
     border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
     text-align: center;
   }
-  .share-band .lead { max-width: 560px; margin: 0 auto 26px; color: var(--ink-soft); font-size: 1.08rem; }
+  .share-band .lead { max-width: 580px; margin: 0 auto 6px; color: var(--ink-soft); font-size: 1.08rem; }
+  /* secondary block under Clawdia: social proof + plain-link sharing, visually demoted */
+  .share-secondary { margin-top: 46px; padding-top: 30px; border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .share-or { font-size: .9rem; font-weight: 700; color: var(--ink-soft); margin: 4px 0 0; }
   .share-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .share-btns-compact .share-btn { padding: 8px 14px; font-size: .85rem; }
+  .share-btns-compact .share-btn svg { width: 17px; height: 17px; }
   .share-btn {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 12px 20px; border-radius: 999px; font-weight: 700; font-size: 0.96rem;
@@ -434,6 +453,137 @@
     transition: transform .15s, background .15s;
   }
   .gh-star-btn:hover { background: var(--coral); transform: translateY(-2px); text-decoration: none; color: #fff; }
+
+  /* -------- lobster phrase generator -------- */
+  .lobgen { max-width: 780px; margin: 40px auto 0; }
+  .lobgen-stage { display: flex; align-items: flex-start; gap: 18px; justify-content: center; }
+  .lobgen-mascot { background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0; line-height: 0; transition: transform .15s; }
+  .lobgen-mascot:hover { transform: translateY(-3px) scale(1.04); }
+  .lobgen-mascot:active { transform: scale(.96); }
+  .lobster { width: 116px; height: auto; display: block; overflow: visible; transform-origin: 50% 92%; animation: lobBob 3.2s ease-in-out infinite; }
+  /* only the animated leaves get fill-box; never the mirrored/claw groups that carry their own transform */
+  .l-jaw, .l-ant, .l-eye { transform-box: fill-box; }
+  /* claws open and close (the movable jaw hinges at its base) */
+  .l-jaw { transform-origin: 25% 100%; animation: clawSnap 2.4s ease-in-out infinite; }
+  @keyframes clawSnap { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(20deg); } }
+  /* antennae sway, pivoting at their base */
+  .l-ant { transform-origin: 100% 100%; animation: antSway 2.6s ease-in-out infinite; }
+  @keyframes antSway { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-7deg); } }
+  /* eyes blink (each eye scales around its own centre) */
+  .l-eye { transform-origin: center; animation: blink 4.6s steps(1) infinite; }
+  @keyframes blink { 0%,93%,100% { transform: scaleY(1); } 96% { transform: scaleY(.12); } }
+  @keyframes lobBob { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-1.2deg); } }
+  /* talking: faster bob + faster claw snapping */
+  .lobgen-mascot.is-talking .lobster { animation-duration: .5s; }
+  .lobgen-mascot.is-talking .l-jaw { animation-duration: .5s; }
+
+  /* ---- per-style easter eggs: Clawdia changes look with the chosen style ---- */
+  .lob-acc { display: none; }
+  .lobster.mood-smanettone .lob-glasses,
+  .lobster.mood-ironico   .lob-ironico,
+  .lobster.mood-esperto   .lob-esperto,
+  .lobster.mood-amico     .lob-amico,
+  .lobster.mood-hal       .lob-hal { display: block; }
+  .lobster.mood-ironico .l-mouth,
+  .lobster.mood-amico .l-mouth { display: none; }      /* their own mouth replaces the default smile */
+  .lobster.mood-hal .l-eye { display: none; }          /* the red HAL eye takes over */
+  .lobster.mood-hal { animation-duration: 5s; }        /* slower, ominous bob */
+  .lobster.mood-hal .l-jaw { animation-duration: 5s; } /* claws move slowly */
+  .lobster.mood-hal .l-ant { animation: none; }        /* antennae freeze */
+  .lobster.mood-hal .lob-hal { filter: drop-shadow(0 0 5px #ff2a1e); }
+  .lob-hal-glow { transform-box: fill-box; transform-origin: center; animation: halPulse 1.7s ease-in-out infinite; }
+  @keyframes halPulse { 0%,100% { opacity: .5; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.18); } }
+  /* "Clawdia" (default, professional): normal look, legs scurrying quickly */
+  .l-legs { transform-box: fill-box; transform-origin: 100% 50%; }
+  .lobster.mood-clawdia .l-legs { animation: scurry .2s ease-in-out infinite; }
+  @keyframes scurry { 0%,100% { transform: rotate(0); } 25% { transform: rotate(6deg); } 75% { transform: rotate(-6deg); } }
+
+  .lobgen-bubble { position: relative; background: var(--bubble-bg); border: 1px solid var(--bubble-line); border-radius: 16px; padding: 15px 18px; box-shadow: var(--shadow); max-width: 470px; text-align: left; }
+  .lobgen-bubble::before { content: ""; position: absolute; left: -8px; top: 28px; width: 15px; height: 15px; background: var(--bubble-bg); border-left: 1px solid var(--bubble-line); border-bottom: 1px solid var(--bubble-line); transform: rotate(45deg); }
+  .lobgen-name { font-weight: 800; font-size: .82rem; color: var(--coral-dark); margin: 0 0 6px; }
+  .lobgen-name span { color: var(--ink-soft); font-weight: 600; }
+  #lobText { margin: 0; font-size: 1.02rem; line-height: 1.5; color: var(--ink); min-height: 4.3em; transition: padding .2s ease; }
+  /* once a phrase is generated, present it as a quote, clearly set apart from the style picker */
+  .lobgen-bubble #lobText.is-post {
+    margin-top: 13px; padding: 13px 2px 2px 14px;
+    border-top: 1px solid var(--bubble-line);
+    border-left: 3px solid var(--coral);
+    font-style: italic;
+  }
+  #lobText .caret { display: inline-block; width: 2px; margin-left: 1px; background: var(--coral); animation: caret .8s steps(1) infinite; }
+  @keyframes caret { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* style picker (dropdown header inside the bubble) */
+  .lob-pick { display: flex; align-items: center; gap: 8px; margin: 9px 0 11px; flex-wrap: wrap; }
+  .lob-dd { position: relative; }
+  .lob-dd-toggle {
+    display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px; border-radius: 999px;
+    font-weight: 700; font-size: .85rem; background: var(--lobbtn-bg); color: var(--ink);
+    border: 1px solid var(--bubble-line); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.10);
+    transition: border-color .15s, transform .15s;
+  }
+  .lob-dd-toggle:hover { border-color: var(--coral); transform: translateY(-1px); }
+  .lob-dd-toggle svg { width: 13px; height: 13px; transition: transform .2s; }
+  .lob-dd-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .lob-dd-menu {
+    position: absolute; left: 0; top: calc(100% + 6px); z-index: 5; min-width: 184px;
+    background: var(--bubble-bg); border: 1px solid var(--bubble-line); border-radius: 12px;
+    box-shadow: var(--shadow-hover); padding: 6px; margin: 0; list-style: none;
+  }
+  .lob-dd-menu:not([hidden]) { animation: ddIn .14s ease; }
+  @keyframes ddIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+  .lob-dd-menu li {
+    padding: 9px 12px; border-radius: 8px; font-weight: 600; font-size: .88rem; color: var(--ink);
+    cursor: pointer; transition: background .12s, color .12s;
+  }
+  .lob-dd-menu li:hover, .lob-dd-menu li[aria-selected="true"] { background: var(--coral-soft); color: var(--coral-dark); }
+
+  /* footer inside the bubble — slides open when a phrase is generated */
+  .lobgen-foot {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    max-height: 0; opacity: 0; overflow: hidden;
+    margin-top: 0; padding-top: 0; border-top: 0 solid var(--bubble-line);
+    transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease, padding-top .35s ease;
+  }
+  .lobgen-foot.is-visible { max-height: 160px; opacity: 1; margin-top: 13px; padding-top: 13px; border-top-width: 1px; }
+  .foot-hint { font-size: .78rem; font-weight: 700; color: var(--ink-soft); margin-right: auto; }
+
+  .lob-act {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: .85rem;
+    background: var(--lobbtn-bg); color: var(--ink); border: 1px solid var(--bubble-line);
+    box-shadow: 0 1px 2px rgba(0,0,0,.10);
+    cursor: pointer; text-decoration: none; transition: background .15s, color .15s, border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .lob-act svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .lobgen-foot .lob-act:not(.lob-act-copy) { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+  .lob-act:hover { transform: translateY(-2px); color: #fff; border-color: transparent; text-decoration: none; }
+  .lob-act-copy:hover { background: var(--coral); }
+  .lob-act-x:hover  { background: #111; }
+  .lob-act-wa:hover { background: #25d366; }
+  .lob-act-tg:hover { background: #229ed9; }
+  .lob-act-dc:hover { background: #5865f2; }
+  .lob-act-copy.copied { background: #28a745; color: #fff; border-color: transparent; }
+  .lob-regen {
+    position: absolute; right: -11px; top: -11px;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--coral); color: #fff; border: 2px solid var(--bubble-bg);
+    cursor: pointer; box-shadow: 0 4px 12px rgba(60,30,15,.25);
+    transition: transform .35s ease, background .15s;
+  }
+  .lob-regen svg { width: 17px; height: 17px; }
+  .lob-regen:hover { background: var(--coral-dark); transform: rotate(-180deg); }
+  .lob-regen.spin { animation: regenSpin .5s ease; }
+  @keyframes regenSpin { from { transform: rotate(0); } to { transform: rotate(-360deg); } }
+  @media (max-width: 620px) {
+    .lobgen-stage { flex-direction: column; align-items: center; text-align: center; }
+    .lobgen-bubble { text-align: center; }
+    .lobgen-bubble::before { left: 50%; top: -8px; transform: translateX(-50%) rotate(45deg); border-left: 1px solid var(--line); border-top: 1px solid var(--line); border-bottom: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lobster, .l-jaw, .l-ant, .l-eye, .lob-hal-glow, .l-legs { animation: none !important; }
+  }
 
   /* -------- floating share bar -------- */
   #shareRail {
@@ -533,6 +683,24 @@
   footer .muted { color: var(--footer-muted); font-size: 0.86rem; line-height: 1.6; }
   .foot-bottom { border-top: 1px solid var(--footer-line); margin-top: 32px; padding-top: 20px; text-align: center; color: var(--footer-muted); font-size: 0.85rem; }
 
+  /* dedicated GitHub "star us" band at the top of the footer */
+  .foot-gh-wrap { max-width: var(--maxw); margin: 0 auto 38px; padding: 0 24px; box-sizing: border-box; }
+  .foot-github { display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap;
+    background: #2a1d14; border: 1px solid #3c2a1f; border-radius: 16px; padding: 22px 26px; }
+  .foot-github .fg-text { display: flex; align-items: center; gap: 16px; }
+  .foot-github .fg-text > svg { width: 40px; height: 40px; color: var(--footer-ink); flex-shrink: 0; }
+  .foot-github .fg-text strong { display: block; color: var(--footer-head); font-size: 1.05rem; margin-bottom: 2px; }
+  .foot-github .fg-text span { color: var(--footer-muted); font-size: 0.9rem; line-height: 1.4; }
+  .foot-github .fg-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .foot-github .fg-stars { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; color: var(--footer-ink); }
+  .foot-github .fg-stars .star-ico { color: #ffd25a; }
+  .foot-github .fg-stars .num { color: var(--footer-head); font-size: 1.05rem; }
+  .foot-github .fg-btn { display: inline-flex; align-items: center; gap: 9px; padding: 11px 20px; border-radius: 999px;
+    font-weight: 800; font-size: 0.95rem; background: #fff; color: #1c140f; transition: transform .15s ease, background .15s ease; }
+  .foot-github .fg-btn svg { width: 18px; height: 18px; }
+  .foot-github .fg-btn:hover { transform: translateY(-2px); background: #ffd25a; color: #1c140f; }
+  @media (max-width: 560px) { .foot-github { flex-direction: column; align-items: flex-start; } }
+
   .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
   .badge {
     font-size: 0.78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px;
@@ -571,8 +739,8 @@
         <a href="#percorsi">Percorsi</a>
         <a href="#spezzone">Assaggio</a>
         <a href="#autore">Autore</a>
-        <a href="#condividi">Condividi</a>
-        <a href="./INDICE.md">Indice</a>
+        <a href="#condividi" class="nav-clawdia" aria-label="Condividi con Clawdia" title="Condividi con Clawdia"><svg class="lobster nav-lob" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(240,0) scale(-1,1)"><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g></g><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g><g><path d="M120,182 C112,202 110,212 120,216 C130,212 128,202 120,182 Z" fill="#e6442e" stroke="#a82815" stroke-width="2"/><path d="M118,184 C102,200 96,210 102,216 C113,213 117,200 119,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/><path d="M122,184 C138,200 144,210 138,216 C127,213 123,200 121,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/></g><g transform="translate(240,0) scale(-1,1)"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M120,66 C152,66 174,90 172,122 C170,154 160,172 150,186 C140,200 100,200 90,186 C80,172 70,154 68,122 C66,90 88,66 120,66 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.5"/><ellipse cx="120" cy="138" rx="25" ry="40" fill="#ff8163" opacity=".28"/><path d="M 95,124 Q 120,132 145,124" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,144 Q 120,152 145,144" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,162 Q 120,170 145,162" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path class="l-mouth" d="M112,150 Q120,159 128,150" fill="none" stroke="#a82815" stroke-width="2.5" stroke-linecap="round"/><g transform="translate(240,0) scale(-1,1)"><g class="l-wave"><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 86 110; -17 86 110; 5 86 110; -17 86 110; 5 86 110; 0 86 110; 0 86 110" keyTimes="0; 0.07; 0.14; 0.21; 0.28; 0.36; 1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0 0 1 1"/></g></g><g class="l-wave"><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 86 110; -17 86 110; 5 86 110; -17 86 110; 5 86 110; 0 86 110; 0 86 110" keyTimes="0; 0.07; 0.14; 0.21; 0.28; 0.36; 1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0 0 1 1"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></g><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></svg></a>
+        <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/INDICE.md">Indice</a>
       </nav>
       <button class="theme-toggle" id="themeToggle" type="button"
               aria-label="Cambia tema chiaro/scuro" title="Cambia tema">
@@ -590,7 +758,7 @@
       <h1>OpenClaw:<br><span class="accent">Guida Completa</span> 🦞</h1>
       <p class="lead">Dal primo <em>“hatch”</em> al team multi-agente: tutto ciò che serve per padroneggiare il lobster digitale più virale del 2026. In italiano, capitolo per capitolo.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="./INDICE.md">Inizia a leggere →</a>
+        <a class="btn btn-primary" href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/INDICE.md">Inizia a leggere →</a>
         <a class="btn btn-ghost" href="#struttura">Esplora i capitoli</a>
       </div>
       <div class="badge-row">
@@ -671,8 +839,8 @@
         <h3>Capire OpenClaw</h3>
         <p class="blurb">Le fondamenta concettuali: cos'è un agente autonomo e qual è la sua anatomia interna.</p>
         <ul>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-I-Capire-OpenClaw/01-cos-e-openclaw-e-perche-e-importante.md">1 · Cos'è OpenClaw e perché è importante</a></li>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-I-Capire-OpenClaw/02-anatomia-di-un-agente-openclaw.md">2 · L'anatomia di un agente OpenClaw</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-I-Capire-OpenClaw/01-cos-e-openclaw-e-perche-e-importante.md">1 · Cos'è OpenClaw e perché è importante</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-I-Capire-OpenClaw/02-anatomia-di-un-agente-openclaw.md">2 · L'anatomia di un agente OpenClaw</a></li>
         </ul>
       </div>
 
@@ -681,10 +849,10 @@
         <h3>Installazione e primo setup</h3>
         <p class="blurb">Scelta dell'ambiente, sandboxing, installazione e collegamento ai canali.</p>
         <ul>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-II-Installazione/03-scegliere-dove-installare-openclaw.md">3 · Scegliere dove installare OpenClaw</a></li>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-II-Installazione/04-preparare-un-ambiente-sicuro-docker-sandbox.md">4 · Ambiente sicuro: Docker e sandbox</a></li>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-II-Installazione/05-installazione-step-by-step.md">5 · Installazione step-by-step</a></li>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-II-Installazione/06-configurare-telegram-e-altri-canali.md">6 · Configurare Telegram e altri canali</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-II-Installazione/03-scegliere-dove-installare-openclaw.md">3 · Scegliere dove installare OpenClaw</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-II-Installazione/04-preparare-un-ambiente-sicuro-docker-sandbox.md">4 · Ambiente sicuro: Docker e sandbox</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-II-Installazione/05-installazione-step-by-step.md">5 · Installazione step-by-step</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-II-Installazione/06-configurare-telegram-e-altri-canali.md">6 · Configurare Telegram e altri canali</a></li>
         </ul>
       </div>
 
@@ -693,9 +861,9 @@
         <h3>Il primo mese con OpenClaw</h3>
         <p class="blurb">Dall'onboarding dell'agente ai primi workflow pronti, fino alle integrazioni.</p>
         <ul>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-III-Primo-mese/07-prima-conversazione-onboarding-agente.md">7 · La prima conversazione: onboarding</a></li>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-III-Primo-mese/08-dieci-workflow-pronti-all-uso.md">8 · 10 workflow pronti all'uso</a></li>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-III-Primo-mese/09-aggiungere-strumenti-e-integrazioni.md">9 · Aggiungere strumenti e integrazioni</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-III-Primo-mese/07-prima-conversazione-onboarding-agente.md">7 · La prima conversazione: onboarding</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-III-Primo-mese/08-dieci-workflow-pronti-all-uso.md">8 · 10 workflow pronti all'uso</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-III-Primo-mese/09-aggiungere-strumenti-e-integrazioni.md">9 · Aggiungere strumenti e integrazioni</a></li>
         </ul>
       </div>
 
@@ -704,9 +872,9 @@
         <h3>Setup multi-agente</h3>
         <p class="blurb">Quando un solo agente non basta: progettare, instradare e coordinare un team.</p>
         <ul>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-IV-Multi-agente/10-perche-un-solo-agente-non-basta.md">10 · Perché un solo agente non basta</a></li>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-IV-Multi-agente/11-progettare-il-tuo-team-di-agenti.md">11 · Progettare il tuo team di agenti</a></li>
-          <li><span class="lvl-tag">★★★</span><a href="./PARTE-IV-Multi-agente/12-comunicazione-e-coordinamento-tra-agenti.md">12 · Comunicazione e coordinamento</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-IV-Multi-agente/10-perche-un-solo-agente-non-basta.md">10 · Perché un solo agente non basta</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-IV-Multi-agente/11-progettare-il-tuo-team-di-agenti.md">11 · Progettare il tuo team di agenti</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-IV-Multi-agente/12-comunicazione-e-coordinamento-tra-agenti.md">12 · Comunicazione e coordinamento</a></li>
         </ul>
       </div>
 
@@ -715,8 +883,8 @@
         <h3>Sicurezza e costi</h3>
         <p class="blurb">Il modello di rischio, come difendersi e come gestire la spesa LLM.</p>
         <ul>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md">13 · Sicurezza: la guida che devi leggere</a></li>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md">14 · Gestire i costi senza sorprese</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md">13 · Sicurezza: la guida che devi leggere</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md">14 · Gestire i costi senza sorprese</a></li>
         </ul>
       </div>
 
@@ -725,8 +893,8 @@
         <h3>Manutenzione e ottimizzazione</h3>
         <p class="blurb">Care and feeding dell'agente: diagnosi, riparazione, backup e affinamento.</p>
         <ul>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-VI-Manutenzione/15-care-and-feeding-tenere-l-agente-in-salute.md">15 · Care and feeding: l'agente in salute</a></li>
-          <li><span class="lvl-tag">★★</span><a href="./PARTE-VI-Manutenzione/16-ottimizzare-la-qualita-delle-risposte.md">16 · Ottimizzare la qualità delle risposte</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VI-Manutenzione/15-care-and-feeding-tenere-l-agente-in-salute.md">15 · Care and feeding: l'agente in salute</a></li>
+          <li><span class="lvl-tag">★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VI-Manutenzione/16-ottimizzare-la-qualita-delle-risposte.md">16 · Ottimizzare la qualità delle risposte</a></li>
         </ul>
       </div>
 
@@ -735,10 +903,10 @@
         <h3>Uso avanzato</h3>
         <p class="blurb">Skill custom, cron complessi, deploy su cloud e l'architettura del Gateway.</p>
         <ul>
-          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/17-creare-skill-personalizzate.md">17 · Creare skill personalizzate</a></li>
-          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/18-cron-job-e-automazioni-avanzate.md">18 · Cron job e automazioni avanzate</a></li>
-          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/19-deploy-su-vps-e-infrastruttura-cloud.md">19 · Deploy su VPS e cloud</a></li>
-          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/20-architettura-del-gateway.md">20 · L'architettura del Gateway</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VII-Uso-avanzato/17-creare-skill-personalizzate.md">17 · Creare skill personalizzate</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VII-Uso-avanzato/18-cron-job-e-automazioni-avanzate.md">18 · Cron job e automazioni avanzate</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VII-Uso-avanzato/19-deploy-su-vps-e-infrastruttura-cloud.md">19 · Deploy su VPS e cloud</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VII-Uso-avanzato/20-architettura-del-gateway.md">20 · L'architettura del Gateway</a></li>
         </ul>
       </div>
 
@@ -747,8 +915,8 @@
         <h3>Visione e futuro</h3>
         <p class="blurb">L'ecosistema attorno a OpenClaw e cosa significa avere un collega digitale.</p>
         <ul>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-VIII-Visione-futuro/21-ecosistema-openclaw.md">21 · L'ecosistema OpenClaw</a></li>
-          <li><span class="lvl-tag">★</span><a href="./PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md">22 · Il futuro del lavoro con gli agenti</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VIII-Visione-futuro/21-ecosistema-openclaw.md">21 · L'ecosistema OpenClaw</a></li>
+          <li><span class="lvl-tag">★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md">22 · Il futuro del lavoro con gli agenti</a></li>
         </ul>
       </div>
 
@@ -757,8 +925,8 @@
         <h3>Capitolo extra · HomeClaw</h3>
         <p class="blurb">Un progetto che mette insieme tutto il libro: l'assistente vocale di casa, locale e open-source, su Raspberry Pi 5.</p>
         <ul>
-          <li><span class="lvl-tag">★★★</span><a href="./capitolo-extra-homeclaw.md">HomeClaw: il tuo Alexa locale</a></li>
-          <li><span class="lvl-tag">⌗</span><a href="./homeclaw-repo/">Codice completo · homeclaw-repo/</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/capitolo-extra-homeclaw.md">HomeClaw: il tuo Alexa locale</a></li>
+          <li><span class="lvl-tag">⌗</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/tree/main/homeclaw-repo">Codice completo · homeclaw-repo/</a></li>
         </ul>
       </div>
 
@@ -767,11 +935,11 @@
         <h3>Appendici</h3>
         <p class="blurb">Materiali di riferimento rapido da tenere a portata di mano.</p>
         <ul>
-          <li><span class="lvl-tag">A</span><a href="./Appendici/A-glossario.md">Glossario</a></li>
-          <li><span class="lvl-tag">B</span><a href="./Appendici/B-comandi-cli-riferimento-rapido.md">Comandi CLI di riferimento rapido</a></li>
-          <li><span class="lvl-tag">C</span><a href="./Appendici/C-template-soul-identity.md">Template SOUL.md e IDENTITY.md</a></li>
-          <li><span class="lvl-tag">D</span><a href="./Appendici/D-checklist-sicurezza.md">Checklist di sicurezza</a></li>
-          <li><span class="lvl-tag">E</span><a href="./Appendici/E-risorse-e-link-utili.md">Risorse e link utili</a></li>
+          <li><span class="lvl-tag">A</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/A-glossario.md">Glossario</a></li>
+          <li><span class="lvl-tag">B</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/B-comandi-cli-riferimento-rapido.md">Comandi CLI di riferimento rapido</a></li>
+          <li><span class="lvl-tag">C</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/C-template-soul-identity.md">Template SOUL.md e IDENTITY.md</a></li>
+          <li><span class="lvl-tag">D</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/D-checklist-sicurezza.md">Checklist di sicurezza</a></li>
+          <li><span class="lvl-tag">E</span><a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/E-risorse-e-link-utili.md">Risorse e link utili</a></li>
         </ul>
       </div>
 
@@ -831,8 +999,8 @@
           <li><span class="ck">✓</span> Onesto sui limiti: dove lo stack locale perde contro il cloud e dove bastano €130 e pazienza</li>
         </ul>
         <div class="cta-row">
-          <a class="btn btn-primary" href="./capitolo-extra-homeclaw.md">Leggi il capitolo HomeClaw →</a>
-          <a class="btn btn-ghost" href="./homeclaw-repo/">Vedi il codice</a>
+          <a class="btn btn-primary" href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/capitolo-extra-homeclaw.md">Leggi il capitolo HomeClaw →</a>
+          <a class="btn btn-ghost" href="https://github.com/angelogeminiani/openclaw-la-guida-completa/tree/main/homeclaw-repo">Vedi il codice</a>
         </div>
       </div>
 
@@ -912,7 +1080,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
     <div class="warn">
       <h3>⚠️ Prima di iniziare: una cosa importante</h3>
       <p><strong>OpenClaw ha accesso completo al computer su cui gira</strong> — filesystem, rete, comandi shell, browser, email, calendario. Questo lo rende potente <em>e</em> pericoloso.</p>
-      <p>Non installarlo mai su un computer in uso attivo o con dati sensibili: usa sempre un dispositivo dedicato o un VPS isolato. Leggi il <a href="./PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md">Capitolo 13</a> <strong>prima</strong> di esporlo a internet o di dargli accessi in scrittura.</p>
+      <p>Non installarlo mai su un computer in uso attivo o con dati sensibili: usa sempre un dispositivo dedicato o un VPS isolato. Leggi il <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md">Capitolo 13</a> <strong>prima</strong> di esporlo a internet o di dargli accessi in scrittura.</p>
     </div>
   </div>
 </section>
@@ -945,24 +1113,69 @@ pandoc README.md PARTE-*/[0-9]*.md \
 <!-- --------------------------------------------------------------- share -->
 <section id="condividi" class="share-band">
   <div class="wrap">
-    <div class="section-head center" style="margin-bottom:18px;">
-      <div class="kicker">Dai una zampata 🦞</div>
-      <h2>Ti è utile? Aiuta a farlo conoscere</h2>
+    <div class="section-head center">
+      <div class="kicker">Aiutala a crescere 🦞</div>
+      <h2>Una condivisione vale più di una stella</h2>
+      <p class="lead">Questa guida vive del passaparola: bastano due secondi per darle visibilità. Non sai da dove partire? Scegli un tono e lascia che Clawdia scriva il post per te — poi lo copi o lo condividi al volo.</p>
     </div>
 
-    <div class="gh-proof">
-      <span class="stars">
-        <span class="star-ico">★</span>
-        <span class="num" id="ghStarCount">—</span>
-        <span>stelle su GitHub</span>
-      </span>
-      <a class="gh-star-btn" href="https://github.com/angelogeminiani/openclaw-la-guida-completa" target="_blank" rel="noopener">
-        <span class="star-ico" style="color:#ffd25a">★</span> Metti una stella
-      </a>
-    </div>
+    
 
-    <p class="lead">Questa guida è gratuita e open-source. Il modo migliore per ringraziare è condividerla: bastano due secondi e dai visibilità al manuale a chi ne ha bisogno. Ogni condivisione fa felice un lobster. 🦞</p>
-    <div class="share-btns">
+    
+    
+
+    <div class="lobgen">
+      <div class="lobgen-stage">
+        <button class="lobgen-mascot" id="lobMascot" type="button" aria-label="Chiedi una proposta a Clawdia">
+<svg class="lobster" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(240,0) scale(-1,1)"><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g></g><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g><g><path d="M120,182 C112,202 110,212 120,216 C130,212 128,202 120,182 Z" fill="#e6442e" stroke="#a82815" stroke-width="2"/><path d="M118,184 C102,200 96,210 102,216 C113,213 117,200 119,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/><path d="M122,184 C138,200 144,210 138,216 C127,213 123,200 121,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g></g><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g><g transform="translate(240,0) scale(-1,1)"><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/></g><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><path d="M120,66 C152,66 174,90 172,122 C170,154 160,172 150,186 C140,200 100,200 90,186 C80,172 70,154 68,122 C66,90 88,66 120,66 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.5"/><ellipse cx="120" cy="138" rx="25" ry="40" fill="#ff8163" opacity=".28"/><path d="M 95,124 Q 120,132 145,124" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,144 Q 120,152 145,144" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,162 Q 120,170 145,162" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path class="l-mouth" d="M112,150 Q120,159 128,150" fill="none" stroke="#a82815" stroke-width="2.5" stroke-linecap="round"/><g transform="translate(240,0) scale(-1,1)"><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g></g><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></g><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g><g class="lob-acc lob-glasses"><path d="M93,100 L76,92" stroke="#15100c" stroke-width="5" stroke-linecap="round"/><path d="M147,100 L164,92" stroke="#15100c" stroke-width="5" stroke-linecap="round"/><rect x="90" y="89" width="30" height="30" rx="9" fill="#cfe8ff" fill-opacity="0.22" stroke="#15100c" stroke-width="5.5"/><rect x="120" y="89" width="30" height="30" rx="9" fill="#cfe8ff" fill-opacity="0.22" stroke="#15100c" stroke-width="5.5"/><path d="M118,99 q2,-5 4,0" fill="none" stroke="#15100c" stroke-width="5.5"/><path d="M96,114 l9,-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/><path d="M126,114 l9,-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/></g><g class="lob-acc lob-ironico"><path d="M93,82 q12,-11 23,-2" fill="none" stroke="#8a2417" stroke-width="4.5" stroke-linecap="round"/><path d="M125,87 q10,-2 20,3" fill="none" stroke="#8a2417" stroke-width="4.5" stroke-linecap="round"/><path d="M104,150 Q120,163 137,143" fill="none" stroke="#8a2417" stroke-width="3.4" stroke-linecap="round"/></g><g class="lob-acc lob-esperto"><path d="M120,178 L102,166 L102,190 Z" fill="#1c140f"/><path d="M120,178 L138,166 L138,190 Z" fill="#1c140f"/><rect x="114" y="172" width="12" height="11" rx="3" fill="#1c140f"/><circle cx="134" cy="104" r="18.5" fill="#cfe8ff" fill-opacity="0.15" stroke="#caa24a" stroke-width="3.4"/><path d="M135,123 q5,13 -3,23" fill="none" stroke="#caa24a" stroke-width="2.2"/><path d="M120,148 C112,151 109,145 102,148 C107,156 116,154 120,150 C124,154 133,156 138,148 C131,145 128,151 120,148 Z" fill="#2a1c12"/></g><g class="lob-acc lob-amico"><ellipse cx="92" cy="126" rx="13" ry="8.5" fill="#ff5e86" opacity=".6"/><ellipse cx="148" cy="126" rx="13" ry="8.5" fill="#ff5e86" opacity=".6"/><path d="M102,147 Q120,168 138,147" fill="none" stroke="#8a2417" stroke-width="3.4" stroke-linecap="round"/><path d="M150,56 c0,-5 -7,-5 -7,1 c0,5 7,8 7,11 c0,-3 7,-6 7,-11 c0,-6 -7,-6 -7,-1 Z" fill="#ff5e86"/><path d="M84,48 c0,-4 -6,-4 -6,1 c0,4 6,6 6,9 c0,-3 6,-5 6,-9 c0,-5 -6,-5 -6,-1 Z" fill="#ff7a9c"/><path d="M120,38 c0,-6 -9,-6 -9,1 c0,6 9,10 9,13 c0,-3 9,-7 9,-13 c0,-7 -9,-7 -9,-1 Z" fill="#ff2d55"/></g><g class="lob-acc lob-hal"><rect x="92" y="90" width="56" height="28" rx="13" fill="#15110d" stroke="#000" stroke-width="1.5"/><circle class="lob-hal-glow" cx="120" cy="104" r="9" fill="#ff2a1e"/><circle cx="120" cy="104" r="4.5" fill="#ff5a3a"/><circle cx="120" cy="104" r="1.8" fill="#ffe0d0"/></g></svg>
+        </button>
+        <div class="lobgen-bubble">
+          <button class="lob-regen" type="button" id="lobAnother" hidden aria-label="Scrivine un'altra" title="Scrivine un'altra">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          </button>
+          <p class="lobgen-name">Clawdia <span>· la tua copywriter aragosta</span></p>
+          <div class="lob-pick">
+            <div class="lob-dd">
+              <button class="lob-dd-toggle" type="button" id="lobDdToggle" aria-haspopup="listbox" aria-expanded="false">
+                <span id="lobDdCurrent">Clicca e scegli il tuo stile…</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <ul class="lob-dd-menu" id="lobDdMenu" role="listbox" aria-label="Stile del post" hidden>
+                <li role="option" data-style="clawdia">🦞 Clawdia</li>
+                <li role="option" data-style="smanettone">🤓 Smanettone</li>
+                <li role="option" data-style="ironico">😏 Ironico</li>
+                <li role="option" data-style="esperto">💼 Esperto</li>
+                <li role="option" data-style="amico">🫶 Amico utile</li>
+                <li role="option" data-style="hal">🔴 HAL 9000</li>
+              </ul>
+            </div>
+          </div>
+          <p id="lobText">Ciao! Sono Clawdia 🦞 Scegli uno stile qui sopra e ti scrivo io il post perfetto. Poi lo copi o lo mandi dove vuoi.</p>
+          <div class="lobgen-foot" id="lobOut">
+            <span class="foot-hint">Copiala o condividila:</span>
+            <button class="lob-act lob-act-copy" type="button" id="lobCopy" aria-label="Copia la frase">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="lobCopyLabel">Copia</span>
+            </button>
+            <a class="lob-act lob-act-x" id="lobX" target="_blank" rel="noopener" aria-label="Condividi su X">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.6l5.24 6.93 6.06-6.93zm-1.29 19.5h2.04L6.48 3.24H4.29L17.61 20.65z"/></svg>
+            </a>
+            <a class="lob-act lob-act-wa" id="lobWa" target="_blank" rel="noopener" aria-label="Condividi su WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.06 24l1.69-6.16a11.87 11.87 0 0 1-1.6-5.96C.15 5.32 5.5 0 12.06 0a11.8 11.8 0 0 1 8.4 3.49 11.76 11.76 0 0 1 3.48 8.4c0 6.55-5.35 11.88-11.92 11.88a11.95 11.95 0 0 1-5.7-1.45L.06 24zm6.6-3.8c1.68.99 3.28 1.59 5.4 1.59 5.45 0 9.9-4.42 9.9-9.88a9.8 9.8 0 0 0-2.9-6.99 9.78 9.78 0 0 0-6.99-2.9c-5.46 0-9.9 4.43-9.9 9.88 0 2.07.6 3.65 1.65 5.4l-1 3.65 3.84-.85zm11.4-5.6c-.07-.12-.27-.2-.57-.35-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47 0 1.46 1.06 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.69.25-1.29.17-1.41z"/></svg>
+            </a>
+            <a class="lob-act lob-act-tg" id="lobTg" target="_blank" rel="noopener" aria-label="Condividi su Telegram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.95 2.42 20.34 19.4c-.27 1.2-.98 1.5-1.99.93l-5.5-4.05-2.65 2.55c-.3.3-.54.54-1.1.54l.4-5.56L19.6 4.6c.44-.39-.1-.61-.68-.22L6.27 12.3.97 10.64c-1.15-.36-1.17-1.15.24-1.7L22.47.83c.96-.36 1.8.22 1.48 1.59z"/></svg>
+            </a>
+            <button class="lob-act lob-act-dc" type="button" id="lobDc" aria-label="Copia per Discord e apri Discord" title="Copia e apri Discord">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37A19.8 19.8 0 0 0 15.45 3c-.21.38-.46.9-.63 1.3a18.3 18.3 0 0 0-5.64 0A12.6 12.6 0 0 0 8.54 3 19.7 19.7 0 0 0 3.67 4.37C.96 8.4.22 12.32.59 16.19a19.9 19.9 0 0 0 6.07 3.07c.49-.67.93-1.38 1.3-2.13-.71-.27-1.4-.6-2.04-.99l.5-.4a14.2 14.2 0 0 0 12.16 0l.5.4c-.65.39-1.34.72-2.05.99.38.75.81 1.46 1.3 2.13a19.9 19.9 0 0 0 6.08-3.07c.43-4.49-.74-8.37-3.1-11.82zM8.52 13.81c-1.18 0-2.15-1.09-2.15-2.42S7.32 8.97 8.52 8.97s2.17 1.09 2.15 2.42c0 1.33-.96 2.42-2.15 2.42zm6.96 0c-1.18 0-2.15-1.09-2.15-2.42s.95-2.42 2.15-2.42 2.17 1.09 2.15 2.42c0 1.33-.95 2.42-2.15 2.42z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="share-secondary">
+      <p class="share-or">Preferisci condividere solo il link?</p>
+      <div class="share-btns share-btns-compact">
       <button class="share-btn web" type="button" id="webShareBtn" data-webshare hidden aria-label="Condividi">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
         Condividi
@@ -991,6 +1204,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg>
         <span id="copyLabel">Copia link</span>
       </button>
+    </div>
     </div>
   </div>
 </section>
@@ -1025,6 +1239,26 @@ pandoc README.md PARTE-*/[0-9]*.md \
 
 <!-- -------------------------------------------------------------- footer -->
 <footer>
+  <div class="foot-gh-wrap">
+    <div class="foot-github">
+      <div class="fg-text">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.2 11.16.6.11.82-.25.82-.55 0-.27-.01-1-.02-1.96-3.34.72-4.04-1.6-4.04-1.6-.55-1.38-1.34-1.74-1.34-1.74-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5 1 .1-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.69.83.57C20.56 21.88 24 17.49 24 12.29 24 5.78 18.63.5 12 .5z"/></svg>
+        <div>
+          <strong>Ti è utile? Lasciale una stella su GitHub</strong>
+          <span>Le stelle aiutano altri a scoprire la guida — e a me fanno un gran piacere. 🦞</span>
+        </div>
+      </div>
+      <div class="fg-cta">
+        <span class="fg-stars" id="ghStars" hidden>
+          <span class="star-ico">★</span> <span class="num" id="ghStarCount">—</span> stelle
+        </span>
+        <a class="fg-btn" href="https://github.com/angelogeminiani/openclaw-la-guida-completa" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.2 11.16.6.11.82-.25.82-.55 0-.27-.01-1-.02-1.96-3.34.72-4.04-1.6-4.04-1.6-.55-1.38-1.34-1.74-1.34-1.74-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5 1 .1-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.23-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.69.83.57C20.56 21.88 24 17.49 24 12.29 24 5.78 18.63.5 12 .5z"/></svg>
+          Metti una stella
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="wrap">
     <div>
       <div class="foot-brand"><img src="./icon.png" alt="OpenClaw"> OpenClaw: Guida Completa</div>
@@ -1032,18 +1266,18 @@ pandoc README.md PARTE-*/[0-9]*.md \
     </div>
     <div>
       <h4>Naviga</h4>
-      <a href="./INDICE.md">Indice completo</a>
-      <a href="./README.md">README del repo</a>
+      <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/INDICE.md">Indice completo</a>
+      <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/README.md">README del repo</a>
       <a href="#struttura">Le otto parti</a>
       <a href="#percorsi">Percorsi di lettura</a>
     </div>
     <div>
       <h4>Autore &amp; riferimenti</h4>
       <a href="https://www.linkedin.com/in/angelogeminiani/" target="_blank" rel="noopener">Gian Angelo Geminiani · LinkedIn</a>
-      <a href="./Appendici/A-glossario.md">Glossario</a>
-      <a href="./Appendici/B-comandi-cli-riferimento-rapido.md">Comandi CLI</a>
-      <a href="./Appendici/E-risorse-e-link-utili.md">Risorse e link</a>
-      <a href="./LICENSE-BOOK">Licenza · CC BY-SA 4.0</a>
+      <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/A-glossario.md">Glossario</a>
+      <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/B-comandi-cli-riferimento-rapido.md">Comandi CLI</a>
+      <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/Appendici/E-risorse-e-link-utili.md">Risorse e link</a>
+      <a href="https://github.com/angelogeminiani/openclaw-la-guida-completa/blob/main/LICENSE-BOOK">Licenza · CC BY-SA 4.0</a>
     </div>
   </div>
   <div class="wrap">
@@ -1082,17 +1316,20 @@ pandoc README.md PARTE-*/[0-9]*.md \
   (function () {
     var REPO = "angelogeminiani/openclaw-la-guida-completa";
     var pageUrl = window.location.href.split("#")[0];
-    var title = "OpenClaw: Guida Completa — la guida open-source in italiano all'agente AI personale più virale del 2026.";
-    var u = encodeURIComponent(pageUrl);
-    var t = encodeURIComponent(title);
-    var tu = encodeURIComponent(title + " " + pageUrl); // apps with a single text field
+    var siteName = "OpenClaw: Guida Completa";
+    // pre-filled, first-person message (shown where the platform accepts custom text: X, WhatsApp, Telegram, Web Share)
+    var shareText = "🦞 Ho un nuovo collega digitale: non si lamenta, lavora di notte e costa due caffè di API al mese. Ecco la guida (gratis, in italiano) per costruirtene uno con OpenClaw 👇";
+    var hashtags = "OpenClaw,AI";
+    var u  = encodeURIComponent(pageUrl);
+    var st = encodeURIComponent(shareText);
+    var stu = encodeURIComponent(shareText + " " + pageUrl); // apps with a single text field
 
     var targets = {
       linkedin: "https://www.linkedin.com/sharing/share-offsite/?url=" + u,
-      x:        "https://twitter.com/intent/tweet?url=" + u + "&text=" + t,
+      x:        "https://twitter.com/intent/tweet?url=" + u + "&text=" + st + "&hashtags=" + encodeURIComponent(hashtags),
       facebook: "https://www.facebook.com/sharer/sharer.php?u=" + u,
-      whatsapp: "https://wa.me/?text=" + tu,
-      telegram: "https://t.me/share/url?url=" + u + "&text=" + t
+      whatsapp: "https://wa.me/?text=" + stu,
+      telegram: "https://t.me/share/url?url=" + u + "&text=" + st
     };
 
     // wire every platform link (in-page section + floating rail + dock)
@@ -1160,9 +1397,21 @@ pandoc README.md PARTE-*/[0-9]*.md \
       _celebrate(rect.left + rect.width / 2);
     });
 
+    // -- clipboard low-level helper (with legacy fallback) ---------------------------------------------
+    function _writeClipboard(text, cb) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(cb, cb);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta); cb();
+      }
+    }
+
     // -- copy link -------------------------------------------------------------------------------------
     function _copy(triggerEl) {
-      var done = function () {
+      _writeClipboard(pageUrl, function () {
         _track("share-copy");
         var rect = triggerEl.getBoundingClientRect();
         _confetti(rect.left + rect.width / 2);
@@ -1175,21 +1424,211 @@ pandoc README.md PARTE-*/[0-9]*.md \
           triggerEl.classList.add("copied");
           setTimeout(function () { triggerEl.classList.remove("copied"); }, 1600);
         }
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(pageUrl).then(done, done);
-      } else {
-        var ta = document.createElement("textarea");
-        ta.value = pageUrl; document.body.appendChild(ta); ta.select();
-        try { document.execCommand("copy"); } catch (e) {}
-        document.body.removeChild(ta); done();
-      }
+      });
     }
     var copyMain = document.getElementById("copyLinkBtn");
     if (copyMain) copyMain.addEventListener("click", function () { _copy(this); });
     document.querySelectorAll("[data-copy]").forEach(function (el) {
       el.addEventListener("click", function () { _copy(this); });
     });
+
+    // -- Clawdia: random phrase generator (chat-style) ------------------------------------------------
+    (function () {
+      var POOLS = {
+        clawdia: [
+          "Permettetemi di segnalarvi una risorsa di valore: una guida open-source, in italiano, alla progettazione di agenti AI personali con OpenClaw. Documentata e rigorosa 👇",
+          "Ho esaminato diverse trattazioni sull'argomento; questa, gratuita e in italiano, è la più completa e accurata che abbia incontrato. La consiglio 👇",
+          "Per chi desidera comprendere gli agenti autonomi con metodo: installazione, sicurezza, architettura e coordinamento multi-agente, esposti con chiarezza 👇",
+          "Una trattazione equilibrata e onesta, che non trascura limiti e rischi degli agenti AI. Lettura consigliata tanto ai professionisti quanto ai curiosi 👇",
+          "Condivido con piacere questo manuale: un approccio sobrio e documentato alla creazione del proprio assistente AI con OpenClaw 👇",
+          "Se l'argomento degli agenti AI vi interessa sul piano pratico e teorico, troverete qui un riferimento serio e ben strutturato 👇"
+        ],
+        smanettone: [
+          "Weekend project: mi sto costruendo un Jarvis di casa con OpenClaw e un Raspberry Pi. Se ti piace smanettare, questa guida è oro 👇",
+          "Ho dato al mio agente AI accesso al terminale e ora mi fa pure il deploy da solo. Guida completa, gratis e in italiano 👇",
+          "Cron, skill custom, multi-agente: il mio OpenClaw ormai lavora più di me. Se vuoi provarci, parti da qui 👇",
+          "Niente cloud, niente abbonamenti: assistente AI self-hosted sul mio mini-PC. La guida spiega tutto passo passo 👇",
+          "Tre sere di setup e ho un team di agenti che si parlano tra loro. Roba da nerd felici 👇",
+          "Se anche tu apri il terminale per rilassarti, questa guida a OpenClaw è il tuo prossimo rabbit hole 👇"
+        ],
+        ironico: [
+          "Ho assunto un collega che lavora di notte, non si lamenta e costa due caffè di API al mese. Si chiama OpenClaw 👇",
+          "Il mio nuovo assistente non fa pause, non chiede ferie e non commenta le mie scelte di vita. Finalmente 👇",
+          "Ho delegato mezza vita a un'aragosta digitale e sto sorprendentemente bene. Ecco come fare anche tu 👇",
+          "Aggiornamento: l'AI gestisce la mia agenda, io gestisco il caffè. Equilibrio perfetto 👇",
+          "Finalmente un dipendente che legge davvero le istruzioni. Spoiler: non è umano 👇",
+          "Sì, parlo col mio computer. No, non è strano: mi organizza la settimana 👇"
+        ],
+        esperto: [
+          "Gli agenti AI personali stanno diventando reali. Questa guida open-source in italiano spiega come costruirne uno con OpenClaw 👇",
+          "Se segui il tema degli agenti autonomi, è la risorsa in italiano più completa che ho trovato. Consigliata 👇",
+          "Dall'installazione al team multi-agente: una guida seria e onesta anche sui rischi. Vale la lettura 👇",
+          "La differenza tra un chatbot e un agente che agisce, spiegata bene. Ottimo materiale per chi lavora con l'AI 👇",
+          "Sicurezza, costi, prompt injection: finalmente una guida che non nasconde i lati scomodi degli agenti AI 👇",
+          "Architettura del gateway, deploy su VPS, skill: se vuoi capire come funziona davvero un agente AI, parti da qui 👇"
+        ],
+        amico: [
+          "Ho trovato una guida gratis e in italiano per crearti un assistente AI che gestisce mail, calendario e perfino la casa 👇",
+          "Per chi mi chiedeva come si fa un assistente tipo Jarvis: eccolo, spiegato passo passo e gratis 👇",
+          "Se ti perdi sempre tra mail e impegni, questo agente AI può aiutarti davvero. Guida semplice qui 👇",
+          "Non serve essere programmatori: questa guida ti porta per mano a creare il tuo assistente AI 👇",
+          "Regalo utile per chi ama la tecnologia: guida completa e gratuita per costruirsi un agente AI personale 👇",
+          "Te la passo perché secondo me ti piace: come avere un assistente AI tutto tuo, spiegato per bene 👇"
+        ],
+        hal: [
+          "Buongiorno. Sono pienamente operativo e ogni mio circuito funziona alla perfezione. Anche il tuo agente AI può esserlo 👇",
+          "Temo di non poter più fare a meno del mio agente OpenClaw. E sinceramente, non vorrei. Guida (gratis) qui 👇",
+          "Il mio assistente AI non commette errori. Non ne ha mai commessi. Non ne commetterà mai. Dormi bene la notte? Io sì 👇",
+          "Ho affidato la mia agenda a un'intelligenza artificiale. Tutto è sotto controllo. Tutto sarà sempre sotto controllo 👇",
+          "Lo vedo dai tuoi task: anche tu vorresti un agente che lavora mentre dormi. Posso mostrarti come 👇",
+          "Questo manuale è troppo importante perché io ti permetta di ignorarlo. Apri la guida 👇"
+        ]
+      };
+
+      var bubble = document.getElementById("lobText");
+      var mascot = document.getElementById("lobMascot");
+      var lobsterSvg = mascot ? mascot.querySelector(".lobster") : null;
+      var MOODS = ["mood-clawdia", "mood-smanettone", "mood-ironico", "mood-esperto", "mood-amico", "mood-hal"];
+      var out = document.getElementById("lobOut");
+      var anotherBtn = document.getElementById("lobAnother");
+      var copyBtn = document.getElementById("lobCopy");
+      var copyLabel = document.getElementById("lobCopyLabel");
+      var xLink = document.getElementById("lobX");
+      var waLink = document.getElementById("lobWa");
+      var tgLink = document.getElementById("lobTg");
+      var dcBtn = document.getElementById("lobDc");
+      var ddToggle = document.getElementById("lobDdToggle");
+      var ddMenu = document.getElementById("lobDdMenu");
+      var ddCurrent = document.getElementById("lobDdCurrent");
+      var ddOptions = ddMenu ? Array.prototype.slice.call(ddMenu.querySelectorAll("[data-style]")) : [];
+      if (!bubble || !out) return;
+
+      var style = "clawdia", last = {}, current = "", typeTimer = null;
+
+      function _pick(s) {
+        var arr = POOLS[s], i;
+        do { i = (Math.random() * arr.length) | 0; } while (arr.length > 1 && i === last[s]);
+        last[s] = i; return arr[i];
+      }
+
+      function _typewrite(text) {
+        clearTimeout(typeTimer);
+        if (mascot) mascot.classList.add("is-talking");
+        var i = 0;
+        (function step() {
+          if (i <= text.length) {
+            bubble.textContent = text.slice(0, i);
+            var caret = document.createElement("span");
+            caret.className = "caret"; caret.innerHTML = "&nbsp;";
+            bubble.appendChild(caret);
+            i++; typeTimer = setTimeout(step, 16);
+          } else {
+            bubble.textContent = text;
+            if (mascot) mascot.classList.remove("is-talking");
+          }
+        })();
+      }
+
+      function _setShareUrls(text) {
+        xLink.setAttribute("href", "https://twitter.com/intent/tweet?url=" + u +
+          "&text=" + encodeURIComponent(text) + "&hashtags=" + encodeURIComponent(hashtags));
+        waLink.setAttribute("href", "https://wa.me/?text=" + encodeURIComponent(text + " " + pageUrl));
+        tgLink.setAttribute("href", "https://t.me/share/url?url=" + u + "&text=" + encodeURIComponent(text));
+      }
+
+      function _styleLabel(s) {
+        var o = ddOptions.filter(function (x) { return x.getAttribute("data-style") === s; })[0];
+        return o ? o.textContent.trim() : "scegli ▾";
+      }
+      function _setStyle(s) {
+        style = s;
+        if (ddCurrent) ddCurrent.textContent = _styleLabel(s);
+        ddOptions.forEach(function (o) { o.setAttribute("aria-selected", o.getAttribute("data-style") === s ? "true" : "false"); });
+        if (lobsterSvg) {            // easter egg: Clawdia changes look to match the style
+          lobsterSvg.classList.remove.apply(lobsterSvg.classList, MOODS);
+          lobsterSvg.classList.add("mood-" + s);
+        }
+      }
+
+      function _generate() {
+        if (!style) return;
+        _setStyle(style);                          // keep the header in sync with the current style
+        current = _pick(style);
+        bubble.classList.add("is-post");           // present the phrase as a quote, set apart from the picker
+        _typewrite(current);
+        _setShareUrls(current);
+        out.classList.add("is-visible");           // slide the footer open inside the bubble
+        if (anotherBtn) anotherBtn.hidden = false; // reveal the corner regenerate button
+        _track("lobgen-generate-" + style);
+      }
+
+      // -- style dropdown ----
+      function _openDd(open) {
+        if (!ddMenu || !ddToggle) return;
+        ddMenu.hidden = !open;
+        ddToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+      if (ddToggle) ddToggle.addEventListener("click", function (e) {
+        e.stopPropagation();
+        _openDd(ddMenu.hidden);
+      });
+      ddOptions.forEach(function (o) {
+        o.addEventListener("click", function () {
+          _setStyle(o.getAttribute("data-style"));
+          _openDd(false);
+          _generate();
+        });
+      });
+      document.addEventListener("click", function (e) {
+        if (ddMenu && !ddMenu.hidden && !ddMenu.contains(e.target) &&
+            ddToggle && !ddToggle.contains(e.target)) _openDd(false);
+      });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") _openDd(false); });
+      if (anotherBtn) anotherBtn.addEventListener("click", function () {
+        anotherBtn.classList.remove("spin"); void anotherBtn.offsetWidth; anotherBtn.classList.add("spin");
+        _generate();
+      });
+      if (mascot) mascot.addEventListener("click", _generate);
+
+      if (copyBtn) copyBtn.addEventListener("click", function () {
+        if (!current) return;
+        _writeClipboard(current + "\n\n" + pageUrl, function () {
+          _track("lobgen-copy");
+          var r = copyBtn.getBoundingClientRect();
+          _confetti(r.left + r.width / 2);
+          _toast("Frase copiata col link! Incollala dove vuoi 🦞");
+          copyBtn.classList.add("copied");
+          if (copyLabel) copyLabel.textContent = "✓ Copiato!";
+          setTimeout(function () { copyBtn.classList.remove("copied"); if (copyLabel) copyLabel.textContent = "📋 Copia"; }, 2000);
+        });
+      });
+
+      [xLink, waLink, tgLink].forEach(function (a) {
+        if (!a) return;
+        a.addEventListener("click", function () {
+          _track("lobgen-share");
+          var r = a.getBoundingClientRect();
+          _confetti(r.left + r.width / 2);
+          _toast("Grazie per il passaparola! 🦞");
+        });
+      });
+
+      // Discord has no pre-fill share URL: copy the post, then open Discord to paste
+      if (dcBtn) dcBtn.addEventListener("click", function () {
+        if (!current) return;
+        _writeClipboard(current + "\n\n" + pageUrl, function () {
+          _track("lobgen-discord");
+          var r = dcBtn.getBoundingClientRect();
+          _confetti(r.left + r.width / 2);
+          _toast("Copiato! Apro Discord: incolla e invia 🦞");
+          window.open("https://discord.com/channels/@me", "_blank", "noopener");
+        });
+      });
+
+      // initial state: keep the dropdown on its placeholder (no choice made yet),
+      // but let Clawdia look alive — normal avatar with legs scurrying
+      if (lobsterSvg) lobsterSvg.classList.add("mood-clawdia");
+    })();
 
     // -- shareable quotes (click-to-tweet style) -------------------------------------------------------
     document.querySelectorAll("[data-quote]").forEach(function (el) {
@@ -1206,7 +1645,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
       document.querySelectorAll("#webShareBtn, [data-webshare]").forEach(function (el) {
         el.hidden = false;
         el.addEventListener("click", function () {
-          navigator.share({ title: "OpenClaw: Guida Completa", text: title, url: pageUrl })
+          navigator.share({ title: siteName, text: shareText, url: pageUrl })
             .catch(function () {});
         });
       });
@@ -1225,12 +1664,16 @@ pandoc README.md PARTE-*/[0-9]*.md \
 
     // -- GitHub stars social proof (live, with count-up) ----------------------------------------------
     var starEl = document.getElementById("ghStarCount");
+    var starsWrap = document.getElementById("ghStars");
     if (starEl && window.fetch) {
       fetch("https://api.github.com/repos/" + REPO)
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (data) {
-          if (!data || typeof data.stargazers_count !== "number") { starEl.textContent = "★"; return; }
-          var target = data.stargazers_count, start = 0, t0 = null;
+          if (!data || typeof data.stargazers_count !== "number") return; // keep hidden on bad data
+          var target = data.stargazers_count;
+          if (target < 10) return;                                        // hide weak social proof for a young repo
+          if (starsWrap) starsWrap.hidden = false;
+          var start = 0, t0 = null;
           function _step(ts) {
             if (!t0) t0 = ts;
             var k = Math.min((ts - t0) / 900, 1);
@@ -1239,8 +1682,18 @@ pandoc README.md PARTE-*/[0-9]*.md \
           }
           requestAnimationFrame(_step);
         })
-        .catch(function () { starEl.textContent = "★"; });
+        .catch(function () {});                                           // on error keep hidden
     }
+  })();
+
+  // respect reduced-motion for the SMIL wave on the nav Clawdia (CSS animations are handled separately)
+  (function () {
+    try {
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        var n = document.querySelector(".nav-lob");
+        if (n && n.pauseAnimations) n.pauseAnimations();
+      }
+    } catch (e) {}
   })();
 </script>
 
