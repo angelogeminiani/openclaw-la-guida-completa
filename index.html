@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw: Guida Completa — dal primo "hatch" al team multi-agente</title>
+<meta name="description" content="La guida completa in italiano a OpenClaw, l'agente AI personale open-source più virale del 2026, di Gian Angelo Geminiani. 22 capitoli, 8 parti, 5 appendici: dall'installazione al team multi-agente, fino a HomeClaw, il tuo Jarvis locale su Raspberry Pi.">
+<meta name="author" content="Gian Angelo Geminiani">
+
+<!-- canonical -->
+<link rel="canonical" href="https://angelogeminiani.github.io/openclaw-la-guida-completa/">
+
+<!-- Open Graph (Facebook, LinkedIn, WhatsApp, Telegram, Slack...) -->
+<meta property="og:site_name" content="OpenClaw: Guida Completa">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:url" content="https://angelogeminiani.github.io/openclaw-la-guida-completa/">
+<meta property="og:title" content="OpenClaw: Guida Completa 🦞">
+<meta property="og:description" content="Dal primo «hatch» al team multi-agente: la guida open-source per padroneggiare il lobster digitale più virale del 2026. Di Gian Angelo Geminiani.">
+<meta property="og:image" content="https://angelogeminiani.github.io/openclaw-la-guida-completa/og-image.png">
+<meta property="og:image:secure_url" content="https://angelogeminiani.github.io/openclaw-la-guida-completa/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Copertina: OpenClaw — Guida Completa, con la mascotte lobster">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpenClaw: Guida Completa 🦞">
+<meta name="twitter:description" content="Dal primo «hatch» al team multi-agente: la guida open-source al lobster digitale più virale del 2026. Di Gian Angelo Geminiani.">
+<meta name="twitter:image" content="https://angelogeminiani.github.io/openclaw-la-guida-completa/og-image.png">
+<meta name="twitter:image:alt" content="Copertina: OpenClaw — Guida Completa, con la mascotte lobster">
+
+<meta name="theme-color" content="#e6442e">
+<link rel="icon" href="./icon.png">
+<script>
+  // apply saved theme before paint to avoid a flash of the wrong theme
+  (function () {
+    try {
+      var saved = localStorage.getItem("oc-theme");
+      if (saved === "dark" || saved === "light") {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --ink: #1c1410;
+    --ink-soft: #5a4a40;
+    --cream: #fdf6ee;
+    --cream-2: #f7ece0;
+    --coral: #e6442e;
+    --coral-dark: #c2331f;
+    --coral-soft: #fbe3dc;
+    --gold: #e8a13a;
+    --line: #e9d8c6;
+    --card: #ffffff;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(60, 30, 15, 0.08);
+    --shadow-hover: 0 16px 44px rgba(60, 30, 15, 0.16);
+    --maxw: 1080px;
+
+    /* surface tokens used by both themes */
+    --nav-bg: rgba(253, 246, 238, 0.85);
+    --hero-glow-1: var(--coral-soft);
+    --hero-glow-2: #fdeccd;
+    --hero-bg: var(--cream);
+    --badge-bg: #ffffff;
+    --warn-bg-1: #fff4ef;
+    --warn-bg-2: #fdeee7;
+    --warn-border: var(--coral-soft);
+    --footer-bg: #221710;
+    --footer-ink: #e9d8c6;
+    --footer-head: #ffffff;
+    --footer-link: #f0c9b8;
+    --footer-muted: #b39a88;
+    --footer-line: #3a2a20;
+    --code-bg: #2a1d16;
+    --code-ink: #f4e6d6;
+  }
+
+  /* ---- dark theme tokens ---- */
+  :root[data-theme="dark"] {
+    --ink: #f1e7dd;
+    --ink-soft: #b9a899;
+    --cream: #16110d;
+    --cream-2: #211912;
+    --coral: #ff6a4d;
+    --coral-dark: #ff8366;
+    --coral-soft: #3a201a;
+    --gold: #f0b24f;
+    --line: #34281f;
+    --card: #1f1812;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-hover: 0 16px 44px rgba(0, 0, 0, 0.6);
+
+    --nav-bg: rgba(22, 17, 13, 0.85);
+    --hero-glow-1: #3a201a;
+    --hero-glow-2: #2c2113;
+    --hero-bg: var(--cream);
+    --badge-bg: #241b14;
+    --warn-bg-1: #2a1812;
+    --warn-bg-2: #221610;
+    --warn-border: #4a2a20;
+    --footer-bg: #100c09;
+    --footer-ink: #cdbcae;
+    --footer-head: #f1e7dd;
+    --footer-link: #f0c9b8;
+    --footer-muted: #8d7868;
+    --footer-line: #2a2018;
+    --code-bg: #100c09;
+    --code-ink: #f4e6d6;
+  }
+
+  /* respect OS preference when the user hasn't chosen explicitly */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #f1e7dd;
+      --ink-soft: #b9a899;
+      --cream: #16110d;
+      --cream-2: #211912;
+      --coral: #ff6a4d;
+      --coral-dark: #ff8366;
+      --coral-soft: #3a201a;
+      --gold: #f0b24f;
+      --line: #34281f;
+      --card: #1f1812;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      --shadow-hover: 0 16px 44px rgba(0, 0, 0, 0.6);
+      --nav-bg: rgba(22, 17, 13, 0.85);
+      --hero-glow-1: #3a201a;
+      --hero-glow-2: #2c2113;
+      --badge-bg: #241b14;
+      --warn-bg-1: #2a1812;
+      --warn-bg-2: #221610;
+      --warn-border: #4a2a20;
+      --footer-bg: #100c09;
+      --footer-ink: #cdbcae;
+      --footer-head: #f1e7dd;
+      --footer-link: #f0c9b8;
+      --footer-muted: #8d7868;
+      --footer-line: #2a2018;
+      --code-bg: #100c09;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background .3s ease, color .3s ease;
+  }
+
+  a { color: var(--coral-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  /* -------- header / nav -------- */
+  header.nav {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--nav-bg);
+    backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.01em; }
+  .brand img { width: 32px; height: 32px; border-radius: 8px; }
+  .nav-links { display: flex; gap: 22px; font-weight: 600; font-size: 0.94rem; }
+  .nav-links a { color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--coral-dark); text-decoration: none; }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* -------- hero -------- */
+  .hero {
+    position: relative;
+    background:
+      radial-gradient(1200px 400px at 80% -10%, var(--hero-glow-1), transparent 60%),
+      radial-gradient(900px 500px at -10% 20%, var(--hero-glow-2), transparent 55%),
+      var(--hero-bg);
+    padding: 84px 0 72px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 48px; align-items: center;
+  }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; text-align: center; } }
+
+  .eyebrow {
+    display: inline-block; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--coral-dark);
+    background: var(--coral-soft); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2.3rem, 5vw, 3.6rem); line-height: 1.05; margin: 0 0 18px;
+    letter-spacing: -0.025em; font-weight: 850;
+  }
+  .hero h1 .accent { color: var(--coral); }
+  .hero .lead {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--ink-soft);
+    max-width: 600px; margin: 0 0 30px;
+  }
+  @media (max-width: 860px) { .hero .lead { margin-left: auto; margin-right: auto; } }
+
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  @media (max-width: 860px) { .cta-row { justify-content: center; } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 14px 26px; border-radius: 999px; font-weight: 700; font-size: 1rem;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-2px); }
+  .btn-primary { background: var(--coral); color: #fff; box-shadow: 0 8px 20px rgba(230,68,46,.32); }
+  .btn-primary:hover { background: var(--coral-dark); box-shadow: var(--shadow-hover); }
+  .btn-ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { border-color: var(--coral); color: var(--coral-dark); }
+
+  .hero-card {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 28px; border: 1px solid var(--line);
+  }
+  .hero-mascot { width: 120px; height: 120px; margin: 0 auto 14px; display: block; }
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+  .stat { text-align: center; padding: 12px 8px; background: var(--cream-2); border-radius: 12px; }
+  .stat b { display: block; font-size: 1.5rem; color: var(--coral-dark); line-height: 1.1; }
+  .stat span { font-size: 0.8rem; color: var(--ink-soft); }
+
+  /* -------- sections -------- */
+  section { padding: 72px 0; }
+  section.alt { background: var(--cream-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .section-head { max-width: 680px; margin-bottom: 44px; }
+  .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+  .section-head h2 {
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem); margin: 0 0 12px; letter-spacing: -0.02em; font-weight: 800;
+  }
+  .section-head p { font-size: 1.1rem; color: var(--ink-soft); margin: 0; }
+  .kicker {
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--coral); margin-bottom: 10px;
+  }
+
+  /* -------- levels -------- */
+  .levels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 800px) { .levels { grid-template-columns: 1fr; } }
+  .level {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 28px; box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s;
+  }
+  .level:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .level .stars { font-size: 1.4rem; color: var(--gold); letter-spacing: 2px; }
+  .level h3 { margin: 10px 0 8px; font-size: 1.25rem; }
+  .level p { margin: 0; color: var(--ink-soft); font-size: 0.97rem; }
+
+  /* -------- parts grid -------- */
+  .parts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  @media (max-width: 800px) { .parts { grid-template-columns: 1fr; } }
+  .part {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s;
+  }
+  .part:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .part-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 10px; background: var(--coral-soft);
+    color: var(--coral-dark); font-weight: 800; font-size: 0.95rem; margin-bottom: 14px;
+  }
+  .part h3 { margin: 0 0 6px; font-size: 1.18rem; }
+  .part .blurb { color: var(--ink-soft); font-size: 0.94rem; margin: 0 0 14px; }
+  .part ul { list-style: none; padding: 0; margin: 0; }
+  .part li { font-size: 0.92rem; padding: 5px 0; border-top: 1px solid var(--cream-2); display: flex; gap: 8px; }
+  .part li:first-child { border-top: none; }
+  .lvl-tag { color: var(--gold); white-space: nowrap; font-size: 0.85rem; }
+
+  /* -------- paths -------- */
+  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 800px) { .paths { grid-template-columns: 1fr; } }
+  .path {
+    border-radius: var(--radius); padding: 26px; border: 1px solid var(--line); background: var(--card);
+    box-shadow: var(--shadow);
+  }
+  .path .dot { font-size: 1.4rem; }
+  .path h3 { margin: 8px 0 4px; font-size: 1.12rem; }
+  .path .time { font-size: 0.82rem; color: var(--ink-soft); font-weight: 600; }
+  .path .seq {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.86rem;
+    background: var(--cream-2); border-radius: 10px; padding: 10px 12px; margin: 14px 0 0;
+    color: var(--coral-dark); letter-spacing: 0.5px;
+  }
+  .path p { margin: 12px 0 0; font-size: 0.92rem; color: var(--ink-soft); }
+
+  /* -------- usage / code -------- */
+  .usage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+  @media (max-width: 800px) { .usage-grid { grid-template-columns: 1fr; } }
+  .usage-grid h3 { font-size: 1.2rem; margin: 0 0 8px; }
+  .usage-grid p { color: var(--ink-soft); margin: 0 0 14px; }
+  pre {
+    background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px;
+    overflow-x: auto; font-size: 0.85rem; line-height: 1.5; margin: 0;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  pre .cm { color: #b89b86; }
+  pre .gr { color: #8fce8f; }
+
+  /* -------- warning -------- */
+  .warn {
+    background: linear-gradient(180deg, var(--warn-bg-1), var(--warn-bg-2));
+    border: 1px solid var(--warn-border); border-left: 5px solid var(--coral);
+    border-radius: var(--radius); padding: 26px 28px; box-shadow: var(--shadow);
+  }
+  .warn h3 { margin: 0 0 8px; color: var(--coral-dark); display: flex; align-items: center; gap: 8px; }
+  .warn p { margin: 0; color: var(--ink-soft); }
+  .warn p + p { margin-top: 10px; }
+
+  /* -------- spotlight (book excerpt) -------- */
+  .spotlight { background: var(--cream); }
+  .spot-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 44px; align-items: center; }
+  @media (max-width: 880px) { .spot-grid { grid-template-columns: 1fr; gap: 30px; } }
+  .spot-copy .tagline {
+    font-size: 1.08rem; color: var(--ink-soft); margin: 0 0 18px;
+  }
+  .spot-features { list-style: none; padding: 0; margin: 0 0 26px; }
+  .spot-features li {
+    display: flex; gap: 11px; align-items: flex-start; padding: 7px 0;
+    font-size: 0.97rem; color: var(--ink);
+  }
+  .spot-features li .ck { color: var(--coral); font-weight: 800; flex-shrink: 0; }
+
+  .excerpt {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .excerpt-bar {
+    display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+    background: var(--cream-2); border-bottom: 1px solid var(--line);
+    font-size: 0.8rem; font-weight: 600; color: var(--ink-soft);
+  }
+  .excerpt-bar .dots { display: flex; gap: 6px; margin-right: 6px; }
+  .excerpt-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .excerpt-bar .dots i:nth-child(1) { background: #ff6058; }
+  .excerpt-bar .dots i:nth-child(2) { background: #ffbd2e; }
+  .excerpt-bar .dots i:nth-child(3) { background: #28c840; }
+  .excerpt-body { padding: 22px 24px; }
+  .excerpt-body .intro { font-style: italic; color: var(--ink-soft); margin: 0 0 18px; font-size: 0.96rem; }
+  .timeline { list-style: none; margin: 0; padding: 0; }
+  .timeline li {
+    display: grid; grid-template-columns: 58px 1fr; gap: 14px; padding: 9px 0;
+    border-top: 1px dashed var(--line); font-size: 0.95rem;
+  }
+  .timeline li:first-child { border-top: none; }
+  .timeline .t { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 700; color: var(--coral-dark); font-size: 0.86rem; padding-top: 1px; }
+  .timeline .ev em { color: var(--ink); font-style: normal; font-weight: 600; }
+
+  /* -------- author -------- */
+  .author-band { background: var(--cream-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .author-card {
+    display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px 30px; box-shadow: var(--shadow); max-width: 760px; margin: 0 auto;
+  }
+  .author-avatar {
+    position: relative; overflow: hidden;
+    width: 66px; height: 66px; border-radius: 50%; flex-shrink: 0;
+    background: var(--coral); color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;
+  }
+  .author-avatar img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .author-meta { flex: 1; min-width: 200px; }
+  .author-meta .role { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--coral); }
+  .author-meta h3 { margin: 4px 0 6px; font-size: 1.3rem; }
+  .author-meta p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+  .author-card .btn { margin-left: auto; }
+  @media (max-width: 560px) { .author-card .btn { margin-left: 0; } }
+
+  /* -------- footer -------- */
+  footer {
+    background: var(--footer-bg); color: var(--footer-ink); padding: 54px 0 36px; margin-top: 0;
+  }
+  footer .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 760px) { footer .wrap { grid-template-columns: 1fr; gap: 26px; } }
+  footer h4 { color: var(--footer-head); margin: 0 0 12px; font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  footer a { color: var(--footer-link); display: block; padding: 3px 0; font-size: 0.94rem; }
+  footer a:hover { color: var(--footer-head); }
+  footer .foot-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; font-weight: 800; font-size: 1.15rem; color: var(--footer-head); }
+  footer .foot-brand img { width: 40px; height: 40px; border-radius: 9px; }
+  footer .muted { color: var(--footer-muted); font-size: 0.86rem; line-height: 1.6; }
+  .foot-bottom { border-top: 1px solid var(--footer-line); margin-top: 32px; padding-top: 20px; text-align: center; color: var(--footer-muted); font-size: 0.85rem; }
+
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+  .badge {
+    font-size: 0.78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px;
+    background: var(--badge-bg); border: 1px solid var(--line); color: var(--ink-soft);
+  }
+
+  /* ---- theme toggle ---- */
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 999px; cursor: pointer;
+    background: var(--card); border: 1px solid var(--line); color: var(--ink);
+    font-size: 1.1rem; line-height: 1; flex-shrink: 0;
+    transition: border-color .15s, transform .15s, background .3s;
+  }
+  .theme-toggle:hover { border-color: var(--coral); transform: translateY(-1px); }
+  .theme-toggle .icon-moon { display: none; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+  :root[data-theme="dark"] .theme-toggle .icon-moon { display: inline; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: none; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: inline; }
+  }
+  @media (max-width: 860px) { .badge-row { justify-content: center; } }
+</style>
+</head>
+<body>
+
+<!-- ----------------------------------------------------------------- nav -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><img src="./icon.png" alt="OpenClaw"> OpenClaw · Guida</div>
+    <div style="display:flex; align-items:center; gap:18px;">
+      <nav class="nav-links">
+        <a href="#livelli">A chi serve</a>
+        <a href="#struttura">Struttura</a>
+        <a href="#percorsi">Percorsi</a>
+        <a href="#spezzone">Assaggio</a>
+        <a href="#autore">Autore</a>
+        <a href="./INDICE.md">Indice</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"
+              aria-label="Cambia tema chiaro/scuro" title="Cambia tema">
+        <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- --------------------------------------------------------------- hero -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Manuale open-source · edizione maggio 2026</span>
+      <h1>OpenClaw:<br><span class="accent">Guida Completa</span> 🦞</h1>
+      <p class="lead">Dal primo <em>“hatch”</em> al team multi-agente: tutto ciò che serve per padroneggiare il lobster digitale più virale del 2026. In italiano, capitolo per capitolo.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="./INDICE.md">Inizia a leggere →</a>
+        <a class="btn btn-ghost" href="#struttura">Esplora i capitoli</a>
+      </div>
+      <div class="badge-row">
+        <span class="badge">22 capitoli</span>
+        <span class="badge">8 parti + 5 appendici</span>
+        <span class="badge">CC BY-SA 4.0</span>
+        <span class="badge">PDF / ePub esportabili</span>
+      </div>
+    </div>
+    <div class="hero-card">
+      <img class="hero-mascot" src="./icon.png" alt="Mascotte lobster di OpenClaw">
+      <div class="hero-stats">
+        <div class="stat"><b>22</b><span>capitoli + extra</span></div>
+        <div class="stat"><b>3</b><span>livelli di lettura</span></div>
+        <div class="stat"><b>9</b><span>agenti d'esempio</span></div>
+        <div class="stat"><b>1</b><span>progetto HomeClaw</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- levels -->
+<section id="livelli">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="kicker">A chi è rivolta</div>
+      <h2>Tre livelli di lettore, segnalati su ogni capitolo</h2>
+      <p>Che tu non abbia mai aperto un terminale o stia per scrivere skill personalizzate, c'è un percorso per te.</p>
+    </div>
+    <div class="levels">
+      <div class="level">
+        <div class="stars">★</div>
+        <h3>Base</h3>
+        <p>Non hai mai usato il terminale, ma vuoi un assistente AI personale. Istruzioni passo-passo e concetti spiegati da zero.</p>
+      </div>
+      <div class="level">
+        <div class="stars">★★</div>
+        <h3>Intermedio</h3>
+        <p>Hai già installato OpenClaw o strumenti simili e vuoi sbloccarne il pieno potenziale: workflow, integrazioni, multi-agente.</p>
+      </div>
+      <div class="level">
+        <div class="stars">★★★</div>
+        <h3>Avanzato</h3>
+        <p>Sei sviluppatore o power user: skill custom, cron complessi, deploy su VPS, architettura interna del Gateway.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------------------------------------------------------- structure -->
+<section id="struttura" class="alt">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="kicker">Come è strutturato</div>
+      <h2>Otto parti, dal concetto al team di agenti</h2>
+      <p>Ogni parte ha la sua sezione e i suoi capitoli numerati progressivamente da 1 a 22, più un capitolo extra e cinque appendici.</p>
+    </div>
+    <div class="parts">
+
+      <div class="part">
+        <div class="part-num">I</div>
+        <h3>Capire OpenClaw</h3>
+        <p class="blurb">Le fondamenta concettuali: cos'è un agente autonomo e qual è la sua anatomia interna.</p>
+        <ul>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-I-Capire-OpenClaw/01-cos-e-openclaw-e-perche-e-importante.md">1 · Cos'è OpenClaw e perché è importante</a></li>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-I-Capire-OpenClaw/02-anatomia-di-un-agente-openclaw.md">2 · L'anatomia di un agente OpenClaw</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">II</div>
+        <h3>Installazione e primo setup</h3>
+        <p class="blurb">Scelta dell'ambiente, sandboxing, installazione e collegamento ai canali.</p>
+        <ul>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-II-Installazione/03-scegliere-dove-installare-openclaw.md">3 · Scegliere dove installare OpenClaw</a></li>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-II-Installazione/04-preparare-un-ambiente-sicuro-docker-sandbox.md">4 · Ambiente sicuro: Docker e sandbox</a></li>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-II-Installazione/05-installazione-step-by-step.md">5 · Installazione step-by-step</a></li>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-II-Installazione/06-configurare-telegram-e-altri-canali.md">6 · Configurare Telegram e altri canali</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">III</div>
+        <h3>Il primo mese con OpenClaw</h3>
+        <p class="blurb">Dall'onboarding dell'agente ai primi workflow pronti, fino alle integrazioni.</p>
+        <ul>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-III-Primo-mese/07-prima-conversazione-onboarding-agente.md">7 · La prima conversazione: onboarding</a></li>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-III-Primo-mese/08-dieci-workflow-pronti-all-uso.md">8 · 10 workflow pronti all'uso</a></li>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-III-Primo-mese/09-aggiungere-strumenti-e-integrazioni.md">9 · Aggiungere strumenti e integrazioni</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">IV</div>
+        <h3>Setup multi-agente</h3>
+        <p class="blurb">Quando un solo agente non basta: progettare, instradare e coordinare un team.</p>
+        <ul>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-IV-Multi-agente/10-perche-un-solo-agente-non-basta.md">10 · Perché un solo agente non basta</a></li>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-IV-Multi-agente/11-progettare-il-tuo-team-di-agenti.md">11 · Progettare il tuo team di agenti</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="./PARTE-IV-Multi-agente/12-comunicazione-e-coordinamento-tra-agenti.md">12 · Comunicazione e coordinamento</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">V</div>
+        <h3>Sicurezza e costi</h3>
+        <p class="blurb">Il modello di rischio, come difendersi e come gestire la spesa LLM.</p>
+        <ul>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md">13 · Sicurezza: la guida che devi leggere</a></li>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-V-Sicurezza-costi/14-gestire-i-costi-senza-sorprese.md">14 · Gestire i costi senza sorprese</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">VI</div>
+        <h3>Manutenzione e ottimizzazione</h3>
+        <p class="blurb">Care and feeding dell'agente: diagnosi, riparazione, backup e affinamento.</p>
+        <ul>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-VI-Manutenzione/15-care-and-feeding-tenere-l-agente-in-salute.md">15 · Care and feeding: l'agente in salute</a></li>
+          <li><span class="lvl-tag">★★</span><a href="./PARTE-VI-Manutenzione/16-ottimizzare-la-qualita-delle-risposte.md">16 · Ottimizzare la qualità delle risposte</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">VII</div>
+        <h3>Uso avanzato</h3>
+        <p class="blurb">Skill custom, cron complessi, deploy su cloud e l'architettura del Gateway.</p>
+        <ul>
+          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/17-creare-skill-personalizzate.md">17 · Creare skill personalizzate</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/18-cron-job-e-automazioni-avanzate.md">18 · Cron job e automazioni avanzate</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/19-deploy-su-vps-e-infrastruttura-cloud.md">19 · Deploy su VPS e cloud</a></li>
+          <li><span class="lvl-tag">★★★</span><a href="./PARTE-VII-Uso-avanzato/20-architettura-del-gateway.md">20 · L'architettura del Gateway</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">VIII</div>
+        <h3>Visione e futuro</h3>
+        <p class="blurb">L'ecosistema attorno a OpenClaw e cosa significa avere un collega digitale.</p>
+        <ul>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-VIII-Visione-futuro/21-ecosistema-openclaw.md">21 · L'ecosistema OpenClaw</a></li>
+          <li><span class="lvl-tag">★</span><a href="./PARTE-VIII-Visione-futuro/22-futuro-del-lavoro-con-gli-agenti.md">22 · Il futuro del lavoro con gli agenti</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">+</div>
+        <h3>Capitolo extra · HomeClaw</h3>
+        <p class="blurb">Un progetto che mette insieme tutto il libro: l'assistente vocale di casa, locale e open-source, su Raspberry Pi 5.</p>
+        <ul>
+          <li><span class="lvl-tag">★★★</span><a href="./capitolo-extra-homeclaw.md">HomeClaw: il tuo Alexa locale</a></li>
+          <li><span class="lvl-tag">⌗</span><a href="./homeclaw-repo/">Codice completo · homeclaw-repo/</a></li>
+        </ul>
+      </div>
+
+      <div class="part">
+        <div class="part-num">A–E</div>
+        <h3>Appendici</h3>
+        <p class="blurb">Materiali di riferimento rapido da tenere a portata di mano.</p>
+        <ul>
+          <li><span class="lvl-tag">A</span><a href="./Appendici/A-glossario.md">Glossario</a></li>
+          <li><span class="lvl-tag">B</span><a href="./Appendici/B-comandi-cli-riferimento-rapido.md">Comandi CLI di riferimento rapido</a></li>
+          <li><span class="lvl-tag">C</span><a href="./Appendici/C-template-soul-identity.md">Template SOUL.md e IDENTITY.md</a></li>
+          <li><span class="lvl-tag">D</span><a href="./Appendici/D-checklist-sicurezza.md">Checklist di sicurezza</a></li>
+          <li><span class="lvl-tag">E</span><a href="./Appendici/E-risorse-e-link-utili.md">Risorse e link utili</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- paths -->
+<section id="percorsi">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="kicker">Percorsi di lettura</div>
+      <h2>Non sei obbligato a leggere tutto in ordine</h2>
+      <p>Tre percorsi consigliati a seconda di quanto vuoi spingerti — e di quanto tempo hai.</p>
+    </div>
+    <div class="paths">
+      <div class="path">
+        <div class="dot">🟢</div>
+        <h3>Installare OpenClaw oggi</h3>
+        <div class="time">3–4 ore</div>
+        <div class="seq">1 → 2 → 3 → 5 → 6 → 7 → 8 → 13 → 14</div>
+        <p>Salti il capitolo Docker/sandbox per arrivare prima all'agente funzionante, ma leggi subito sicurezza e costi prima di lasciarlo correre da solo.</p>
+      </div>
+      <div class="path">
+        <div class="dot">🟡</div>
+        <h3>Un setup robusto</h3>
+        <div class="time">1 settimana</div>
+        <div class="seq">1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 13 → 14 → 15</div>
+        <p>Aggiungi il capitolo sandbox e quello sulle integrazioni: la base solida prima di automatizzare la tua vita.</p>
+      </div>
+      <div class="path">
+        <div class="dot">🔴</div>
+        <h3>Un team di agenti</h3>
+        <div class="time">2–4 settimane</div>
+        <div class="seq">tutti i capitoli, in ordine</div>
+        <p>Tutto il libro, più l'Appendice C per i template SOUL.md da cui partire per i tuoi archetipi di agente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------- spotlight -->
+<section id="spezzone" class="spotlight">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="kicker">Un assaggio dal libro</div>
+      <h2>HomeClaw: il tuo “Jarvis” locale, in un weekend</h2>
+      <p>Il capitolo extra costruisce un assistente vocale domestico interamente locale — niente cloud obbligatorio, niente abbonamenti, niente pubblicità. Solo un lobster digitale che ti risponde dal salotto.</p>
+    </div>
+    <div class="spot-grid">
+      <div class="spot-copy">
+        <p class="tagline">Nel 2026 Alexa ha messo la pubblicità e Google ha messo da parte l'Assistant. Dall'altra parte, lo stack voice open-source è maturato: openWakeWord, Whisper e Piper girano su un Raspberry Pi da salotto. Aggiungi un agente vero come OpenClaw e “Ehi&nbsp;Claw, domani vado a Milano, organizza tutto” smette di essere fantascienza.</p>
+        <ul class="spot-features">
+          <li><span class="ck">✓</span> Tre tier di complessità: da <strong>€130</strong> mono-stanza a <strong>€550+</strong> multi-stanza con satelliti ESP32-S3 e Pi Zero 2 W</li>
+          <li><span class="ck">✓</span> Wyoming Protocol (wake + STT + TTS) connesso all'agente via una skill bridge in Python</li>
+          <li><span class="ck">✓</span> Accelerazione su Raspberry Pi AI HAT+ 2 (Hailo-10H, 40 TOPS) per Whisper e un LLM locale</li>
+          <li><span class="ck">✓</span> Onesto sui limiti: dove lo stack locale perde contro il cloud e dove bastano €130 e pazienza</li>
+        </ul>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="./capitolo-extra-homeclaw.md">Leggi il capitolo HomeClaw →</a>
+          <a class="btn btn-ghost" href="./homeclaw-repo/">Vedi il codice</a>
+        </div>
+      </div>
+
+      <div class="excerpt" aria-label="Estratto: una mattina con HomeClaw">
+        <div class="excerpt-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          Estratto · «Una mattina con HomeClaw»
+        </div>
+        <div class="excerpt-body">
+          <p class="intro">Prima di parlare di cavi e systemd, vale la pena immaginare cosa cambia nella giornata quando HomeClaw funziona.</p>
+          <ul class="timeline">
+            <li><span class="t">6:45</span><span class="ev">Il cronjob mattutino si sveglia <em>in silenzio</em>: legge calendario, email della notte e il meteo, e prepara un briefing in testo piano.</span></li>
+            <li><span class="t">6:58</span><span class="ev">“Buongiorno.” — <em>“Oggi alle dieci hai la call con Lorenzo. Il treno per Milano di domani è confermato. Tre email importanti, te le mando su Telegram?”</em></span></li>
+            <li><span class="t">7:15</span><span class="ev">Il bambino: “Quanto fa sette per otto?” Lo speaker ID locale riconosce la voce e instrada la domanda a <em>Q</em>, l'agente educativo.</span></li>
+            <li><span class="t">7:30</span><span class="ev">“Timer venti minuti.” Nessuna voce, solo il LED che pulsa verde — regola SOUL.md: comandi banali = nessuna voce.</span></li>
+            <li><span class="t">23:45</span><span class="ev">A letto, sussurri “domattina sveglia alle sei e mezza.” Durante le ore di sonno i LED sono al 10%. <em>“Va bene.”</em> Silenzio.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ leggere -->
+<section id="leggere" class="alt">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="kicker">Come usare questo libro</div>
+      <h2>Leggi online, in locale, o esporta in PDF / ePub</h2>
+    </div>
+    <div class="usage-grid">
+      <div>
+        <h3>Leggere online o in locale</h3>
+        <p>Naviga le cartelle direttamente su GitHub: ogni file <code>.md</code> viene renderizzato e i link tra capitoli funzionano. Oppure clona il repo e aprilo in Obsidian o VS Code.</p>
+        <pre><span class="cm"># clona e leggi in locale</span>
+git clone https://github.com/&lt;tuo-utente&gt;/openclaw-guida.git
+cd openclaw-guida</pre>
+      </div>
+      <div>
+        <h3>Esportare in PDF / ePub</h3>
+        <p>Con <a href="https://pandoc.org">Pandoc</a> generi un volume unico, pronto per la stampa A5 o per il lettore ebook.</p>
+        <pre><span class="cm"># PDF unico (richiede LaTeX)</span>
+pandoc README.md PARTE-*/[0-9]*.md \
+  capitolo-extra-homeclaw.md \
+  Appendici/[A-D]-*.md \
+  --lua-filter=tools/strip-external-links.lua \
+  -o openclaw-guida.pdf --toc --toc-depth=2
+
+<span class="cm"># ePub</span>
+pandoc README.md PARTE-*/[0-9]*.md \
+  capitolo-extra-homeclaw.md Appendici/[A-E]-*.md \
+  -o openclaw-guida.epub --toc --toc-depth=2</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- warning -->
+<section>
+  <div class="wrap">
+    <div class="warn">
+      <h3>⚠️ Prima di iniziare: una cosa importante</h3>
+      <p><strong>OpenClaw ha accesso completo al computer su cui gira</strong> — filesystem, rete, comandi shell, browser, email, calendario. Questo lo rende potente <em>e</em> pericoloso.</p>
+      <p>Non installarlo mai su un computer in uso attivo o con dati sensibili: usa sempre un dispositivo dedicato o un VPS isolato. Leggi il <a href="./PARTE-V-Sicurezza-costi/13-sicurezza-la-guida-che-devi-leggere.md">Capitolo 13</a> <strong>prima</strong> di esporlo a internet o di dargli accessi in scrittura.</p>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- author -->
+<section id="autore" class="author-band">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="kicker">L'autore</div>
+      <h2>Chi ha scritto questa guida</h2>
+    </div>
+    <div class="author-card">
+      <div class="author-avatar">
+        GG
+        <img src="./author.png" alt="Gian Angelo Geminiani"
+             onerror="this.remove();">
+      </div>
+      <div class="author-meta">
+        <div class="role">Autore</div>
+        <h3>Gian Angelo Geminiani</h3>
+        <p>Ha installato, rotto e rimesso in piedi OpenClaw su Mac Mini, VPS e Raspberry Pi per scrivere questa guida — incluso il progetto HomeClaw da cui nasce il capitolo extra.</p>
+      </div>
+      <a class="btn btn-primary" href="https://www.linkedin.com/in/angelogeminiani/" target="_blank" rel="noopener">
+        Profilo LinkedIn →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- footer -->
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="foot-brand"><img src="./icon.png" alt="OpenClaw"> OpenClaw: Guida Completa</div>
+      <p class="muted">Manuale open-source in italiano. Versione di riferimento: maggio 2026 · OpenClaw 2026.4.27. OpenClaw evolve rapidamente: verifica sempre comandi e prezzi con <code>openclaw --version</code> e il changelog ufficiale.</p>
+    </div>
+    <div>
+      <h4>Naviga</h4>
+      <a href="./INDICE.md">Indice completo</a>
+      <a href="./README.md">README del repo</a>
+      <a href="#struttura">Le otto parti</a>
+      <a href="#percorsi">Percorsi di lettura</a>
+    </div>
+    <div>
+      <h4>Autore &amp; riferimenti</h4>
+      <a href="https://www.linkedin.com/in/angelogeminiani/" target="_blank" rel="noopener">Gian Angelo Geminiani · LinkedIn</a>
+      <a href="./Appendici/A-glossario.md">Glossario</a>
+      <a href="./Appendici/B-comandi-cli-riferimento-rapido.md">Comandi CLI</a>
+      <a href="./Appendici/E-risorse-e-link-utili.md">Risorse e link</a>
+      <a href="./LICENSE-BOOK">Licenza · CC BY-SA 4.0</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="foot-bottom">
+      Scritto da <strong>Gian Angelo Geminiani</strong> · contenuti sotto Creative Commons BY-SA 4.0 · codice sotto licenza MIT.<br>
+      Buona lettura — e attenzione alle chele. 🦞
+    </div>
+  </div>
+</footer>
+
+<script>
+  // -----------------------------------------------------------------------------------------------------------------
+  //  theme toggle
+  // -----------------------------------------------------------------------------------------------------------------
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("themeToggle");
+
+    // returns the theme actually rendered right now (explicit choice or OS preference)
+    function _currentTheme() {
+      var explicit = root.getAttribute("data-theme");
+      if (explicit) return explicit;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+
+    btn.addEventListener("click", function () {
+      var next = _currentTheme() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("oc-theme", next); } catch (e) {}
+    });
+  })();
+</script>
+
+</body>
+</html>
