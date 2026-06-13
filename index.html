@@ -963,7 +963,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
 
     <p class="lead">Questa guida è gratuita e open-source. Il modo migliore per ringraziare è condividerla: bastano due secondi e dai visibilità al manuale a chi ne ha bisogno. Ogni condivisione fa felice un lobster. 🦞</p>
     <div class="share-btns">
-      <button class="share-btn web" type="button" id="webShareBtn" hidden aria-label="Condividi">
+      <button class="share-btn web" type="button" id="webShareBtn" data-webshare hidden aria-label="Condividi">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
         Condividi
       </button>
@@ -1137,10 +1137,25 @@ pandoc README.md PARTE-*/[0-9]*.md \
       _toast(THANKS[(Math.random() * THANKS.length) | 0]);
     }
 
-    // celebrate whenever a platform/quote/webshare button is activated (event delegation)
+    // privacy-friendly analytics: send a custom event to GoatCounter (no-op if not loaded)
+    function _track(name) {
+      try {
+        if (window.goatcounter && window.goatcounter.count) {
+          window.goatcounter.count({ path: name, title: "Action: " + name, event: true });
+        }
+      } catch (e) {}
+    }
+
+    // celebrate + track whenever a platform/quote/webshare/star button is activated (event delegation)
     document.addEventListener("click", function (e) {
       var el = e.target.closest("[data-share], [data-quote], [data-webshare], .gh-star-btn");
       if (!el) return;
+      var name = el.hasAttribute("data-share")    ? "share-" + el.getAttribute("data-share")
+               : el.hasAttribute("data-quote")    ? "share-quote"
+               : el.hasAttribute("data-webshare") ? "share-native"
+               : el.classList.contains("gh-star-btn") ? "github-star"
+               : "share-other";
+      _track(name);
       var rect = el.getBoundingClientRect();
       _celebrate(rect.left + rect.width / 2);
     });
@@ -1148,6 +1163,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
     // -- copy link -------------------------------------------------------------------------------------
     function _copy(triggerEl) {
       var done = function () {
+        _track("share-copy");
         var rect = triggerEl.getBoundingClientRect();
         _confetti(rect.left + rect.width / 2);
         _toast("Link copiato! Ora incollalo dove vuoi 🦞");
@@ -1227,6 +1243,10 @@ pandoc README.md PARTE-*/[0-9]*.md \
     }
   })();
 </script>
+
+<!-- privacy-friendly analytics (cookieless, no consent banner needed) -->
+<script data-goatcounter="https://openclaw-la-guida.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 
 </body>
 </html>
