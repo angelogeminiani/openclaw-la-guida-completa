@@ -701,6 +701,32 @@
   .foot-github .fg-btn:hover { transform: translateY(-2px); background: #ffd25a; color: #1c140f; }
   @media (max-width: 560px) { .foot-github { flex-direction: column; align-items: flex-start; } }
 
+  /* -------- surprise peeker: Clawdia pops up from the bottom-right, then tucks back down -------- */
+  .claw-peek {
+    position: fixed; right: 22px; bottom: 0; z-index: 75;
+    transform: translateY(135%); transition: transform .5s cubic-bezier(.2,1.25,.35,1);
+  }
+  .claw-peek.show { transform: translateY(0); }
+  .claw-peek-go { position: relative; display: flex; flex-direction: column; align-items: center; background: none; border: none; cursor: pointer; padding: 0; }
+  .claw-peek-bubble {
+    position: relative; background: var(--card); border: 1px solid var(--line); color: var(--ink);
+    font-weight: 700; font-size: .9rem; padding: 8px 14px; border-radius: 14px; box-shadow: var(--shadow);
+    margin-bottom: 7px; white-space: nowrap;
+  }
+  .claw-peek-bubble::after {
+    content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%) rotate(45deg);
+    width: 12px; height: 12px; background: var(--card); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .claw-peek .peek-lob { width: 96px; height: auto; overflow: visible; animation: none; display: block; }
+  .claw-peek-go:hover .peek-lob { transform: scale(1.05); transition: transform .2s ease; }
+  .claw-peek-close {
+    position: absolute; top: -6px; right: -8px; z-index: 2; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--ink); color: #fff; border: 2px solid var(--card); cursor: pointer;
+    font-size: 15px; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .claw-peek-close:hover { background: var(--coral); }
+  @media (max-width: 620px) { .claw-peek { display: none; } }
+
   .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
   .badge {
     font-size: 0.78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px;
@@ -1237,6 +1263,15 @@ pandoc README.md PARTE-*/[0-9]*.md \
 
 <div id="toast" role="status" aria-live="polite"></div>
 
+<!-- ----------------------------------------------------- surprise peeker -->
+<div id="clawPeek" class="claw-peek" hidden>
+  <button class="claw-peek-close" id="clawPeekClose" type="button" aria-label="Chiudi">×</button>
+  <button class="claw-peek-go" id="clawPeekGo" type="button" aria-label="Vai alla sezione condivisione">
+    <span class="claw-peek-bubble">Psst… condividila! 🦞</span>
+    <svg class="lobster peek-lob" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(240,0) scale(-1,1)"><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g></g><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g><g><path d="M120,182 C112,202 110,212 120,216 C130,212 128,202 120,182 Z" fill="#e6442e" stroke="#a82815" stroke-width="2"/><path d="M118,184 C102,200 96,210 102,216 C113,213 117,200 119,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/><path d="M122,184 C138,200 144,210 138,216 C127,213 123,200 121,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g></g><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g><path d="M120,66 C152,66 174,90 172,122 C170,154 160,172 150,186 C140,200 100,200 90,186 C80,172 70,154 68,122 C66,90 88,66 120,66 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.5"/><ellipse cx="120" cy="138" rx="25" ry="40" fill="#ff8163" opacity=".28"/><path d="M 95,124 Q 120,132 145,124" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,144 Q 120,152 145,144" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,162 Q 120,170 145,162" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path class="l-mouth" d="M112,150 Q120,159 128,150" fill="none" stroke="#a82815" stroke-width="2.5" stroke-linecap="round"/><g transform="translate(240,0) scale(-1,1)"><g class="l-wave"><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 86 110; -17 86 110; 5 86 110; -17 86 110; 5 86 110; 0 86 110; 0 86 110" keyTimes="0; 0.07; 0.14; 0.21; 0.28; 0.36; 1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0 0 1 1"/></g></g><g class="l-wave"><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 86 110; -17 86 110; 5 86 110; -17 86 110; 5 86 110; 0 86 110; 0 86 110" keyTimes="0; 0.07; 0.14; 0.21; 0.28; 0.36; 1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0 0 1 1"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></g><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></svg>
+  </button>
+</div>
+
 <!-- -------------------------------------------------------------- footer -->
 <footer>
   <div class="foot-gh-wrap">
@@ -1686,14 +1721,44 @@ pandoc README.md PARTE-*/[0-9]*.md \
     }
   })();
 
-  // respect reduced-motion for the SMIL wave on the nav Clawdia (CSS animations are handled separately)
+  // respect reduced-motion for the SMIL wave on the waving Clawdias (CSS animations are handled separately)
   (function () {
     try {
       if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        var n = document.querySelector(".nav-lob");
-        if (n && n.pauseAnimations) n.pauseAnimations();
+        document.querySelectorAll(".nav-lob, .peek-lob").forEach(function (n) {
+          if (n.pauseAnimations) n.pauseAnimations();
+        });
       }
     } catch (e) {}
+  })();
+
+  // surprise peeker: slides in once after some scrolling, invites a click to the share section
+  (function () {
+    var peek = document.getElementById("clawPeek");
+    if (!peek) return;
+    var KEY = "claw-peek-dismissed", shown = false, done = false;
+    try { if (localStorage.getItem(KEY) === "1") done = true; } catch (e) {}
+    var hideTimer = null;
+    function _trk(p) { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: p, title: p, event: true }); } catch (e) {} }
+    function _retract() { clearTimeout(hideTimer); peek.classList.remove("show"); setTimeout(function () { peek.hidden = true; }, 600); }
+    function _show() {
+      if (shown || done) return; shown = true; peek.hidden = false;
+      requestAnimationFrame(function () { peek.classList.add("show"); });
+      hideTimer = setTimeout(function () { done = true; _retract(); }, 6000);  // stay out 6s, then tuck back down
+    }
+    function _dismiss() { done = true; _retract(); try { localStorage.setItem(KEY, "1"); } catch (e) {} }  // clicked/closed: gone for good
+    function _onScroll() { if (!done && !shown && window.scrollY > window.innerHeight * 1.2) setTimeout(_show, 400); }
+    window.addEventListener("scroll", _onScroll, { passive: true });
+    var target = document.getElementById("condividi");
+    if (target && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) { if (en.isIntersecting) { done = true; _retract(); } });
+      }, { threshold: 0.2 }).observe(target);
+    }
+    var go = document.getElementById("clawPeekGo");
+    if (go) go.addEventListener("click", function () { _trk("peek-go"); if (target) target.scrollIntoView({ behavior: "smooth" }); _dismiss(); });
+    var close = document.getElementById("clawPeekClose");
+    if (close) close.addEventListener("click", function (e) { e.stopPropagation(); _trk("peek-close"); _dismiss(); });
   })();
 </script>
 
