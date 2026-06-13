@@ -4,6 +4,8 @@
 
 > *Dal primo "hatch" al team multi-agente: tutto ciò che serve per padroneggiare il lobster digitale più virale del 2026.*
 
+### 🌐 [Sfoglia la versione web → angelogeminiani.github.io/openclaw-la-guida-completa](https://angelogeminiani.github.io/openclaw-la-guida-completa/)
+
 Questo repository contiene il manoscritto completo del libro **OpenClaw: Guida Completa**, suddiviso capitolo per capitolo in file Markdown. È pensato per essere letto direttamente su GitHub, clonato in locale, esportato in PDF/ePub o riusato come base per una documentazione viva.
 
 > 📖 Cerchi solo l'elenco lineare di tutti i capitoli? Vai a [INDICE.md](./INDICE.md).
