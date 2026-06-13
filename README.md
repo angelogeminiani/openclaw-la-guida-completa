@@ -162,8 +162,8 @@ Naviga le cartelle direttamente su GitHub: ogni file `.md` viene renderizzato au
 ### Clonare e leggere in locale
 
 ```bash
-git clone https://github.com/<tuo-utente>/openclaw-guida.git
-cd openclaw-guida
+git clone https://github.com/angelogeminiani/openclaw-la-guida-completa.git
+cd openclaw-la-guida-completa
 ```
 
 Aprilo in [Obsidian](https://obsidian.md), VS Code, o qualsiasi editor Markdown. Obsidian è particolarmente comodo: crea automaticamente il grafo delle pagine collegate.
