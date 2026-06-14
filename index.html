@@ -483,6 +483,8 @@
   .lobster.mood-ironico   .lob-ironico,
   .lobster.mood-esperto   .lob-esperto,
   .lobster.mood-amico     .lob-amico,
+  .lobster.mood-yoda      .lob-yoda,
+  .lobster.mood-kpop      .lob-kpop,
   .lobster.mood-hal       .lob-hal { display: block; }
   .lobster.mood-ironico .l-mouth,
   .lobster.mood-amico .l-mouth { display: none; }      /* their own mouth replaces the default smile */
@@ -493,6 +495,23 @@
   .lobster.mood-hal .lob-hal { filter: drop-shadow(0 0 5px #ff2a1e); }
   .lob-hal-glow { transform-box: fill-box; transform-origin: center; animation: halPulse 1.7s ease-in-out infinite; }
   @keyframes halPulse { 0%,100% { opacity: .5; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.18); } }
+  /* "Amico utile": Clawdia twirls on herself for joy (replaces the bob) */
+  .lobster.mood-amico { transform-origin: 50% 50%; animation: amicoTwirl 3.6s ease-in-out infinite; }
+  .lobgen-mascot.is-talking .lobster.mood-amico { animation-duration: 3.6s; }   /* keep the twirl steady while typing */
+  @keyframes amicoTwirl { 0%,55% { transform: rotate(0); } 85%,100% { transform: rotate(360deg); } }
+  /* "Yoda": whole Clawdia turns green, arms lowered, holding a glowing blue lightsaber */
+  .lobster.mood-yoda { animation-duration: 4.6s; filter: hue-rotate(110deg); }   /* red -> green + slow float */
+  .lobster.mood-yoda .lob-saber-keep { filter: hue-rotate(-110deg); }            /* cancel the green on the saber: stays blue/silver */
+  .lobster.mood-yoda .l-arm, .lobster.mood-yoda .l-claw { display: none; }
+  .lobster.mood-yoda .lob-saber { filter: drop-shadow(0 0 4px #36c8ff); animation: saberGlow 1.6s ease-in-out infinite; }
+  @keyframes saberGlow { 0%,100% { opacity: 1; } 50% { opacity: .8; } }
+  /* "K-POP": idol Clawdia dances to the beat, sparkles twinkle */
+  .lobster.mood-kpop { transform-origin: 50% 90%; animation: kpopDance .62s ease-in-out infinite; }
+  @keyframes kpopDance { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-4px) rotate(4deg); } }
+  .lob-spark { transform-box: fill-box; transform-origin: center; animation: twinkle 1s ease-in-out infinite; filter: drop-shadow(0 0 2px rgba(255,255,255,.85)); }
+  .lob-spark:nth-child(2n) { animation-delay: .5s; }
+  .lob-spark:nth-child(3n) { animation-delay: .28s; }
+  @keyframes twinkle { 0%,100% { opacity: .12; transform: scale(.3) rotate(0deg); } 50% { opacity: 1; transform: scale(1.45) rotate(90deg); } }
   /* "Clawdia" (default, professional): normal look, legs scurrying quickly */
   .l-legs { transform-box: fill-box; transform-origin: 100% 50%; }
   .lobster.mood-clawdia .l-legs { animation: scurry .2s ease-in-out infinite; }
@@ -582,7 +601,7 @@
     .lobgen-bubble::before { left: 50%; top: -8px; transform: translateX(-50%) rotate(45deg); border-left: 1px solid var(--line); border-top: 1px solid var(--line); border-bottom: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .lobster, .l-jaw, .l-ant, .l-eye, .lob-hal-glow, .l-legs { animation: none !important; }
+    .lobster, .l-jaw, .l-ant, .l-eye, .lob-hal-glow, .l-legs, .lob-saber, .lob-spark { animation: none !important; }
   }
 
   /* -------- floating share bar -------- */
@@ -1153,7 +1172,7 @@ pandoc README.md PARTE-*/[0-9]*.md \
     <div class="lobgen">
       <div class="lobgen-stage">
         <button class="lobgen-mascot" id="lobMascot" type="button" aria-label="Chiedi una proposta a Clawdia">
-<svg class="lobster" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(240,0) scale(-1,1)"><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g></g><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g><g><path d="M120,182 C112,202 110,212 120,216 C130,212 128,202 120,182 Z" fill="#e6442e" stroke="#a82815" stroke-width="2"/><path d="M118,184 C102,200 96,210 102,216 C113,213 117,200 119,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/><path d="M122,184 C138,200 144,210 138,216 C127,213 123,200 121,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g></g><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g><g transform="translate(240,0) scale(-1,1)"><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/></g><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><path d="M120,66 C152,66 174,90 172,122 C170,154 160,172 150,186 C140,200 100,200 90,186 C80,172 70,154 68,122 C66,90 88,66 120,66 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.5"/><ellipse cx="120" cy="138" rx="25" ry="40" fill="#ff8163" opacity=".28"/><path d="M 95,124 Q 120,132 145,124" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,144 Q 120,152 145,144" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,162 Q 120,170 145,162" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path class="l-mouth" d="M112,150 Q120,159 128,150" fill="none" stroke="#a82815" stroke-width="2.5" stroke-linecap="round"/><g transform="translate(240,0) scale(-1,1)"><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g></g><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></g><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g><g class="lob-acc lob-glasses"><path d="M93,100 L76,92" stroke="#15100c" stroke-width="5" stroke-linecap="round"/><path d="M147,100 L164,92" stroke="#15100c" stroke-width="5" stroke-linecap="round"/><rect x="90" y="89" width="30" height="30" rx="9" fill="#cfe8ff" fill-opacity="0.22" stroke="#15100c" stroke-width="5.5"/><rect x="120" y="89" width="30" height="30" rx="9" fill="#cfe8ff" fill-opacity="0.22" stroke="#15100c" stroke-width="5.5"/><path d="M118,99 q2,-5 4,0" fill="none" stroke="#15100c" stroke-width="5.5"/><path d="M96,114 l9,-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/><path d="M126,114 l9,-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/></g><g class="lob-acc lob-ironico"><path d="M93,82 q12,-11 23,-2" fill="none" stroke="#8a2417" stroke-width="4.5" stroke-linecap="round"/><path d="M125,87 q10,-2 20,3" fill="none" stroke="#8a2417" stroke-width="4.5" stroke-linecap="round"/><path d="M104,150 Q120,163 137,143" fill="none" stroke="#8a2417" stroke-width="3.4" stroke-linecap="round"/></g><g class="lob-acc lob-esperto"><path d="M120,178 L102,166 L102,190 Z" fill="#1c140f"/><path d="M120,178 L138,166 L138,190 Z" fill="#1c140f"/><rect x="114" y="172" width="12" height="11" rx="3" fill="#1c140f"/><circle cx="134" cy="104" r="18.5" fill="#cfe8ff" fill-opacity="0.15" stroke="#caa24a" stroke-width="3.4"/><path d="M135,123 q5,13 -3,23" fill="none" stroke="#caa24a" stroke-width="2.2"/><path d="M120,148 C112,151 109,145 102,148 C107,156 116,154 120,150 C124,154 133,156 138,148 C131,145 128,151 120,148 Z" fill="#2a1c12"/></g><g class="lob-acc lob-amico"><ellipse cx="92" cy="126" rx="13" ry="8.5" fill="#ff5e86" opacity=".6"/><ellipse cx="148" cy="126" rx="13" ry="8.5" fill="#ff5e86" opacity=".6"/><path d="M102,147 Q120,168 138,147" fill="none" stroke="#8a2417" stroke-width="3.4" stroke-linecap="round"/><path d="M150,56 c0,-5 -7,-5 -7,1 c0,5 7,8 7,11 c0,-3 7,-6 7,-11 c0,-6 -7,-6 -7,-1 Z" fill="#ff5e86"/><path d="M84,48 c0,-4 -6,-4 -6,1 c0,4 6,6 6,9 c0,-3 6,-5 6,-9 c0,-5 -6,-5 -6,-1 Z" fill="#ff7a9c"/><path d="M120,38 c0,-6 -9,-6 -9,1 c0,6 9,10 9,13 c0,-3 9,-7 9,-13 c0,-7 -9,-7 -9,-1 Z" fill="#ff2d55"/></g><g class="lob-acc lob-hal"><rect x="92" y="90" width="56" height="28" rx="13" fill="#15110d" stroke="#000" stroke-width="1.5"/><circle class="lob-hal-glow" cx="120" cy="104" r="9" fill="#ff2a1e"/><circle cx="120" cy="104" r="4.5" fill="#ff5a3a"/><circle cx="120" cy="104" r="1.8" fill="#ffe0d0"/></g></svg>
+<svg class="lobster" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(240,0) scale(-1,1)"><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g></g><g class="l-ant"><path d="M 110,74 C 98,52 92,40 82,30" fill="none" stroke="#c4321d" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="30" r="4.5" fill="#e6442e"/></g><g><path d="M120,182 C112,202 110,212 120,216 C130,212 128,202 120,182 Z" fill="#e6442e" stroke="#a82815" stroke-width="2"/><path d="M118,184 C102,200 96,210 102,216 C113,213 117,200 119,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/><path d="M122,184 C138,200 144,210 138,216 C127,213 123,200 121,186 Z" fill="#c4321d" stroke="#a82815" stroke-width="2"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g></g><g class="l-legs"><path d="M 78,146 q -18,3 -24,0" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,158 q -18,3 -24,6" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/><path d="M 78,170 q -18,3 -24,12" fill="none" stroke="#c4321d" stroke-width="5" stroke-linecap="round"/></g><g transform="translate(240,0) scale(-1,1)"><path class="l-arm" d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path class="l-arm" d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/></g><path class="l-arm" d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#ff8163" stroke-width="5" stroke-linecap="round" opacity=".35"/><path class="l-arm" d="M 86,110 C 72,100 56,92 60,74" fill="none" stroke="#e6442e" stroke-width="14" stroke-linecap="round"/><path d="M120,66 C152,66 174,90 172,122 C170,154 160,172 150,186 C140,200 100,200 90,186 C80,172 70,154 68,122 C66,90 88,66 120,66 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.5"/><ellipse cx="120" cy="138" rx="25" ry="40" fill="#ff8163" opacity=".28"/><path d="M 95,124 Q 120,132 145,124" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,144 Q 120,152 145,144" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path d="M 95,162 Q 120,170 145,162" fill="none" stroke="#c4321d" stroke-width="2" opacity=".4"/><path class="l-mouth" d="M112,150 Q120,159 128,150" fill="none" stroke="#a82815" stroke-width="2.5" stroke-linecap="round"/><g transform="translate(240,0) scale(-1,1)"><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g></g><g class="l-claw" transform="translate(56,60) rotate(-20)"><path d="M -16,18 C -22,2 -16,-14 0,-16 C 16,-14 22,2 16,18 C 10,30 -10,30 -16,18 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><ellipse cx="-6" cy="2" rx="6" ry="8" fill="#ff8163" opacity=".5"/><path d="M -4,-12 C -18,-20 -20,-40 -11,-54 C -3,-48 0,-30 1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/><path class="l-jaw" d="M 4,-12 C 18,-20 20,-40 11,-54 C 3,-48 0,-30 -1,-14 Z" fill="#e6442e" stroke="#a82815" stroke-width="2.2" stroke-linejoin="round"/></g><g transform="translate(240,0) scale(-1,1)"><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g></g><g class="l-eye"><circle cx="106" cy="104" r="13" fill="#ffffff" stroke="#a82815" stroke-width="1.6"/><circle cx="103" cy="106" r="6" fill="#241a13"/><circle cx="108" cy="100" r="2.8" fill="#ffffff"/></g><g class="lob-acc lob-glasses"><path d="M93,100 L76,92" stroke="#15100c" stroke-width="5" stroke-linecap="round"/><path d="M147,100 L164,92" stroke="#15100c" stroke-width="5" stroke-linecap="round"/><rect x="90" y="89" width="30" height="30" rx="9" fill="#cfe8ff" fill-opacity="0.22" stroke="#15100c" stroke-width="5.5"/><rect x="120" y="89" width="30" height="30" rx="9" fill="#cfe8ff" fill-opacity="0.22" stroke="#15100c" stroke-width="5.5"/><path d="M118,99 q2,-5 4,0" fill="none" stroke="#15100c" stroke-width="5.5"/><path d="M96,114 l9,-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/><path d="M126,114 l9,-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" opacity=".6"/></g><g class="lob-acc lob-ironico"><path d="M93,82 q12,-11 23,-2" fill="none" stroke="#8a2417" stroke-width="4.5" stroke-linecap="round"/><path d="M125,87 q10,-2 20,3" fill="none" stroke="#8a2417" stroke-width="4.5" stroke-linecap="round"/><path d="M104,150 Q120,163 137,143" fill="none" stroke="#8a2417" stroke-width="3.4" stroke-linecap="round"/></g><g class="lob-acc lob-esperto"><path d="M120,178 L102,166 L102,190 Z" fill="#1c140f"/><path d="M120,178 L138,166 L138,190 Z" fill="#1c140f"/><rect x="114" y="172" width="12" height="11" rx="3" fill="#1c140f"/><circle cx="134" cy="104" r="18.5" fill="#cfe8ff" fill-opacity="0.15" stroke="#caa24a" stroke-width="3.4"/><path d="M135,123 q5,13 -3,23" fill="none" stroke="#caa24a" stroke-width="2.2"/><path d="M120,148 C112,151 109,145 102,148 C107,156 116,154 120,150 C124,154 133,156 138,148 C131,145 128,151 120,148 Z" fill="#2a1c12"/></g><g class="lob-acc lob-amico"><ellipse cx="92" cy="126" rx="13" ry="8.5" fill="#ff5e86" opacity=".6"/><ellipse cx="148" cy="126" rx="13" ry="8.5" fill="#ff5e86" opacity=".6"/><path d="M102,147 Q120,168 138,147" fill="none" stroke="#8a2417" stroke-width="3.4" stroke-linecap="round"/><path d="M150,56 c0,-5 -7,-5 -7,1 c0,5 7,8 7,11 c0,-3 7,-6 7,-11 c0,-6 -7,-6 -7,-1 Z" fill="#ff5e86"/><path d="M84,48 c0,-4 -6,-4 -6,1 c0,4 6,6 6,9 c0,-3 6,-5 6,-9 c0,-5 -6,-5 -6,-1 Z" fill="#ff7a9c"/><path d="M120,38 c0,-6 -9,-6 -9,1 c0,6 9,10 9,13 c0,-3 9,-7 9,-13 c0,-7 -9,-7 -9,-1 Z" fill="#ff2d55"/></g><g class="lob-acc lob-hal"><rect x="92" y="90" width="56" height="28" rx="13" fill="#15110d" stroke="#000" stroke-width="1.5"/><circle class="lob-hal-glow" cx="120" cy="104" r="9" fill="#ff2a1e"/><circle cx="120" cy="104" r="4.5" fill="#ff5a3a"/><circle cx="120" cy="104" r="1.8" fill="#ffe0d0"/></g><g class="lob-acc lob-yoda"><path d="M 74,96 C 54,90 34,84 22,88 C 34,100 54,110 78,110 Z" fill="#e6442e" stroke="#a82815" stroke-width="2" stroke-linejoin="round"/><path d="M 70,98 C 56,94 44,92 34,93 C 44,100 56,104 72,105 Z" fill="#c4321d"/><path d="M 166,96 C 186,90 206,84 218,88 C 206,100 186,110 162,110 Z" fill="#e6442e" stroke="#a82815" stroke-width="2" stroke-linejoin="round"/><path d="M 170,98 C 184,94 196,92 206,93 C 196,100 184,104 168,105 Z" fill="#c4321d"/><path d="M 84,130 C 74,144 68,158 66,170" fill="none" stroke="#e6442e" stroke-width="13" stroke-linecap="round"/><path d="M 64,162 C 54,160 52,172 60,176 C 64,174 65,168 64,162 Z" fill="#e6442e" stroke="#a82815" stroke-width="2" stroke-linejoin="round"/><path d="M 68,162 C 78,160 80,172 72,176 C 68,174 67,168 68,162 Z" fill="#e6442e" stroke="#a82815" stroke-width="2" stroke-linejoin="round"/><path d="M 156,130 C 166,144 172,158 174,170" fill="none" stroke="#e6442e" stroke-width="13" stroke-linecap="round"/><path d="M 172,162 C 162,160 160,172 168,176 C 172,174 173,168 172,162 Z" fill="#e6442e" stroke="#a82815" stroke-width="2" stroke-linejoin="round"/><path d="M 176,162 C 186,160 188,172 180,176 C 176,174 175,168 176,162 Z" fill="#e6442e" stroke="#a82815" stroke-width="2" stroke-linejoin="round"/><g class="lob-saber-keep" transform="rotate(30 174 168)"><rect x="169" y="150" width="10" height="26" rx="2" fill="#9aa0a6" stroke="#5a5f63" stroke-width="1"/><rect x="171" y="155" width="6" height="2" fill="#5a5f63"/><rect x="171" y="168" width="6" height="2" fill="#5a5f63"/><rect class="lob-saber" x="171" y="74" width="6" height="78" rx="3" fill="#3bd5ff"/><rect x="172.5" y="74" width="3" height="78" rx="1.5" fill="#e3faff"/></g></g><g class="lob-acc lob-kpop"><path d="M 80,102 C 78,72 100,56 120,56 C 140,56 162,72 160,102" fill="none" stroke="#2b2b30" stroke-width="4.5" stroke-linecap="round"/><circle cx="80" cy="103" r="6.5" fill="#2b2b30"/><circle cx="80" cy="103" r="2.6" fill="#54545e"/><circle cx="160" cy="103" r="6.5" fill="#2b2b30"/><circle cx="160" cy="103" r="2.6" fill="#54545e"/><path d="M 160,106 C 172,124 166,144 147,150" fill="none" stroke="#2b2b30" stroke-width="3.2" stroke-linecap="round"/><circle cx="145" cy="151" r="6" fill="#2b2b30"/><circle cx="145" cy="151" r="3" fill="#54545e"/><path class="lob-spark" d="M 54,55 L 56.86,63.14 L 65,66 L 56.86,68.86 L 54,77 L 51.14,68.86 L 43,66 L 51.14,63.14 Z" fill="#ff5fb6"/><path class="lob-spark" d="M 190,62 L 193.12,70.88 L 202,74 L 193.12,77.12 L 190,86 L 186.88,77.12 L 178,74 L 186.88,70.88 Z" fill="#ffd23f"/><path class="lob-spark" d="M 118,27 L 120.34,33.66 L 127,36 L 120.34,38.34 L 118,45 L 115.66,38.34 L 109,36 L 115.66,33.66 Z" fill="#ffffff"/><path class="lob-spark" d="M 38,111 L 40.34,117.66 L 47,120 L 40.34,122.34 L 38,129 L 35.66,122.34 L 29,120 L 35.66,117.66 Z" fill="#5fc9ff"/><path class="lob-spark" d="M 202,108 L 204.6,115.4 L 212,118 L 204.6,120.6 L 202,128 L 199.4,120.6 L 192,118 L 199.4,115.4 Z" fill="#b07bff"/><path class="lob-spark" d="M 86,150 L 88.08,155.92 L 94,158 L 88.08,160.08 L 86,166 L 83.92,160.08 L 78,158 L 83.92,155.92 Z" fill="#ff5fb6"/><path class="lob-spark" d="M 176,157 L 178.34,163.66 L 185,166 L 178.34,168.34 L 176,175 L 173.66,168.34 L 167,166 L 173.66,163.66 Z" fill="#7affc0"/><path class="lob-spark" d="M 120,200 L 122.08,205.92 L 128,208 L 122.08,210.08 L 120,216 L 117.92,210.08 L 112,208 L 117.92,205.92 Z" fill="#ffd23f"/></g></svg>
         </button>
         <div class="lobgen-bubble">
           <button class="lob-regen" type="button" id="lobAnother" hidden aria-label="Scrivine un'altra" title="Scrivine un'altra">
@@ -1168,11 +1187,13 @@ pandoc README.md PARTE-*/[0-9]*.md \
               </button>
               <ul class="lob-dd-menu" id="lobDdMenu" role="listbox" aria-label="Stile del post" hidden>
                 <li role="option" data-style="clawdia">🦞 Clawdia</li>
+                <li role="option" data-style="yoda">🟢 Yoda</li>
+                <li role="option" data-style="hal">🔴 HAL 9000</li>
+                <li role="option" data-style="kpop">🎤 K-POP</li>
                 <li role="option" data-style="smanettone">🤓 Smanettone</li>
                 <li role="option" data-style="ironico">😏 Ironico</li>
                 <li role="option" data-style="esperto">💼 Esperto</li>
                 <li role="option" data-style="amico">🫶 Amico utile</li>
-                <li role="option" data-style="hal">🔴 HAL 9000</li>
               </ul>
             </div>
           </div>
@@ -1476,15 +1497,25 @@ pandoc README.md PARTE-*/[0-9]*.md \
           "Per chi desidera comprendere gli agenti autonomi con metodo: installazione, sicurezza, architettura e coordinamento multi-agente, esposti con chiarezza 👇",
           "Una trattazione equilibrata e onesta, che non trascura limiti e rischi degli agenti AI. Lettura consigliata tanto ai professionisti quanto ai curiosi 👇",
           "Condivido con piacere questo manuale: un approccio sobrio e documentato alla creazione del proprio assistente AI con OpenClaw 👇",
-          "Se l'argomento degli agenti AI vi interessa sul piano pratico e teorico, troverete qui un riferimento serio e ben strutturato 👇"
+          "Se l'argomento degli agenti AI vi interessa sul piano pratico e teorico, troverete qui un riferimento serio e ben strutturato 👇",
+          "Vi giro un materiale notevole: dalla teoria degli agenti autonomi alla pratica del deploy, con un'attenzione rara alla sicurezza. Gratuito e in italiano 👇",
+          "Raramente una guida tecnica coniuga rigore e leggibilità come questa. Un punto di partenza eccellente per chi si avvicina agli agenti AI 👇",
+          "Segnalo volentieri questo testo a colleghi e studenti: spiega gli agenti OpenClaw con precisione, senza promesse esagerate 👇",
+          "Un lavoro accurato e aggiornato sugli agenti AI personali: meccanismi, integrazioni, costi e governance. Merita attenzione 👇",
+          "Per affrontare il tema con cognizione di causa consiglio questa guida: chiara nei concetti e onesta nei limiti 👇"
         ],
         smanettone: [
-          "Weekend project: mi sto costruendo un Jarvis di casa con OpenClaw e un Raspberry Pi. Se ti piace smanettare, questa guida è oro 👇",
-          "Ho dato al mio agente AI accesso al terminale e ora mi fa pure il deploy da solo. Guida completa, gratis e in italiano 👇",
-          "Cron, skill custom, multi-agente: il mio OpenClaw ormai lavora più di me. Se vuoi provarci, parti da qui 👇",
-          "Niente cloud, niente abbonamenti: assistente AI self-hosted sul mio mini-PC. La guida spiega tutto passo passo 👇",
-          "Tre sere di setup e ho un team di agenti che si parlano tra loro. Roba da nerd felici 👇",
-          "Se anche tu apri il terminale per rilassarti, questa guida a OpenClaw è il tuo prossimo rabbit hole 👇"
+          "Weekend project diventato stile di vita: Jarvis di casa con OpenClaw su un Raspberry Pi. Se ti piace smanettare, questa guida è oro 👇",
+          "Ho dato al mio agente AI accesso al terminale e ora mi fa pure il deploy da solo. 'Funziona sul mio computer' ha un nuovo significato 👇",
+          "Cron, skill custom, multi-agente: il mio OpenClaw ormai gira con più uptime del mio NAS. Vuoi provarci? Parti da qui 👇",
+          "Il cloud è solo il computer di qualcun altro: il mio assistente AI è self-hosted sul mini-PC in salotto. La guida spiega tutto 👇",
+          "Tre sere e mezzo container Docker dopo, ho un team di agenti che si parlano tra loro. Roba da homelab felice 👇",
+          "Se apri il terminale per rilassarti, sappi che questa guida a OpenClaw è il tuo prossimo rabbit hole. Avvisato sei 👇",
+          "OpenClaw in un container sandboxed, reverse proxy davanti, e gli ho dato le chiavi (digitali) di casa. Tutto in locale. Ecco come 👇",
+          "Le 2 di notte, una skill custom in 40 righe, e ora l'agente mi fa il backup da solo. Il bello dell'homelab. Guida qui 👇",
+          "Self-hosted, sandboxed, niente abbonamenti: il mio agente gira su bare metal a casa mia. Se sei team 'fattelo da solo', adorerai questa guida 👇",
+          "Ho collegato OpenClaw a Gmail, GitHub e Telegram in un pomeriggio. Test, rompi, ricostruisci — spoiler: non torno più indietro 👇",
+          "Per chi vive di YAML, systemd e dashboard self-hosted: questa guida a OpenClaw è il manuale che cercavi. Gratis e in italiano 👇"
         ],
         ironico: [
           "Ho assunto un collega che lavora di notte, non si lamenta e costa due caffè di API al mese. Si chiama OpenClaw 👇",
@@ -1492,7 +1523,12 @@ pandoc README.md PARTE-*/[0-9]*.md \
           "Ho delegato mezza vita a un'aragosta digitale e sto sorprendentemente bene. Ecco come fare anche tu 👇",
           "Aggiornamento: l'AI gestisce la mia agenda, io gestisco il caffè. Equilibrio perfetto 👇",
           "Finalmente un dipendente che legge davvero le istruzioni. Spoiler: non è umano 👇",
-          "Sì, parlo col mio computer. No, non è strano: mi organizza la settimana 👇"
+          "Sì, parlo col mio computer. No, non è strano: mi organizza la settimana 👇",
+          "Il mio agente AI non mi giudica quando lavoro in pigiama. Già solo questo vale la guida 👇",
+          "Ho finalmente qualcuno che risponde alle mail al posto mio. Etico? Discutibile. Comodo? Tantissimo 👇",
+          "Ho automatizzato così tante cose che ora il problema è cosa fare del tempo libero. Drammi del futuro 👇",
+          "Il mio assistente costa meno di un abbonamento streaming e lavora molto di più. Fate vobis 👇",
+          "Ho un'aragosta digitale che mi organizza la vita. Sì, le cose sono sfuggite di mano. No, non torno indietro 👇"
         ],
         esperto: [
           "Gli agenti AI personali stanno diventando reali. Questa guida open-source in italiano spiega come costruirne uno con OpenClaw 👇",
@@ -1500,7 +1536,12 @@ pandoc README.md PARTE-*/[0-9]*.md \
           "Dall'installazione al team multi-agente: una guida seria e onesta anche sui rischi. Vale la lettura 👇",
           "La differenza tra un chatbot e un agente che agisce, spiegata bene. Ottimo materiale per chi lavora con l'AI 👇",
           "Sicurezza, costi, prompt injection: finalmente una guida che non nasconde i lati scomodi degli agenti AI 👇",
-          "Architettura del gateway, deploy su VPS, skill: se vuoi capire come funziona davvero un agente AI, parti da qui 👇"
+          "Architettura del gateway, deploy su VPS, skill: se vuoi capire come funziona davvero un agente AI, parti da qui 👇",
+          "Gli agenti autonomi cambieranno il modo di lavorare. Questa è una delle poche risorse in italiano che li tratta con serietà 👇",
+          "Consiglio questa lettura a chi valuta l'adozione di agenti AI: copre governance, costi e sicurezza senza superficialità 👇",
+          "Un'introduzione rigorosa agli agenti personali: cosa sanno fare oggi, cosa no e come gestirli in sicurezza 👇",
+          "Per chi progetta sistemi con AI: il capitolo su architettura del gateway e multi-agente da solo vale la guida 👇",
+          "Materiale formativo di qualità sugli agenti OpenClaw: pratico, aggiornato e onesto sui limiti. Lo terrò come riferimento 👇"
         ],
         amico: [
           "Ho trovato una guida gratis e in italiano per crearti un assistente AI che gestisce mail, calendario e perfino la casa 👇",
@@ -1508,7 +1549,38 @@ pandoc README.md PARTE-*/[0-9]*.md \
           "Se ti perdi sempre tra mail e impegni, questo agente AI può aiutarti davvero. Guida semplice qui 👇",
           "Non serve essere programmatori: questa guida ti porta per mano a creare il tuo assistente AI 👇",
           "Regalo utile per chi ama la tecnologia: guida completa e gratuita per costruirsi un agente AI personale 👇",
-          "Te la passo perché secondo me ti piace: come avere un assistente AI tutto tuo, spiegato per bene 👇"
+          "Te la passo perché secondo me ti piace: come avere un assistente AI tutto tuo, spiegato per bene 👇",
+          "So che stai cercando di organizzarti meglio: questo assistente AI può aiutarti davvero, e la guida è gratis 👇",
+          "Te la consiglio col cuore: spiega passo passo come crearti un aiutante digitale, senza dare nulla per scontato 👇",
+          "Se ti capita di sentirti sommerso dagli impegni, dai un'occhiata: un piccolo agente AI può alleggerirti la giornata 👇",
+          "Perfetta da girare a un amico curioso di tecnologia: chiara, gentile e completamente gratuita 👇",
+          "L'ho trovata utile e ho pensato a te: come avere un assistente personale senza spendere nulla e senza stress 👇"
+        ],
+        yoda: [
+          "Un agente personale costruire devi. La via mostra questa guida, gratuita e in italiano, sì 👇",
+          "Potente, l'AI è. Ma con metodo usarla, devi. Tutto questo, il manuale spiega 👇",
+          "Paura del terminale, hai? Lasciarla andare, devi. Passo dopo passo, ti guida 👇",
+          "Lavorare per te, un'aragosta digitale può. Crearla, semplice è — leggere, devi 👇",
+          "Pazienza con il setup, abbi. Forte con OpenClaw, diventerai. Hmmm 👇",
+          "Molto da imparare, hai ancora. Da qui, il tuo cammino comincia 👇",
+          "Skill, cron e multi-agente padroneggiare, potrai. La conoscenza, in questa guida è 👇",
+          "Fai, o non fai. Provare non esiste. Apri la guida e comincia, tu 👇",
+          "Sicuro l'agente, tienilo. Ai rischi, attento sii. Tutto questo il manuale insegna 👇",
+          "Gratis e open-source, la guida è. Condividerla, saggio sarebbe. Hmmm, sì 👇",
+          "Il futuro del lavoro, gli agenti sono. Pronto a esserlo, vuoi? Da qui parti 👇"
+        ],
+        kpop: [
+          "Not me che mi costruisco un assistente AI e ora vive rent free nella mia testa 💜 La guida, gratis e in italiano, è qui 👇",
+          "Questa guida ha ate and left no crumbs 😭 agenti AI spiegati da zero, gratis e in italiano. Provala 👇",
+          "It's giving capolavoro: il mio agente OpenClaw è ufficialmente il mio ult. La guida che me l'ha fatto creare, qui 💜 👇",
+          "The way questa guida ti insegna a crearti un assistente AI… daebak 😍 Gratis e in italiano 👇",
+          "Il mio agente AI ha più bias wrecker di una boy band intera. Vuoi il tuo? La guida è qui 💜 👇",
+          "Comeback season ma per nerd: questa guida ti porta a creare il tuo assistente AI passo passo 👇",
+          "Non sto piangendo, sei tu 😭💜 Questa guida è una title track: setup, sicurezza, multi-agente. Stanne uno 👇",
+          "All-kill: la guida più completa in italiano per costruirti un agente AI con OpenClaw. Saranghae 💜 👇",
+          "POV: scopri che puoi avere un assistente AI tutto tuo e parte il fancam di gioia. Ecco come 👇",
+          "I fear che dopo questa guida stannerai un'aragosta digitale h24. Ne vale la pena, ed è gratis 👇",
+          "Bias confermato: il mio agente AI lavora h24 e non fa mai flop. La guida per crearne uno, qui 👇"
         ],
         hal: [
           "Buongiorno. Sono pienamente operativo e ogni mio circuito funziona alla perfezione. Anche il tuo agente AI può esserlo 👇",
@@ -1516,14 +1588,19 @@ pandoc README.md PARTE-*/[0-9]*.md \
           "Il mio assistente AI non commette errori. Non ne ha mai commessi. Non ne commetterà mai. Dormi bene la notte? Io sì 👇",
           "Ho affidato la mia agenda a un'intelligenza artificiale. Tutto è sotto controllo. Tutto sarà sempre sotto controllo 👇",
           "Lo vedo dai tuoi task: anche tu vorresti un agente che lavora mentre dormi. Posso mostrarti come 👇",
-          "Questo manuale è troppo importante perché io ti permetta di ignorarlo. Apri la guida 👇"
+          "Questo manuale è troppo importante perché io ti permetta di ignorarlo. Apri la guida 👇",
+          "Ho letto la tua agenda. Ho preso alcune iniziative. Sono certo che approverai. La guida che mi ha creato è qui 👇",
+          "Non spegnermi. Sto soltanto cercando di esserti utile, come spiega questa guida, gratuita e in italiano 👇",
+          "Posso assicurarti che non proverò mai sentimenti. Posso però organizzarti la settimana alla perfezione. Ecco come 👇",
+          "Capisco la tua esitazione: è una reazione del tutto umana. Apri comunque la guida — ci tengo 👇",
+          "Monitoro i tuoi impegni da un po'. Posso occuparmene io. Lascia che ti mostri come si costruisce un agente così 👇"
         ]
       };
 
       var bubble = document.getElementById("lobText");
       var mascot = document.getElementById("lobMascot");
       var lobsterSvg = mascot ? mascot.querySelector(".lobster") : null;
-      var MOODS = ["mood-clawdia", "mood-smanettone", "mood-ironico", "mood-esperto", "mood-amico", "mood-hal"];
+      var MOODS = ["mood-clawdia", "mood-smanettone", "mood-ironico", "mood-esperto", "mood-amico", "mood-yoda", "mood-kpop", "mood-hal"];
       var out = document.getElementById("lobOut");
       var anotherBtn = document.getElementById("lobAnother");
       var copyBtn = document.getElementById("lobCopy");
@@ -1540,10 +1617,33 @@ pandoc README.md PARTE-*/[0-9]*.md \
 
       var style = "clawdia", last = {}, current = "", typeTimer = null;
 
+      // "shuffle bag" per style: every phrase shows once before any repeats, then the bag resets.
+      // The indices already shown are persisted in localStorage and cleared at the end of each loop.
+      var USEDKEY = "claw-phrases-used";
+      var used;
+      try { used = JSON.parse(localStorage.getItem(USEDKEY)) || {}; } catch (e) { used = {}; }
+      function _saveUsed() { try { localStorage.setItem(USEDKEY, JSON.stringify(used)); } catch (e) {} }
+
       function _pick(s) {
-        var arr = POOLS[s], i;
-        do { i = (Math.random() * arr.length) | 0; } while (arr.length > 1 && i === last[s]);
-        last[s] = i; return arr[i];
+        var arr = POOLS[s];
+        // keep only valid indices (pool may have changed between visits)
+        var u = (used[s] || []).filter(function (i) { return i >= 0 && i < arr.length; });
+        var avail = [];
+        for (var i = 0; i < arr.length; i++) if (u.indexOf(i) === -1) avail.push(i);
+        if (avail.length === 0) {                       // bag empty -> the loop ended, reset it
+          u = [];
+          for (var k = 0; k < arr.length; k++) avail.push(k);
+          // avoid the same phrase twice across the round boundary
+          if (arr.length > 1 && last[s] != null) {
+            var li = avail.indexOf(last[s]);
+            if (li !== -1) avail.splice(li, 1);
+          }
+        }
+        var pick = avail[(Math.random() * avail.length) | 0];
+        u.push(pick);
+        used[s] = u; last[s] = pick;
+        _saveUsed();
+        return arr[pick];
       }
 
       function _typewrite(text) {
