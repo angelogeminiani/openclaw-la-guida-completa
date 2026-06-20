@@ -38,10 +38,13 @@ E, contrariamente all'intuizione, moltiplicare gli agenti non significa moltipli
 Creare il secondo agente è un comando:
 
 ```bash
-openclaw agents add max
+openclaw agents add max \
+  --workspace ~/.openclaw/workspace-max
 ```
 
-Dietro le quinte succedono tre cose. Primo, il Gateway crea il workspace dedicato `~/.openclaw/workspace-max/` — il tuo primo agente vive in `~/.openclaw/workspace/`, ogni agente aggiuntivo in `~/.openclaw/workspace-<nome>/`. Secondo, dentro il workspace vengono seminati i file canonici che conosci dal [Capitolo 2](../PARTE-I-Capire-OpenClaw/02-anatomia-di-un-agente-openclaw.md), incluso un `BOOTSTRAP.md` nuovo di zecca: anche Max dovrà fare il suo rito del primo avvio, esattamente come Polly nel Capitolo 7, e anche il suo BOOTSTRAP.md si auto-cancellerà a onboarding completato. Terzo, il Gateway registra il nuovo agente nel routing, pronto per ricevere un binding (sezione 10.4).
+Il flag `--workspace` è obbligatorio quando passi opzioni esplicite (in quel caso il comando gira in modalità non interattiva); l'id `main` è riservato al primo agente e non si può riusare. Alla creazione puoi anche fissare modello e routing con `--model` e `--bind` (per esempio `--bind telegram:*`), oltre a `--identity`, `--tools` e `--template`.
+
+Dietro le quinte succedono tre cose. Primo, il Gateway crea il workspace indicato `~/.openclaw/workspace-max/` — il tuo primo agente vive in `~/.openclaw/workspace/`, ogni agente aggiuntivo in `~/.openclaw/workspace-<nome>/`. Secondo, dentro il workspace vengono seminati i file canonici che conosci dal [Capitolo 2](../PARTE-I-Capire-OpenClaw/02-anatomia-di-un-agente-openclaw.md), incluso un `BOOTSTRAP.md` nuovo di zecca: anche Max dovrà fare il suo rito del primo avvio, esattamente come Polly nel Capitolo 7, e anche il suo BOOTSTRAP.md si auto-cancellerà a onboarding completato. Terzo, il Gateway registra il nuovo agente nel routing, pronto per ricevere un binding (sezione 10.4).
 
 Per verificare che la creazione sia andata a buon fine:
 
@@ -178,7 +181,7 @@ Fix: `openclaw cron list` su entrambi e `openclaw cron disable <id>` sul vecchio
 ## Checklist di fine capitolo
 
 - [ ] Ho identificato almeno un'area dove serve un secondo agente
-- [ ] Ho creato un secondo agente con `openclaw agents add <nome>`
+- [ ] Ho creato un secondo agente con `openclaw agents add <nome> --workspace <path>`
 - [ ] I due agenti hanno workspace, identità, tool e cron separati
 - [ ] So come instradare i messaggi al giusto agente (binding/routing)
 - [ ] Il binding canale→agente è nella config YAML del Gateway, non in TOOLS.md

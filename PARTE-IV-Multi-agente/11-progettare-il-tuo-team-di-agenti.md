@@ -120,7 +120,7 @@ Nota cosa rende buono questo file: è corto (l'agente lo carica a ogni sessione)
 
 Chiudiamo con il piano operativo. Due settimane, un agente nuovo, nessuna fretta.
 
-**Giorni 1–2: scegli e crea.** Applica il framework della sezione 11.1 alle tue aree candidate e scegli *un solo* vincitore. Crea l'agente (`openclaw agents add <nome>`, come nel Capitolo 10), fai il suo onboarding con la stessa cura del primo: dieci minuti veri, perimetro stretto, token read-only per cominciare.
+**Giorni 1–2: scegli e crea.** Applica il framework della sezione 11.1 alle tue aree candidate e scegli *un solo* vincitore. Crea l'agente (`openclaw agents add <nome> --workspace <path>`, come nel Capitolo 10), fai il suo onboarding con la stessa cura del primo: dieci minuti veri, perimetro stretto, token read-only per cominciare.
 
 **Giorni 3–7: rodaggio.** Usa l'agente ogni giorno sul suo lavoro vero, e tieni una nota degli attriti: dove ha sbagliato tono, cosa ha chiesto due volte, cosa avrebbe dovuto sapere. Niente cron in questa fase — prima la qualità delle risposte, poi l'autonomia. A fine settimana attiva il primo cron, uno solo, quello che ti farebbe più comodo domattina.
 

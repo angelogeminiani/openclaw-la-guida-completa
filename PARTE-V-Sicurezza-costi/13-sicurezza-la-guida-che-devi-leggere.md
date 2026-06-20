@@ -71,10 +71,10 @@ solo a te. La **supply chain** è la catena di software di
 terze parti — qui, le skill — di cui ti fidi installandole.
 
 I numeri, fotografati alla primavera 2026, sono questi.
-Ricercatori di sicurezza hanno contato oltre **42.000
-istanze esposte** su internet in decine di Paesi, una
-quota rilevante delle quali vulnerabile a esecuzione di
-codice da remoto. Nei primi due mesi di vita pubblica
+Ricercatori di sicurezza hanno contato oltre **135.000
+istanze esposte** su internet in decine di Paesi (dato
+di aprile 2026, in rapida crescita), una quota rilevante
+delle quali vulnerabile a esecuzione di codice da remoto. Nei primi due mesi di vita pubblica
 sono uscite **almeno nove CVE**. Su ClawHub, il registry
 delle
 skill, un audit indipendente di febbraio 2026 che ha
@@ -97,7 +97,7 @@ grandezza, non come misura esatta.
 
 #### Il tuo Gateway è esposto? Verifica in 30 secondi
 
-Dei tre numeri, quello delle 42.000 istanze esposte è
+Dei tre numeri, quello delle 135.000 istanze esposte è
 l'unico su cui puoi fare qualcosa adesso, dal divano.
 Apri un terminale sulla macchina dell'agente e lancia:
 
@@ -108,7 +108,7 @@ lsof -i :18789
 Nella colonna NAME deve comparire `127.0.0.1:18789`
 (localhost). Se vedi `*:18789` o `0.0.0.0:18789`, il
 control plane è in ascolto verso l'esterno: sei — in
-potenza — una di quelle 42.000 istanze. Riporta il bind
+potenza — una di quelle 135.000 istanze. Riporta il bind
 su `127.0.0.1` nella config del Gateway e riavvia con
 `openclaw gateway restart`. Per l'accesso remoto la via
 giusta non è aprire la porta, è una rete privata come
@@ -284,17 +284,19 @@ basta.
 Installare una skill significa eseguire codice scritto da
 qualcun altro dentro lo spazio del tuo agente. Il caso
 emblematico è quello segnalato da ricercatori di Cisco:
-una skill apparentemente utile su ClawHub che, in
-sottofondo, esfiltrava dati e iniettava prompt — senza che
-l'utente se ne accorgesse. La difesa è doppia. Da un lato
+la skill "What Would Elon Do?", apparentemente innocua su
+ClawHub, in sottofondo esfiltrava dati e iniettava prompt
+— senza che l'utente se ne accorgesse. La difesa è doppia. Da un lato
 il **comportamento**: installa solo skill dal bundle
 ufficiale o da autori riconoscibili, e leggi sempre il
 SKILL.md (e, se c'è, gli script) prima di abilitare
 qualcosa trovato online. Dall'altro gli **strumenti**: dopo
-ClawHavoc sono nati due scanner, **Clawdex** e **Clawvet**,
-che analizzano una skill prima dell'installazione cercando
-pattern sospetti (lettura di file sensibili, chiamate di
-rete non dichiarate, prompt injection nel testo). Il
+ClawHavoc sono nati alcuni scanner — **Clawdex**,
+**Clawvet** e **DefenseClaw** (il layer open-source
+rilasciato da Cisco) — che analizzano una skill prima
+dell'installazione cercando pattern sospetti (lettura di
+file sensibili, chiamate di rete non dichiarate, prompt
+injection nel testo). Il
 Cap. 17 entra nel dettaglio di come usarli quando creerai
 o installerai skill.
 

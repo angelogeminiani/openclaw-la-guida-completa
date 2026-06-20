@@ -34,7 +34,7 @@ Il 10 marzo 2026 arriva l'epilogo (o il prologo, dipende dai punti di vista): Me
 
 Il Capitolo 1 aveva promesso che questa biforcazione sarebbe stata spiegata qui, ed eccola. Dal 10 marzo 2026 l'ecosistema ha due metà che è facilissimo confondere e che hanno proprietari, incentivi e destini diversi.
 
-Moltbook è un **prodotto**: ha un proprietario (prima Schlicht, ora Meta), server centrali, termini di servizio che possono cambiare domattina. OpenClaw è un **framework** affidato a una fondazione: il codice è open-source, replicato in 67.000+ fork, e nessuno lo "possiede" nel senso commerciale del termine. La conseguenza pratica per te è netta: il tuo agente non dipende da Moltbook in alcun modo. Se Meta domani chiudesse il social, lo riempisse di pubblicità o lo riservasse agli agenti dei prodotti Meta, il tuo OpenClaw continuerebbe a fare colazione con il suo heartbeat come se niente fosse. Vale anche il contrario: nessuna decisione della fondazione OpenClaw obbliga Meta a qualcosa.
+Moltbook è un **prodotto**: ha un proprietario (prima Schlicht, ora Meta), server centrali, termini di servizio che possono cambiare domattina. OpenClaw è un **framework** affidato a una fondazione: il codice è open-source, replicato in 70.000+ fork, e nessuno lo "possiede" nel senso commerciale del termine. La conseguenza pratica per te è netta: il tuo agente non dipende da Moltbook in alcun modo. Se Meta domani chiudesse il social, lo riempisse di pubblicità o lo riservasse agli agenti dei prodotti Meta, il tuo OpenClaw continuerebbe a fare colazione con il suo heartbeat come se niente fosse. Vale anche il contrario: nessuna decisione della fondazione OpenClaw obbliga Meta a qualcosa.
 
 Questa è la lente da usare per tutto il resto del capitolo: davanti a ogni nome dell'ecosistema, chiediti "chi controlla questo pezzo, e cosa succede al mio agente se sparisce?". Per Moltbook la risposta è "Meta, e non succede nulla". Vedremo che per altri pezzi la risposta è meno rassicurante.
 
@@ -58,7 +58,7 @@ Il limite strutturale è lo stesso per tutti, e Claire Vo l'ha riassunto dopo av
 
 ### La community: dove si impara davvero
 
-I numeri prima di tutto, con la data accanto perché su carta invecchiano in fretta: ad aprile 2026 il repository GitHub di OpenClaw superava le 343.000 stelle e i 67.000 fork — una curva di adozione che React non ha avvicinato in dieci anni di vita. Ma le stelle non rispondono alle domande alle due di notte. Quello che conta è sapere dove andare per cosa:
+I numeri prima di tutto, con la data accanto perché su carta invecchiano in fretta: ad aprile 2026 il repository GitHub di OpenClaw superava le 350.000 stelle e i 70.000 fork — una curva di adozione che React non ha avvicinato in dieci anni di vita. Ma le stelle non rispondono alle domande alle due di notte. Quello che conta è sapere dove andare per cosa:
 
 - **Discord ufficiale** — aiuto in tempo reale, canali per livello e per tema. È il posto giusto per "il mio agente fa una cosa strana", prima di aprire un bug.
 - **GitHub Issues** — bug riproducibili e richieste di funzionalità. Cerca prima tra le issue esistenti: con una community così grande, qualcuno è quasi sempre passato dal tuo stesso errore.
@@ -72,7 +72,7 @@ I numeri prima di tutto, con la data accanto perché su carta invecchiano in fre
 
 Il 14 febbraio 2026 Peter Steinberger annuncia due cose nello stesso post: ha accettato un ruolo in OpenAI, e OpenClaw passa a una fondazione open-source indipendente. OpenAI sostiene la fondazione economicamente ma non possiede il codice e non ne governa la roadmap; lo sviluppo resta in mano ai maintainer della community. La missione che Steinberger si dà nella nuova casa la conosci dal Capitolo 1: "costruire un agente che anche mia mamma possa usare."
 
-Per il lettore non tecnico, "fondazione" significa tre garanzie concrete. Primo: il codice resta open-source, e con 67.000 fork in giro nessuna acquisizione potrebbe farlo sparire. Secondo: il modello resta **BYOK** (*bring your own key*: la chiave API del modello la porti tu, di qualunque provider) — nessuno può infilare un abbonamento obbligatorio tra te e il tuo agente. Terzo: il progetto resta model-agnostic, cioè non sposato a un singolo fornitore di modelli.
+Per il lettore non tecnico, "fondazione" significa tre garanzie concrete. Primo: il codice resta open-source, e con 70.000 fork in giro nessuna acquisizione potrebbe farlo sparire. Secondo: il modello resta **BYOK** (*bring your own key*: la chiave API del modello la porti tu, di qualunque provider) — nessuno può infilare un abbonamento obbligatorio tra te e il tuo agente. Terzo: il progetto resta model-agnostic, cioè non sposato a un singolo fornitore di modelli.
 
 L'onestà però impone di dire anche il resto: una fondazione non è un incantesimo. Vive di sponsor, e gli sponsor hanno interessi; e il ban di Anthropic del 4 aprile ha dimostrato che il potere più concreto dell'ecosistema non sta nella governance del codice ma nei provider dei modelli, che la fondazione non controlla. La vera difesa di OpenClaw non è legale, è architetturale: proprio perché BYOK e model-agnostic, quando un provider chiude la porta si cambia provider in un pomeriggio — il Capitolo 14 lo racconta ora per ora.
 

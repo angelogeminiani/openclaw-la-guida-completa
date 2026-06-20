@@ -149,10 +149,11 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 | Discord Privileged Gateway Intents 2026 — practical guide | Space-Node | https://space-node.net/blog/discord-gateway-intents-message-content-2026 |
 | Discord.js — Gateway Intents guide | discord.js | https://discordjs.guide/legacy/popular-topics/intents |
 | Discord.py — Intents reference | Read the Docs | https://discordpy.readthedocs.io/en/latest/intents.html |
-| BlueBubbles — channel docs ufficiale OpenClaw | OpenClaw Docs | https://docs.openclaw.ai/channels/bluebubbles |
-| BlueBubbles Server — Complete Setup & API Guide | hmseeb (gist) | https://gist.github.com/hmseeb/e313cd954ad893b75433f2f2db0fb704 |
-| BlueBubbles — repository server | GitHub (BlueBubblesApp) | https://github.com/BlueBubblesApp/bluebubbles-server |
-| Set Up OpenClaw With iMessage via BlueBubbles | Stack Junkie | https://www.stack-junkie.com/blog/openclaw-imessage-bluebubbles-setup-guide |
+| iMessage — channel docs ufficiale OpenClaw (plugin nativo) | OpenClaw Docs | https://docs.openclaw.ai/channels/imessage |
+| Coming from BlueBubbles — guida di migrazione | OpenClaw Docs | https://docs.openclaw.ai/channels/imessage-from-bluebubbles |
+| BlueBubbles Server — Setup & API Guide (deprecato 2026) | hmseeb (gist) | https://gist.github.com/hmseeb/e313cd954ad893b75433f2f2db0fb704 |
+| BlueBubbles — repository server (deprecato 2026) | GitHub (BlueBubblesApp) | https://github.com/BlueBubblesApp/bluebubbles-server |
+| Set Up OpenClaw With iMessage via BlueBubbles (deprecato 2026) | Stack Junkie | https://www.stack-junkie.com/blog/openclaw-imessage-bluebubbles-setup-guide |
 | OpenClaw iMessage Setup (2026) — Claw Messenger | Claw Messenger | https://www.clawmessenger.com/blog/openclaw-imessage-setup-guide |
 | signal-cli — repository ufficiale | GitHub (AsamK) | https://github.com/AsamK/signal-cli |
 | signal-cli Quickstart Wiki | GitHub (AsamK) | https://github.com/AsamK/signal-cli/wiki/Quickstart |
@@ -203,6 +204,7 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 |---------|-------|-----|
 | Regolamento (UE) 2024/1689 (AI Act) — testo ufficiale | EUR-Lex | https://eur-lex.europa.eu/eli/reg/2024/1689/oj |
 | AI Act — Regulatory framework on AI | Commissione europea | https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai |
+| Digital Omnibus on AI (accordo 7 maggio 2026, rinvio alto rischio al 2 dic 2027) | Commissione europea | https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai |
 
 ### Podcast e video
 

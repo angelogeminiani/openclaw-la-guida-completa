@@ -303,6 +303,8 @@ openclaw channels login --channel imessage-bluebubbles
 # legacy bridge, requires bluebubbles-server running
 ```
 
+**(!) Attenzione — aggiornamento giugno 2026:** con la serie 2026.6 OpenClaw ha **rimosso del tutto** il canale BlueBubbles dal core: il comando `--channel imessage-bluebubbles` non è più disponibile. Se parti oggi usa solo il plugin nativo (`--channel imessage`); chi ha un setup BlueBubbles deve migrare la configurazione (`channels.bluebubbles` → `channels.imessage`) seguendo la guida ufficiale "Coming from BlueBubbles" (link in Appendice E).
+
 **(!) Attenzione:** Apple non garantisce stabilità sui database di Messages.app: aggiornamenti minori di macOS hanno già rotto il plugin nativo in passato. Tieni `openclaw update` aggiornato e controlla il changelog dopo ogni update di macOS.
 
 ### Gli altri canali in mezza pagina [★★]
@@ -467,7 +469,7 @@ Slack — [Slack Bolt for JavaScript docs](https://tools.slack.dev/bolt-js/conce
 
 Discord — [Privileged Gateway Intents FAQ (Discord)](https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ), [Discord Intents 2026 practical guide (Space-Node)](https://space-node.net/blog/discord-gateway-intents-message-content-2026).
 
-iMessage / Signal / Matrix — [OpenClaw BlueBubbles docs](https://docs.openclaw.ai/channels/bluebubbles), [signal-cli wiki (AsamK)](https://github.com/AsamK/signal-cli/wiki/Quickstart), [matrix-appservice-bridge](https://github.com/matrix-org/matrix-appservice-bridge).
+iMessage / Signal / Matrix — [OpenClaw iMessage docs](https://docs.openclaw.ai/channels/imessage), [Coming from BlueBubbles (migrazione)](https://docs.openclaw.ai/channels/imessage-from-bluebubbles), [signal-cli wiki (AsamK)](https://github.com/AsamK/signal-cli/wiki/Quickstart), [matrix-appservice-bridge](https://github.com/matrix-org/matrix-appservice-bridge).
 
 OpenClaw — [Configuration reference](https://docs.openclaw.ai/gateway/configuration), [Multi-channel setup (LumaDock)](https://lumadock.com/tutorials/openclaw-multi-channel-setup), [Channel integration guide (YingTu)](https://yingtu.ai/en/blog/openclaw-messaging-channel-integration-guide).
 

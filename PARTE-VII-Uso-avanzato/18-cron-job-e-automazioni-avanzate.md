@@ -73,7 +73,7 @@ by priority. If nothing relevant: 'Free day.'" \
 
 Smontiamolo pezzo per pezzo, perché ogni flag è una decisione.
 
-**Lo schedule.** Tre forme possibili: `--at` per il colpo singolo (un timestamp ISO oppure un relativo come `20m`; aggiungi `--delete-after-run` perché il job si cancelli da solo dopo il successo), `--every` per l'intervallo fisso (`--every 1h`), `--cron` per l'espressione classica a cinque campi: minuto, ora, giorno del mese, mese, giorno della settimana. `0 7 * * *` = ogni giorno alle 7:00; `0 18 * * 5` = venerdì alle 18:00.
+**Lo schedule.** Tre forme possibili: `--at` per il colpo singolo (un timestamp ISO oppure un relativo come `20m`; i job one-shot si cancellano da soli dopo il successo — usa `--keep-after-run` se invece vuoi conservarli nello storico), `--every` per l'intervallo fisso (`--every 1h`), `--cron` per l'espressione classica a cinque campi: minuto, ora, giorno del mese, mese, giorno della settimana. `0 7 * * *` = ogni giorno alle 7:00; `0 18 * * 5` = venerdì alle 18:00.
 
 **La timezone è obbligatoria** — non per la CLI, che senza `--tz` accetta comunque il job, ma per la tua sanità mentale. Senza timezone esplicita i timestamp vengono trattati come UTC e le espressioni seguono l'orologio della macchina che ospita il Gateway: il giorno in cui sposti l'agente dal Mac mini a un VPS di Francoforte, o il giorno del cambio dell'ora legale, il digest delle 7:00 arriva alle 6:00, alle 8:00 o mai (il Capitolo 15 ha già raccontato questo guasto dal lato della diagnosi). Scrivi `--tz "Europe/Rome"` su ogni job, sempre, anche quando "tanto il server è in Italia".
 
@@ -165,11 +165,12 @@ L'esempio quotidiano è già nella giornata-tipo del Capitolo 1: il ping delle 1
 Part of morning-digest instructions:
 For each external meeting today, create a
 one-shot cron 30 minutes before it (--at,
---delete-after-run) that checks the guest's
-public channels and sends me a 3-line brief.
+auto-deletes on success) that checks the
+guest's public channels and sends me a
+3-line brief.
 ```
 
-I job one-shot creati con `--delete-after-run` si cancellano da soli dopo l'esecuzione: la sera lo scheduler è pulito, e domattina il mattutino riseminerà. Questo è il meta-cron "sicuro": figli a vita breve, numero limitato dal calendario stesso.
+I job one-shot si cancellano da soli dopo l'esecuzione — è il comportamento di default per i job `--at` (se ti serve conservarli usa `--keep-after-run`): la sera lo scheduler è pulito, e domattina il mattutino riseminerà. Questo è il meta-cron "sicuro": figli a vita breve, numero limitato dal calendario stesso.
 
 Il meta-cron *ricorsivo* — un job ricorrente che crea altri job ricorrenti — è un'altra categoria di rischio, perché senza freni la popolazione di cron può solo crescere. L'esempio canonico, monitoraggio competitor, scritto per esteso e **con stop-condition**:
 
@@ -207,12 +208,13 @@ cron:
   enabled: true
   maxConcurrentRuns: 8
   retry:
-    maxAttempts: 3
-    # backoff in ms: 1, 2, then 5 minutes
-    backoffMs: [60000, 120000, 300000]
+    enabled: true
+    # exponential backoff:
+    # 30s, 1m, 5m, 15m, 60m
+    backoffMs: [30000, 60000, 300000, 900000, 3600000]
 ```
 
-Tre tentativi con backoff crescente per gli errori transitori (rate limit, rete, server); gli errori permanenti disabilitano il job invece di insistere. Se ti viene la tentazione di alzare `maxAttempts` "per sicurezza", rileggi la prima storia della sezione 18.8.
+Backoff esponenziale a cinque gradini per gli errori transitori (rate limit, rete, server): dopo un run riuscito il contatore torna a zero, mentre gli errori permanenti disabilitano il job invece di insistere. Se ti viene la tentazione di moltiplicare i retry "per sicurezza", rileggi la prima storia della sezione 18.8.
 
 **(!) Attenzione:** un meta-cron senza stop-condition non è un'automazione avanzata: è una bomba a orologeria con la miccia accesa a tua insaputa. La checklist minima prima di attivarne uno: tetto di popolazione scritto nelle istruzioni, figli con auto-rimozione, nomi univoci, modello economico sui figli, e un cron di audit (sezione 18.7) che ti avvisa se il conteggio cresce. Se manca anche uno solo di questi pezzi, il meta-cron non va in produzione.
 

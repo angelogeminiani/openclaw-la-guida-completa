@@ -36,11 +36,11 @@ Come promesso nel Capitolo 2, ecco la contabilità trasformata in regole di budg
 | Messaggio semplice | < $0,02 |
 | Brief con 1–2 skill | $0,02–0,12 |
 | Ricerca web + sintesi | $0,05–0,15 |
-| Ragionamento lungo (Opus) | $0,30–1,00 |
+| Ragionamento lungo (Opus) | $0,10–0,35 |
 
 La regola di pollice: se un singolo task supera regolarmente un dollaro, o stai usando un modello troppo potente per quel lavoro, o la sessione si è gonfiata di contesto inutile (ne riparliamo tra poco).
 
-Per pagare i token le strade oggi sono due, più una mezza. La **API key** (consigliata, la più affidabile): paghi esattamente i token che consumi, sul pannello del provider. Oppure la **sottoscrizione ChatGPT Pro** a $200 (~€185) al mese: una flat fee (tariffa fissa mensile) che OpenAI ha esplicitamente "benedetto" per l'uso con agenti come OpenClaw — conviene solo se consumi più di $200 equivalenti di token. La mezza strada sono i **modelli locali**, che non pagano token ma hardware ed elettricità: ci arriviamo nelle strategie. E la strada che non esiste più, la sottoscrizione Claude, merita una sezione tutta sua.
+Per pagare i token le strade oggi sono due, più una mezza. La **API key** (consigliata, la più affidabile): paghi esattamente i token che consumi, sul pannello del provider. Oppure la **sottoscrizione ChatGPT Pro** a $200 (~€185) al mese: una flat fee (tariffa fissa mensile) che OpenAI ha esplicitamente "benedetto" per l'uso con agenti come OpenClaw — conviene solo se consumi più di $200 equivalenti di token. La mezza strada sono i **modelli locali**, che non pagano token ma hardware ed elettricità: ci arriviamo nelle strategie. E la strada che a maggio 2026 non esiste più, la sottoscrizione Claude, merita una sezione tutta sua.
 
 ### I modelli di maggio 2026: il listino
 
@@ -48,7 +48,7 @@ Prima della storia, i numeri. Questa è la fotografia dei prezzi a maggio 2026, 
 
 | Modello | Input | Output |
 |---|---|---|
-| Claude Opus 4.6 | $15 | $75 |
+| Claude Opus 4.6 | $5 | $25 |
 | Claude Sonnet 4.6 | $3 | $15 |
 | Claude Haiku 4.5 | $1 | $5 |
 | GPT-5.1 | $2,50 | $10 |
@@ -63,7 +63,7 @@ Prima della storia, i numeri. Questa è la fotografia dei prezzi a maggio 2026, 
 
 \* I modelli locali non hanno costo per token, ma richiedono hardware adeguato (GPU consigliata) ed elettricità: vedi il confronto TCO del [Capitolo 3](../PARTE-II-Installazione/03-scegliere-dove-installare-openclaw.md).
 
-Tre fasce, in pratica. I **premium** vanno riservati al ragionamento difficile: Opus 4.6 costa 5–12 volte i modelli medi, Codex 5.4 "solo" il doppio di Sonnet — premium più per posizionamento che per prezzo. I **medi** (Sonnet 4.6 — il default di questo libro —, GPT-5.1, Gemini Pro, Mistral Large) sono il cavallo da lavoro quotidiano. Gli **economici** (Haiku 4.5, Gemini Flash, GPT-5.1 mini, Kimi K2.5, MiniMax M2.5) costano centesimi e sono perfetti per heartbeat, cron e task ripetitivi. Tieni questa tabella sottomano: tutto il resto del capitolo ci torna sopra.
+Tre fasce, in pratica. I **premium** vanno riservati al ragionamento difficile: Opus 4.6 costa meno del doppio dei modelli medi e Codex 5.4 circa il doppio di Sonnet — premium più per posizionamento che per prezzo. I **medi** (Sonnet 4.6 — il default di questo libro —, GPT-5.1, Gemini Pro, Mistral Large) sono il cavallo da lavoro quotidiano. Gli **economici** (Haiku 4.5, Gemini Flash, GPT-5.1 mini, Kimi K2.5, MiniMax M2.5) costano centesimi e sono perfetti per heartbeat, cron e task ripetitivi. Tieni questa tabella sottomano: tutto il resto del capitolo ci torna sopra.
 
 ### Il terremoto del 4 aprile 2026
 
@@ -92,17 +92,19 @@ Vale la pena capire *come* funziona il blocco, perché ti aiuta a diagnosticare 
 
 Le alternative per chi usava Claude, coi conti esatti:
 
-- **API key Anthropic** (pay-per-token): $3/$15 per milione di token su Sonnet 4.6, $15/$75 su Opus 4.6 — la via maestra
+- **API key Anthropic** (pay-per-token): $3/$15 per milione di token su Sonnet 4.6, $5/$25 su Opus 4.6 — la via maestra
 - **"Extra usage"**: un addon pay-as-you-go agganciato alla sottoscrizione esistente, allo stesso prezzo per token dell'API. Attenzione ai conti: la sottoscrizione non copre nessun token di OpenClaw, quindi paghi l'abbonamento *più* tutto il consumo. Ha senso solo se tieni la sottoscrizione per Claude Code o Claude.ai e ti interessa la fatturazione unificata — o se sfrutti lo sconto fino al 30% sui bundle pre-acquistati
 - **Credito una tantum** pari a un mese di abbonamento (andava richiesto entro il 17 aprile 2026)
 
-In altre parole: che tu scelga API key o extra usage, per OpenClaw oggi su Claude **si paga sempre per token**. È la stessa conclusione del Capitolo 3, vista dall'altra angolazione.
+In altre parole: che tu scelga API key o extra usage, per OpenClaw — a maggio 2026 — su Claude **si paga sempre per token**. È la stessa conclusione del Capitolo 3, vista dall'altra angolazione.
 
-L'impatto sui costi dipende interamente dal profilo. Un utente intensivo che girava Opus 4.6 con ~500K token in ingresso e 200K in uscita al giorno passa da $200/mese (~€185, piano Max) a circa $675/mese (~€620) di API: 3,4 volte tanto. Un utente moderato che pagava i $20 del piano Pro e consumava come un piano da $150 si ritrova un aumento di 7 volte o più. Paradossalmente, gli utenti davvero leggeri possono perfino *risparmiare*: un consumo da $6–10 al mese di API costa meno dei $20 della vecchia sottoscrizione. La sofferenza è tutta di chi consumava molto pagando un prezzo fisso basso — che era esattamente il "loophole" che Anthropic ha chiuso.
+L'impatto sui costi dipende interamente dal profilo. Un utente intensivo che girava Opus 4.6 con ~500K token in ingresso e 200K in uscita al giorno paga in API circa $225/mese (~€207): col listino Opus di maggio 2026, appena sopra i $200 del vecchio piano Max. Un utente moderato che pagava i $20 del piano Pro e consumava come un piano da $150 si ritrova invece un aumento di 7 volte o più. Paradossalmente, gli utenti davvero leggeri possono perfino *risparmiare*: un consumo da $6–10 al mese di API costa meno dei $20 della vecchia sottoscrizione. La sofferenza è tutta di chi consumava molto pagando un prezzo fisso basso — che era esattamente il "loophole" che Anthropic ha chiuso.
 
 Le reazioni della community sono state immediate. Steinberger — pur ormai in OpenAI dal 14 febbraio — ha definito la decisione "triste per l'ecosistema" e ha rivelato che lui e Dave Morin avevano cercato di convincere Anthropic, ottenendo solo un ritardo di una settimana. Garry Tan (Y Combinator): "Potrebbe rivelarsi un errore strategico o un colpo di genio." Molti utenti sono migrati verso modelli OpenAI (GPT-5.1, Codex 5.4), modelli locali (Nemotron) o verso ChatGPT Pro come provider principale.
 
 La lezione per te è una sola, e vale più di ogni tabella di prezzi: **non costruire mai un workflow critico su un singolo provider**. La natura model-agnostic di OpenClaw — il modello lo porti tu, e puoi cambiarlo — è passata in una notte da dettaglio architetturale a polizza assicurativa. Usala.
+
+**(i) Pro tip — aggiornamento giugno 2026:** dopo la chiusura della finestra temporale di questo libro, Anthropic ha parzialmente fatto marcia indietro. Le sottoscrizioni Claude Pro/Max tornano utilizzabili con tool terzi come OpenClaw attraverso un meccanismo di credito "Agent SDK": un plafond che assorbe il costo della minore efficienza di caching dei tool esterni. I conti e le strategie di questo capitolo restano validi come fotografia di maggio 2026, ma prima di scegliere tra sottoscrizione e API key verifica lo stato attuale sulla documentazione ufficiale (link in Appendice E).
 
 ### Un giorno nella vita di Polly
 
@@ -123,13 +125,13 @@ Ora applichiamo il listino. Stessa Polly, stessa giornata, cinque modelli divers
 
 | Modello | $/giorno | $/mese |
 |---|---|---|
-| Claude Opus 4.6 | 4,88 | ~146 (~€134) |
+| Claude Opus 4.6 | 1,63 | ~49 (~€45) |
 | Claude Sonnet 4.6 | 0,98 | ~29 (~€27) |
 | GPT-5.1 | 0,78 | ~23 (~€21) |
 | Claude Haiku 4.5 | 0,33 | ~10 (~€9) |
 | Kimi K2.5 | 0,19 | ~6 (~€5,50) |
 
-La stessa identica giornata costa da €5,50 a €134 al mese a seconda del modello: un fattore 24. Ed è qui che nasce l'idea più importante del capitolo: non devi *scegliere* un modello, devi *assegnare* i modelli. Se Polly usasse Haiku per i 48 heartbeat e Sonnet per tutto il resto, la giornata scenderebbe da $0,98 a circa $0,76: quasi un quarto di spesa in meno senza perdere nulla, perché rispondere `HEARTBEAT_OK` non richiede un premio Nobel. È il *routing per modello*, e lo configuriamo tra due sezioni.
+La stessa identica giornata costa da €5,50 a €45 al mese a seconda del modello: un fattore 8. Ed è qui che nasce l'idea più importante del capitolo: non devi *scegliere* un modello, devi *assegnare* i modelli. Se Polly usasse Haiku per i 48 heartbeat e Sonnet per tutto il resto, la giornata scenderebbe da $0,98 a circa $0,76: quasi un quarto di spesa in meno senza perdere nulla, perché rispondere `HEARTBEAT_OK` non richiede un premio Nobel. È il *routing per modello*, e lo configuriamo tra due sezioni.
 
 ### Stima costi per profilo d'uso
 
@@ -251,6 +253,7 @@ fallback.
 
 - [Anthropic blocks OpenClaw from Claude subscriptions](https://thenextweb.com/news/anthropic-openclaw-claude-subscription-ban-cost) — cronaca del ban del 4 aprile 2026 e impatto sui costi
 - [Anthropic cuts off Claude subscriptions with OpenClaw](https://venturebeat.com/technology/anthropic-cuts-off-the-ability-to-use-claude-subscriptions-with-openclaw-and) — ricostruzione dell'escalation e delle reazioni
+- [Anthropic reinstates OpenClaw on Claude subscriptions](https://venturebeat.com/technology/anthropic-reinstates-openclaw-and-third-party-agent-usage-on-claude-subscriptions-with-a-catch) — la parziale marcia indietro di giugno 2026 (credito Agent SDK)
 - [Claude Code subscribers need extra for OpenClaw](https://techcrunch.com/2026/04/04/anthropic-says-claude-code-subscribers-will-need-to-pay-extra-for-openclaw-support/) — i dettagli dell'opzione "extra usage"
 - [Rebuilt my OpenClaw setup for $15/month](https://medium.com/@rentierdigital/anthropic-just-killed-my-200-month-openclaw-setup-so-i-rebuilt-it-for-15-9cab6814c556) — caso studio "$200 → $15/mese" con dettagli pratici
 - [Anthropic provider docs (OpenClaw)](https://docs.openclaw.ai/providers/anthropic) — configurazione di chiavi API Anthropic post-ban

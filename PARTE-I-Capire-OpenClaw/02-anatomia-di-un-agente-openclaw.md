@@ -211,7 +211,7 @@ I **canali** sono i mezzi attraverso cui parli all'agente: ne esistono più di v
 
 **Telegram (grammY)** è il canale consigliato per iniziare: setup veloce con `@BotFather`, supporto a immagini, file, voce, gruppi — la base del Cap. 6. **WhatsApp (Baileys)** è il più naturale per uso personale e familiare, ma usa il protocollo non ufficiale di WhatsApp Web ed è il più sensibile a cambi lato Meta. **Slack** e **Discord** sono i canali da team: il primo per l'ufficio, il secondo per le community. **Signal** è la scelta per chi vuole privacy; per **iMessage**, dal 2026 il plugin nativo è il default e il vecchio ponte BlueBubbles è deprecato.
 
-C'è poi l'arcipelago lungo — Teams, Matrix, Google Chat, LINE, IRC, Mattermost, Nostr, WeChat, QQ e altri — utile in casi specifici (WeChat e QQ per chi opera in Cina, Matrix per chi vuole un canale federato). E due interfacce locali: la **TUI**, la shell interattiva che vedi appena finita l'installazione, utile per il primo "hatch" e il debug; e il **WebChat**, una pagina web minimale servita dal Gateway.
+C'è poi l'arcipelago lungo — Teams, Matrix, Google Chat, LINE, IRC, Mattermost, Nostr, Feishu, Twitch, WeChat, QQ e altri — utile in casi specifici (WeChat e QQ per chi opera in Cina, Matrix per chi vuole un canale federato). E due interfacce locali: la **TUI**, la shell interattiva che vedi appena finita l'installazione, utile per il primo "hatch" e il debug; e il **WebChat**, una pagina web minimale servita dal Gateway.
 
 La regola di scelta è banale: il canale giusto è *quello che già usi tutto il giorno*. Telegram è il consiglio del libro per l'onboarding perché ha l'attrito più basso, ma niente vieta di passare a WhatsApp dopo una settimana.
 
