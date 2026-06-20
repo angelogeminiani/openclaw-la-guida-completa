@@ -200,9 +200,11 @@ OpenClaw evolve molto velocemente — se trovi informazioni datate (versioni di 
 
 ## Date e versioning
 
-- **Versione di riferimento**: maggio 2026
+- **Versione di riferimento**: maggio 2026 (fotografia dei contenuti)
+- **Ultima revisione**: giugno 2026 — passata di verifica dei fatti online. Dove la realtà è cambiata dopo la fotografia, i capitoli riportano note "aggiornamento giugno 2026" (es. rimozione del canale BlueBubbles, parziale revoca del ban Anthropic, rinvio degli obblighi AI Act sui sistemi ad alto rischio).
 - **Eventi inclusi**: ban Anthropic del 4 aprile 2026, acquisizione Moltbook da parte di Meta (10 marzo 2026), ingresso di Steinberger in OpenAI (14 febbraio 2026)
 - **Software**: OpenClaw 2026.4.27 al momento della stesura. La CLI può cambiare: verifica sempre con `openclaw --version` e leggi il changelog ufficiale.
+- **Modifiche al libro**: registrate in [CHANGELOG.md](./CHANGELOG.md)
 
 OpenClaw evolve rapidamente. Verifica i comandi e i prezzi prima di seguirli alla lettera.
 
