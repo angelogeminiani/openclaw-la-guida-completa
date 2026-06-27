@@ -58,7 +58,7 @@ Il limite strutturale è lo stesso per tutti, e Claire Vo l'ha riassunto dopo av
 
 ### La community: dove si impara davvero
 
-I numeri prima di tutto, con la data accanto perché su carta invecchiano in fretta: ad aprile 2026 il repository GitHub di OpenClaw superava le 350.000 stelle e i 70.000 fork — una curva di adozione che React non ha avvicinato in dieci anni di vita. Ma le stelle non rispondono alle domande alle due di notte. Quello che conta è sapere dove andare per cosa:
+I numeri prima di tutto, con la data accanto perché su carta invecchiano in fretta: ad aprile 2026 il repository GitHub di OpenClaw superava le 350.000 stelle e i 70.000 fork (aggiornamento giugno 2026: oltre 378.000 stelle) — una curva di adozione che React non ha avvicinato in dieci anni di vita. Ma le stelle non rispondono alle domande alle due di notte. Quello che conta è sapere dove andare per cosa:
 
 - **Discord ufficiale** — aiuto in tempo reale, canali per livello e per tema. È il posto giusto per "il mio agente fa una cosa strana", prima di aprire un bug.
 - **GitHub Issues** — bug riproducibili e richieste di funzionalità. Cerca prima tra le issue esistenti: con una community così grande, qualcuno è quasi sempre passato dal tuo stesso errore.

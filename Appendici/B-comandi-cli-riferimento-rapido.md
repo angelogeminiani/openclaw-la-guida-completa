@@ -12,6 +12,10 @@ Comandi `openclaw` e affini usati nel libro, raggruppati per area. Tutti i coman
   containerizzato + sandbox aggiuntivo. (Cap. 4)
 - `docker sandbox create --name openclaw` — sandbox
   Docker ufficiale (MicroVM, credential proxy). (Cap. 4)
+- **Schema di versioni** (aggiornamento giugno 2026):
+  da `2026.6` il terzo numero è un contatore patch
+  mensile (`2026.6.11`), non più il giorno del mese
+  dello schema `2026.4.27`. (Cap. 3, 5)
 
 ## Stato e diagnostica
 

@@ -6,6 +6,29 @@ Il formato segue lo spirito di [Keep a Changelog](https://keepachangelog.com/it/
 
 Categorie usate: **Corretto** (errori o dati imprecisi), **Aggiornato** (fatti cambiati dopo maggio 2026, segnalati come tali nel testo), **Aggiunto**, **Rimosso**.
 
+## [Revisione giugno 2026 — verifica online] — 2026-06-27
+
+Seconda passata di verifica dei fatti rispetto allo stato online a fine giugno 2026, in continuità con la revisione del 20 giugno. La fotografia dei contenuti resta maggio 2026; i fatti cambiati dopo sono annotati nei capitoli come "aggiornamento giugno 2026".
+
+### Corretto
+
+- **Cap. 4** — Data della CVE-2026-25253 portata al 3 febbraio 2026 (era "gennaio 2026"), in linea con la disclosure documentata (CVSS 8.8, one-click RCE via WebSocket).
+- **Cap. 22 / Appendice E** — Data dell'accordo "Digital Omnibus on AI" precisata: intesa provvisoria del 6 maggio 2026, confermata dal Consiglio il 13 maggio (era genericamente "7 maggio"). Aggiunto l'obbligo di watermarking dei contenuti sintetici (slittato al 2 dicembre 2026).
+
+### Aggiornato (fatti post-maggio 2026, annotati nel testo)
+
+- **Cap. 1 / Cap. 21** — Stelle GitHub: aggiunta nota "oltre 378.000" a giugno 2026 (il dato canonico di ~350.000 ad aprile resta invariato).
+- **Cap. 3 / Appendice B** — Schema di versioning: dalla serie 2026.6 il terzo numero è un contatore patch mensile (es. `2026.6.11`), non più il giorno del mese dello schema `2026.4.27`.
+- **Cap. 14** — Box reversal Anthropic arricchito con data (15 giugno 2026) e importi del credito "Agent SDK" (Pro $20, Max 5× $100, Max 20× $200), con la fine del compute agentico illimitato a tariffa fissa.
+- **Cap. 14 / Cap. 16** — Modelli: nota sull'uscita di Claude Opus 4.8, del livello Fable 5 e di GPT-5.2; gli esempi del libro restano su Sonnet 4.6 (default) e Haiku 4.5, tuttora attuali. Listino di maggio invariato come fotografia.
+- **Cap. 13 / Cap. 17** — Sicurezza ClawHub: aggiunta nota sulla crescita delle skill malevole (da 341 a ~824, fino a ~1.184) col registry oltre le 10.700 skill, e sulle istanze esposte oltre le 220.000. Il conteggio canonico 341/2.857 (audit febbraio 2026) resta.
+
+### Valutato e non modificato
+
+- **Node.js minimo** — La documentazione online indica ora 22.19+ come floor pratico; il libro resta su 22.16+ (valore canonico fissato in CLAUDE.md, "24 raccomandato"), poiché le fonti sono discordanti (22.14 / 22.16 / 22.19).
+- **Cina (Cap. 21–22)** — La "doppia strategia" (regolazione interna + sussidi dei governi locali) è già presente nel testo; nessuna modifica necessaria.
+- **Nat Eliason (Cap. 11)** — Cifra ~$177.000 confermata ($177.417); nessuna correzione necessaria.
+
 ## [Revisione giugno 2026] — 2026-06-20
 
 Passata di verifica dei fatti del progetto OpenClaw rispetto allo stato online a giugno 2026. La fotografia dei contenuti resta a maggio 2026: dove la realtà è cambiata dopo, i capitoli riportano note esplicite "aggiornamento giugno 2026".

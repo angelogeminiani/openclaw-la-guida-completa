@@ -86,6 +86,15 @@ Meta ha vietato l'uso interno dello strumento; la Cina lo
 ha vietato negli uffici governativi e nelle imprese
 statali.
 
+**(i) Pro tip — aggiornamento giugno 2026:** dopo la
+fotografia di questo capitolo i numeri sono cresciuti:
+le stime sulle istanze esposte superano le 220.000 e,
+col registry salito oltre le 10.700 skill, le malevole
+individuate nella campagna ClawHavoc arrivano a circa
+824 (fino a ~1.184 secondo analisi successive). Gli
+ordini di grandezza contano più dei numeri esatti: la
+morale del capitolo non cambia.
+
 **(!) Attenzione:** trovi in giro percentuali molto più
 alte (un terzo, persino il 40% delle skill "con
 problemi"). Cambiano perché cambiano i criteri: "contiene

@@ -69,7 +69,7 @@ Ora prendi un caffè e leggi il resto: ti spiega cosa è successo davvero in que
 
 OpenClaw, per com'è fatto, ha le chiavi di casa: filesystem, rete, comandi shell, browser, eventuali credenziali API montate nelle variabili d'ambiente. È quello che lo rende utile, ed è anche quello che lo rende pericoloso. La frase di Simon Willison — "non sono abbastanza coraggioso per farlo girare direttamente sul mio Mac" — è circolata nelle prime settimane proprio perché coglieva un sentimento comune: un agente autonomo, su una macchina personale e senza isolamento, è una bomba a orologeria silenziosa.
 
-Il caso che ha chiuso la discussione nella community è la **CVE-2026-25253** di gennaio 2026: un'istanza non patchata, raggiungibile via WebSocket sulla porta `18789`, poteva essere compromessa in meno di 90 secondi da un attaccante che fosse riuscito a fare in modo che l'agente leggesse una singola pagina ostile. Da quel momento la documentazione ufficiale ha smesso di chiamare il sandbox "consigliato" e ha iniziato a chiamarlo "predefinito".
+Il caso che ha chiuso la discussione nella community è la **CVE-2026-25253** del 3 febbraio 2026: un'istanza non patchata, raggiungibile via WebSocket sulla porta `18789`, poteva essere compromessa in meno di 90 secondi da un attaccante che fosse riuscito a fare in modo che l'agente leggesse una singola pagina ostile. Da quel momento la documentazione ufficiale ha smesso di chiamare il sandbox "consigliato" e ha iniziato a chiamarlo "predefinito".
 
 La regola operativa, che ripeteremo lungo tutto il capitolo, è semplice: **un container non è automaticamente un sandbox**. Lo diventa solo dopo aver chiuso almeno quattro porte: filesystem, rete, capability, secrets.
 

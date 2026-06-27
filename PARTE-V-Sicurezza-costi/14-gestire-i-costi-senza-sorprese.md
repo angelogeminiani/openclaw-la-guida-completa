@@ -65,6 +65,8 @@ Prima della storia, i numeri. Questa è la fotografia dei prezzi a maggio 2026, 
 
 Tre fasce, in pratica. I **premium** vanno riservati al ragionamento difficile: Opus 4.6 costa meno del doppio dei modelli medi e Codex 5.4 circa il doppio di Sonnet — premium più per posizionamento che per prezzo. I **medi** (Sonnet 4.6 — il default di questo libro —, GPT-5.1, Gemini Pro, Mistral Large) sono il cavallo da lavoro quotidiano. Gli **economici** (Haiku 4.5, Gemini Flash, GPT-5.1 mini, Kimi K2.5, MiniMax M2.5) costano centesimi e sono perfetti per heartbeat, cron e task ripetitivi. Tieni questa tabella sottomano: tutto il resto del capitolo ci torna sopra.
 
+**(i) Pro tip — aggiornamento giugno 2026:** questo listino è la fotografia di maggio. Da allora il top di gamma si è mosso: Anthropic ha rilasciato **Opus 4.8** (sopra Opus 4.6) e un nuovo livello **Fable 5**, mentre lato OpenAI il riferimento competitivo è passato a **GPT-5.2**. Sonnet 4.6 e Haiku 4.5 restano attuali e validi per gli esempi del libro; verifica comunque i prezzi correnti sul pannello del provider.
+
 ### Il terremoto del 4 aprile 2026
 
 Se nei mesi scorsi hai letto tutorial che consigliavano di collegare OpenClaw alla tua sottoscrizione Claude Pro o Max, dimenticali: dal 4 aprile 2026 non funzionano più. Quel giorno Anthropic ha bloccato l'uso delle sottoscrizioni Claude Pro ($20/mese, ~€18) e Max ($100–200/mese, ~€92–185) con tutti i tool di terze parti, OpenClaw incluso. La motivazione ufficiale: i tool terzi aggiravano le ottimizzazioni di prompt caching di Anthropic, consumando molte più risorse per sessione rispetto agli strumenti proprietari (Claude Code, Cowork). Boris Cherny, responsabile di Claude Code: "Le sottoscrizioni non erano progettate per i pattern di utilizzo di questi tool terzi."
@@ -104,7 +106,7 @@ Le reazioni della community sono state immediate. Steinberger — pur ormai in O
 
 La lezione per te è una sola, e vale più di ogni tabella di prezzi: **non costruire mai un workflow critico su un singolo provider**. La natura model-agnostic di OpenClaw — il modello lo porti tu, e puoi cambiarlo — è passata in una notte da dettaglio architetturale a polizza assicurativa. Usala.
 
-**(i) Pro tip — aggiornamento giugno 2026:** dopo la chiusura della finestra temporale di questo libro, Anthropic ha parzialmente fatto marcia indietro. Le sottoscrizioni Claude Pro/Max tornano utilizzabili con tool terzi come OpenClaw attraverso un meccanismo di credito "Agent SDK": un plafond che assorbe il costo della minore efficienza di caching dei tool esterni. I conti e le strategie di questo capitolo restano validi come fotografia di maggio 2026, ma prima di scegliere tra sottoscrizione e API key verifica lo stato attuale sulla documentazione ufficiale (link in Appendice E).
+**(i) Pro tip — aggiornamento giugno 2026:** dopo la chiusura della finestra temporale di questo libro, Anthropic ha parzialmente fatto marcia indietro. Dal **15 giugno 2026** le sottoscrizioni Claude Pro/Max tornano utilizzabili con tool terzi come OpenClaw attraverso un meccanismo di credito "Agent SDK": un plafond mensile (Pro $20, Max 5× $100, Max 20× $200) che assorbe il costo della minore efficienza di caching dei tool esterni, ponendo però fine al compute agentico illimitato a tariffa fissa. I conti e le strategie di questo capitolo restano validi come fotografia di maggio 2026, ma prima di scegliere tra sottoscrizione e API key verifica lo stato attuale sulla documentazione ufficiale (link in Appendice E).
 
 ### Un giorno nella vita di Polly
 

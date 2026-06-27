@@ -204,7 +204,7 @@ Se stai leggendo l'edizione stampata, gli URL completi non sono riportati nel co
 |---------|-------|-----|
 | Regolamento (UE) 2024/1689 (AI Act) — testo ufficiale | EUR-Lex | https://eur-lex.europa.eu/eli/reg/2024/1689/oj |
 | AI Act — Regulatory framework on AI | Commissione europea | https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai |
-| Digital Omnibus on AI (accordo 7 maggio 2026, rinvio alto rischio al 2 dic 2027) | Commissione europea | https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai |
+| Digital Omnibus on AI (accordo 6 maggio 2026, confermato dal Consiglio il 13 maggio; rinvio alto rischio al 2 dic 2027) | Commissione europea | https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai |
 
 ### Podcast e video
 

@@ -41,7 +41,7 @@ Non esiste una via "giusta": esiste quella più adatta a budget, tempo libero e 
 
 ### Requisiti minimi: cosa OpenClaw vuole davvero (maggio 2026)
 
-I numeri di base aggiornati alla release `2026.4.27`:
+I numeri di base aggiornati alla release `2026.4.27` (aggiornamento giugno 2026: dalla serie `2026.6` il terzo numero dello schema di versioning è un contatore patch mensile, es. `2026.6.11`, non più il giorno del mese):
 
 - **Node.js 22.16+** (24.x è il default consigliato)
 - **CPU**: 2 core minimi, 4 per multi-agente
